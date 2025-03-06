@@ -9,7 +9,7 @@ export const allUsers = async (req, res) => {
     const page = req.params.page || 1;
     const limit = 2;
     const users = await User.findAndCountAll({
-      order: [['createdAt', 'DESC'], ['firstName', 'ASC']],
+      order: [['createdAt', 'DESC'], ['username', 'ASC']],
       offset: (page - 1) * limit,
       limit,
     });
@@ -22,7 +22,7 @@ export const allUsers = async (req, res) => {
 export const register = async (req, res) => {
   try {
     const {
-      email, password, firstName, lastName,
+      email, password, username,
     } = req.body;
     if (process.env.IS_GOOGLE_AUTH_ENABLE === 'true') {
       if (!req.body.code) {
@@ -58,8 +58,7 @@ export const register = async (req, res) => {
       .digest('hex');
     const payload = {
       email,
-      firstName,
-      lastName,
+      username,
       password: reqPass,
       isVerified: false,
       verifyToken: uniqueId(),
