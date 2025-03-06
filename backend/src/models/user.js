@@ -1,15 +1,10 @@
-
-
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     'User',
     {
-      firstName: {
+      username: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      lastName: {
-        type: DataTypes.STRING,
       },
       email: {
         type: DataTypes.STRING,
@@ -18,12 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING,
       },
-      profilePic: {
+      role: {
         type: DataTypes.STRING,
-      },
-      isAdmin: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        defaultValue: 'user',
       },
       verifyToken: {
         type: DataTypes.STRING,
@@ -36,17 +28,19 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       defaultScope: {
-        attributes: { exclude: ['password', 'verifyToken', 'isAdmin'] },
+        attributes: { exclude: ['password', 'verifyToken'] },
       },
       scopes: {
         withSecretColumns: {
-          attributes: { include: ['password', 'verifyToken', 'isAdmin'] },
+          attributes: { include: ['password', 'verifyToken'] },
         },
       },
     },
   );
   User.associate = function (models) {
     // associations can be defined here
+    User.hasMany(models.Order, { foreignKey: 'userId' });
+    User.hasMany(models.Review, { foreignKey: 'userId' });
   };
   return User;
 };
