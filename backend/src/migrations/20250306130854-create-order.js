@@ -17,23 +17,32 @@ module.exports = {
       },
       totalAmount: {
         type: Sequelize.DECIMAL(10, 2),
+        allowNull: false,
+        validate: {
+          min: 0,
+        },
       },
       status: {
         type: Sequelize.ENUM('Pending', 'Preparing', 'Delivering', 'Completed'),
+        defaultValue: 'Pending',
       },
       orderDate: {
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
       deliveryAddress: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
     });
   },

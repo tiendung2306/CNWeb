@@ -10,9 +10,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     status: {
       type: DataTypes.ENUM('Pending', 'Preparing', 'Delivering', 'Completed'),
+      defaultValue: 'Pending',
     },
     orderDate: {
       type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
     },
     deliveryAddress: {
       type: DataTypes.STRING,
