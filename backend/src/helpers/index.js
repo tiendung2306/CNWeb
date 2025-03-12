@@ -1,4 +1,4 @@
-export const successResponse = (req, res, data, code = 200) => res.send({
+export const successResponse = (req, res, data, code = 200) => res.status(code).json({
   code,
   data,
   success: true,
@@ -16,6 +16,17 @@ export const errorResponse = (
   error,
   data: null,
   success: false,
+});
+
+export const createdResponse = (req, res, data, code = 201) => res.status(201).json({
+  code,
+  data,
+  success: true,
+});
+
+export const notFoundResponse = (req, res, errorMessage = 'Not found', code = 404) => res.status(404).json({
+  code,
+  errorMessage
 });
 
 export const validateEmail = (email) => {

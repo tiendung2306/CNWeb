@@ -28,17 +28,23 @@ module.exports = {
       },
       paymentStatus: {
         type: Sequelize.ENUM('Pending', 'Completed', 'Failed'),
+        defaultValue: 'Pending',
+        allowNull: false,
       },
       paymentDate: {
         type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
     });
   },
