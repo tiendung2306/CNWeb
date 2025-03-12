@@ -1,0 +1,101 @@
+/* ========== Header ========== */
+.header-wrap {
+  background-color: #f8f8f8;
+  padding: 20px 0; /* Increased padding for a larger appearance */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1600px; /* Increased width to make it longer */
+  width: 95%; /* Ensures better responsiveness */
+  margin: 0 auto;
+}
+
+.header-logo__link i {
+  max-height: 70px; /* Larger logo for better visibility */
+font-size: 20px; /* Larger icon size */
+}
+
+.header-menu {
+  flex-grow: 1;
+  margin-left: 30px; /* Balanced spacing for wider layout */
+}
+
+.header-menu-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header-menu-item {
+  margin-left: 25px; /* Increased spacing between menu items */
+}
+
+.header-menu__link {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 18px; /* Larger font size */
+  transition: color 0.3s ease;
+}
+
+.header-menu__link:hover {
+  color: #007bff;
+}
+
+.header-wrap-action {
+  display: flex;
+  align-items: center;
+}
+
+.header-action {
+  display: flex;
+}
+
+.header-action-item {
+  margin-left: 25px; /* Adjusted spacing for larger layout */
+  position: relative;
+}
+
+.header-action__link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  font-size: 18px; /* Larger font size */
+  transition: color 0.3s ease;
+}
+
+.header-action__link:hover {
+  color: #007bff;
+}
+
+.header-action-item .fa-solid {
+  font-size: 24px; /* Larger icon size */
+  margin-right: 5px;
+}
+
+.header-action_hotline span {
+  color: #ff0000;
+  font-weight: bold;
+  font-size: 20px; /* Increased font size for emphasis */
+}
+
+/* ========== Giỏ hàng ========== */
+.header-action_cart .count-holder {
+  min-width: 25px; /* Larger counter */
+  height: 25px;
+  font-size: 14px; /* Increased font size */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: -5px;
+  right: -10px;
+}
