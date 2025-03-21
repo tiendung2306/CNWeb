@@ -35,6 +35,19 @@ const getOrderById = async (req, res) => {
     }
 };
 
+const getOrderByUserId = async (req, res) => {
+    try {
+        const order = await orderService.getOrderByUserId(req.params.id);
+        if (order) {
+            return successResponse(req, res, order);
+        } else {
+            return notFoundResponse(req, res, 'Order not found');
+        }
+    } catch (error) {
+        return errorResponse(req, res, error.message);
+    }
+}
+
 // Update order by ID
 const updateOrder = async (req, res) => {
     try {
@@ -67,6 +80,7 @@ module.exports = {
     createOrder,
     getAllOrders,
     getOrderById,
+    getOrderByUserId,
     updateOrder,
     deleteOrder
 };

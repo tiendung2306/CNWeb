@@ -5,6 +5,8 @@ import * as userController from '../controllers/user/user.controller';
 import * as userValidator from '../validation/user.validator';
 import * as orderController from '../controllers/order/order.controller';
 import * as orderValidator from '../validation/order.validator';
+import * as paymentController from '../controllers/payment/payment.controller';
+import * as paymentValidator from '../validation/payment.validator';
 
 const router = express.Router();
 
@@ -18,12 +20,25 @@ router.post(
   userController.changePassword,
 );
 router.route('/order')
-  .post(validate(orderValidator.createOrder), orderController.createOrder)
-  .get(orderController.getAllOrders);
+  .post(validate(orderValidator.createOrder), orderController.createOrder);
 
 router.route('/order/:id')
   .get(validate(orderValidator.getOrderById), orderController.getOrderById)
-  .put(validate(orderValidator.updateOrder), orderController.updateOrder)
+  .patch(validate(orderValidator.updateOrder), orderController.updateOrder)
   .delete(validate(orderValidator.deleteOrder), orderController.deleteOrder);
+
+router.route('/order/user/:id')
+  .get(validate(orderValidator.getOrderByUserId), orderController.getOrderByUserId);
+
+router.route('/payment')
+  .post(validate(paymentValidator.createPayment), paymentController.createPayment);
+
+router.route('/payment/:id')
+  .get(validate(paymentValidator.getPaymentById), paymentController.getPaymentById)
+  .patch(validate(paymentValidator.updatePayment), paymentController.updatePayment)
+  .delete(validate(paymentValidator.deletePayment), paymentController.deletePayment);
+
+router.route('/payment/user/:id')
+  .get(validate(paymentValidator.getPaymentByUserId), paymentController.getPaymentByUserId);
 
 module.exports = router;
