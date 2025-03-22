@@ -1,35 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./Header.css";
 import LoginModal from "./LoginModal.js";
+import { CartContext } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext.js";
+
 
 function Header() {
   const [isLoginFormVisible, setLoginFormVisible] = useState(false);
+  const { cart, notification } = useContext(CartContext);
+  const { isLoggedIn,user, logout } = useAuth();
+  
+  // Tính tổng số sản phẩm trong giỏ
+  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <div className="header-wrap">
       <div className="header">
         <div className="header-logo">
           <a href="/" className="header-logo__link">
-          <i class="fa-solid fa-store"> Bistro West</i>
+            <i className="fa-solid fa-store"> Bistro West</i>
           </a>
         </div>
         <div className="header-menu">
           <ul className="header-menu-list">
             <li className="header-menu-item">
               <a href="/" className="header-menu__link">
-              <i className="fa-solid fa-house"></i> Trang chủ</a>
+                <i className="fa-solid fa-house"></i> Trang chủ
+              </a>
+            </li>
+            <li className="header-menu-item">
+              <a href="/menu" className="header-menu__link">
+                <i className="fa-solid fa-utensils"></i> Thực đơn
+              </a>
             </li>
             <li className="header-menu-item">
               <a href="/" className="header-menu__link">
-              <i className="fa-solid fa-utensils"></i> Thực đơn</a>
+                <i className="fa-solid fa-concierge-bell"></i> Dịch vụ
+              </a>
             </li>
             <li className="header-menu-item">
               <a href="/" className="header-menu__link">
-              <i className="fa-solid fa-concierge-bell"></i> Dịch vụ</a>
-            </li>
-            <li className="header-menu-item">
-              <a href="/" className="header-menu__link">
-              <i className="fa-solid fa-envelope"></i> Liên hệ</a>
+                <i className="fa-solid fa-envelope"></i> Liên hệ
+              </a>
             </li>
           </ul>
         </div>
@@ -41,27 +53,48 @@ function Header() {
                 <span>0123 456 789</span>
               </a>
             </div>
+             {/* Nếu đã đăng nhập thì hiển thị Profile, nếu chưa thì hiển thị Login */}
             <div className="header-action-item header-action_account">
-              <a href="#" className="header-action__link" 
-                 onClick={(e) => {
-                   e.preventDefault();
-                   setLoginFormVisible(true);
-                 }}>
-                <i className="fa-solid fa-user"></i>
-              </a>
+              {isLoggedIn ? (
+                <div className="profile-dropdown">
+                  <button className="profile-btn">
+                    <i className="fa-solid fa-user"></i> {user.name}
+                  </button>
+                  <ul className="profile-menu">
+                    <li><link to="/profile">Tài khoản</link></li>
+                    <li><a href="/orders">Lịch sử đặt hàng</a></li>
+                    <li><button onClick={logout}>Đăng xuất</button></li>
+                  </ul>
+                </div>
+              ) : (<div class="show">
+                <a href="#" className="header-action__link"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setLoginFormVisible(true);
+                  }}>
+                  <i className="fa-solid fa-user"></i>
+                </a></div>
+              )}
             </div>
             <div className="header-action-item header-action_cart">
-              <a href="#" className="header-action__link">
+              <a href="/cart" className="header-action__link">
                 <i className="fa-solid fa-shopping-cart"></i>
-                <span className="count-holder">3</span>
+                {totalItems > 0 && <span className="count-holder">{totalItems}</span>}
               </a>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Hiển thị thông báo thêm vào giỏ hàng */}
+      {notification && (
+        <div className="cart-notification">
+          {notification}
+        </div>
+      )}
+
       {isLoginFormVisible && (
-        <div className="login-form-overlay active" 
+        <div className="login-form-overlay active"
              onClick={() => setLoginFormVisible(false)}>
           <div className="login-form-wrapper" onClick={(e) => e.stopPropagation()}>
             <LoginModal 
