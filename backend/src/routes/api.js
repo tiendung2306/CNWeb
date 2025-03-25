@@ -8,6 +8,7 @@ import * as orderValidator from '../validation/order.validator';
 import * as paymentController from '../controllers/payment/payment.controller';
 import * as paymentValidator from '../validation/payment.validator';
 import * as menuItemController from '../controllers/menu/menuitem.controller';
+import * as reviewController from '../controllers/review/review.controller';
 
 const router = express.Router();
 
@@ -50,6 +51,12 @@ router.get("/menuitems", menuItemController.getAllMenuItems);
 router.get("/menuitems/:id", menuItemController.getMenuItemById); 
 router.put("/menuitems/:id", menuItemController.updateMenuItem); 
 router.delete("/menuitems/:id", menuItemController.deleteMenuItem); 
+
+// Route cho Review
+router.post("/reviews", reviewController.createReview);                   
+router.get("/reviews/menuitem/:menuItemId", reviewController.getReviewsByMenuItem); 
+router.put("/reviews/:id", reviewController.updateReview);               
+router.delete("/reviews/:id", reviewController.deleteReview);           
 
 
 module.exports = router;
