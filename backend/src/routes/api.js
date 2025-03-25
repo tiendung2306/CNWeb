@@ -7,6 +7,7 @@ import * as orderController from '../controllers/order/order.controller';
 import * as orderValidator from '../validation/order.validator';
 import * as paymentController from '../controllers/payment/payment.controller';
 import * as paymentValidator from '../validation/payment.validator';
+import * as menuItemController from '../controllers/menu/menuitem.controller';
 
 const router = express.Router();
 
@@ -40,5 +41,15 @@ router.route('/payment/:id')
 
 router.route('/payment/user/:id')
   .get(validate(paymentValidator.getPaymentByUserId), paymentController.getPaymentByUserId);
+
+  router.post("/", menuItemController.createMenuItem);
+
+//api menu-item
+router.post("/menuitems", menuItemController.createMenuItem);   
+router.get("/menuitems", menuItemController.getAllMenuItems);   
+router.get("/menuitems/:id", menuItemController.getMenuItemById); 
+router.put("/menuitems/:id", menuItemController.updateMenuItem); 
+router.delete("/menuitems/:id", menuItemController.deleteMenuItem); 
+
 
 module.exports = router;
