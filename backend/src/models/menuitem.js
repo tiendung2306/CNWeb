@@ -17,8 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
   MenuItem.associate = function(models) {
-    MenuItem.hasMany(models.OrderItem, { foreignKey: 'menuItemId' });
-    MenuItem.hasMany(models.Review, { foreignKey: 'menuItemId' });
+    MenuItem.hasMany(models.OrderItem, { foreignKey: 'menuItemId', as: 'orderItems' });
+    MenuItem.hasMany(models.Review, { foreignKey: 'menuItemId', as: 'reviews' });
   };
   return MenuItem;
 };

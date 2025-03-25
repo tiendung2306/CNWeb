@@ -9,6 +9,7 @@ import * as paymentController from '../controllers/payment/payment.controller';
 import * as paymentValidator from '../validation/payment.validator';
 import * as menuItemController from '../controllers/menu/menuitem.controller';
 import * as reviewController from '../controllers/review/review.controller';
+import { sendInvoice } from "../controllers/order/order.controller";
 
 const router = express.Router();
 
@@ -49,14 +50,16 @@ router.route('/payment/user/:id')
 router.post("/menuitems", menuItemController.createMenuItem);   
 router.get("/menuitems", menuItemController.getAllMenuItems);   
 router.get("/menuitems/:id", menuItemController.getMenuItemById); 
-router.put("/menuitems/:id", menuItemController.updateMenuItem); 
-router.delete("/menuitems/:id", menuItemController.deleteMenuItem); 
+ 
 
 // Route cho Review
 router.post("/reviews", reviewController.createReview);                   
 router.get("/reviews/menuitem/:menuItemId", reviewController.getReviewsByMenuItem); 
 router.put("/reviews/:id", reviewController.updateReview);               
-router.delete("/reviews/:id", reviewController.deleteReview);           
+router.delete("/reviews/:id", reviewController.deleteReview);   
+
+// Route gửi hóa đơn
+router.post("/orders/:orderId/invoice", sendInvoice);
 
 
 module.exports = router;

@@ -1,5 +1,8 @@
 const orderService = require('../../services/order/order.service');
 import { createdResponse, errorResponse, notFoundResponse, successResponse } from '../../helpers';
+import nodemailer from "nodemailer";
+import { Op } from "sequelize";
+import db from "../../models/index.js";
 
 // Create a new order
 const createOrder = async (req, res) => {
@@ -76,11 +79,133 @@ const deleteOrder = async (req, res) => {
     }
 };
 
+export const sendInvoice = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    // Tìm đơn hàng với các liên kết tới OrderItem và Payment
+    const order = await db.Order.findOne({
+      where: { id: orderId },
+      include: [
+        {
+          model: db.User,
+          as: 'user', // Lấy thông tin người dùng
+          attributes: ['email', 'username']
+        },
+        {
+          model: db.OrderItem,
+          as: 'orderItems', // Lấy các món ăn trong đơn hàng
+          include: [
+            {
+              model: db.MenuItem,
+              as: 'menuItem', // Lấy thông tin món ăn
+              attributes: ['name', 'price']
+            }
+          ]
+        },
+        {
+          model: db.Payment,
+          as: 'payment', // Lấy thông tin thanh toán
+          attributes: ['paymentMethod', 'paymentStatus', 'amount']
+        }
+      ]
+    });
+
+    // Kiểm tra xem đơn hàng có tồn tại không
+    if (!order) {
+      return res.status(404).json({ success: false, message: 'Order not found' });
+    }
+
+    // Nếu không có thanh toán, trả về lỗi
+    if (!order.payment) {
+      return res.status(400).json({ success: false, message: 'Payment not found for this order' });
+    }
+
+    const user = order.user;
+    const orderItems = order.orderItems;
+    const payment = order.payment;
+
+    // Tạo nội dung hóa đơn dưới dạng HTML
+    const invoiceHtml = `
+      <h2>Hóa Đơn Mua Hàng</h2>
+      <p><strong>Khách hàng:</strong> ${user.username}</p>
+      <p><strong>Email:</strong> ${user.email}</p>
+      <p><strong>Địa chỉ giao hàng:</strong> ${order.deliveryAddress}</p>
+      <h3>Chi tiết đơn hàng:</h3>
+      <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+          <tr>
+            <th>Tên món ăn</th>
+            <th>Số lượng</th>
+            <th>Đơn giá</th>
+            <th>Tổng giá</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${orderItems
+            .map(
+              (item) =>
+                `<tr>
+                  <td>${item.menuItem.name}</td>
+                  <td>${item.quantity}</td>
+                  <td>${item.menuItem.price}</td>
+                  <td>${item.menuItem.price * item.quantity}</td>
+                </tr>`
+            )
+            .join('')}
+        </tbody>
+      </table>
+      <h3>Tổng tiền: ${order.totalAmount}</h3>
+      <h3>Hình thức thanh toán: ${payment.paymentMethod}</h3>
+      <h3>Trạng thái thanh toán: ${payment.paymentStatus}</h3>
+      <p>Cảm ơn bạn đã mua hàng tại cửa hàng chúng tôi!</p>
+    `;
+
+    // Cấu hình Nodemailer để gửi email
+    const transporter = nodemailer.createTransport({
+      service: 'gmail', // Sử dụng Gmail, có thể thay đổi nếu dùng dịch vụ khác
+      auth: {
+        user: 'mahndugn3@gmail.com', // Thay bằng email của bạn
+        pass: 'manhdung-123'    // Thay bằng mật khẩu email của bạn
+      }
+    });
+
+    // Cấu hình email
+    const mailOptions = {
+      from: 'mahndugn3@gmail.com', // Email gửi đi
+      to: user.email,               // Email người nhận
+      subject: `Hóa đơn mua hàng - Đơn hàng #${order.id}`,
+      html: invoiceHtml
+    };
+
+    // Gửi email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+        return res.status(500).json({ success: false, message: 'Error sending email', error });
+      }
+
+      // Trả về thành công nếu gửi thành công
+      console.log('Email sent:', info);
+      return res.status(200).json({
+        success: true,
+        message: 'Invoice sent successfully',
+        emailInfo: info
+      });
+    });
+
+  } catch (error) {
+    console.error('Error in sendInvoice:', error); // Log toàn bộ lỗi
+    return res.status(500).json({ success: false, message: 'Internal server error', error });
+  }
+};
+
 module.exports = {
     createOrder,
     getAllOrders,
     getOrderById,
     getOrderByUserId,
     updateOrder,
-    deleteOrder
+    deleteOrder,
+    sendInvoice
 };
