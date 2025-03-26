@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import OrderList from '../../components/Order/OrderList'
-const AdminPage = () => {
+import OrderList from '../../components/Order/OrderList';
 
-
+const OrderPage = () => {
     const [orders, setOrders] = useState([
         {
             id: 1,
@@ -27,9 +26,9 @@ const AdminPage = () => {
 
     return (
         <div>
-            <OrderList orders={orders} onUpdateOrder={handleUpdateOrder} haveEdit={true} />
+            <OrderList orders={orders} onUpdateOrder={handleUpdateOrder} haveEdit={false} />
         </div>
     );
 }
 
-export default AdminPage
+export default OrderPage

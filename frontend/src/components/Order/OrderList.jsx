@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import './Order.css'
 import OrderItem from './OrderItem'
 import EditOrderPopup from './EditOrderPopup'
-const OrderList = ({ orders, onUpdateOrder }) => {
+const OrderList = ({ orders, onUpdateOrder, haveEdit }) => {
     const [selectedOrder, setSelectedOrder] = useState(null)
 
     const handleEditOrder = (order) => {
@@ -23,7 +23,7 @@ const OrderList = ({ orders, onUpdateOrder }) => {
         <div className="order-list">
             <h2>Danh sách đơn hàng</h2>
             {orders.map((order) => (
-                <OrderItem key={order.id} order={order} onEdit={handleEditOrder} />
+                <OrderItem key={order.id} order={order} onEdit={handleEditOrder} haveEdit={haveEdit} />
             ))}
             {selectedOrder && (
                 <EditOrderPopup
