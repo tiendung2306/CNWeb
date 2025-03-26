@@ -1,0 +1,67 @@
+.menu-container {
+    font-family: sans-serif;
+    color: #333;
+    padding: 20px;
+    text-align: center;
+}
+
+.menu-title h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.menu-title p {
+    font-size: 1.2em;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.menu-items {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.menu-item {
+    width: 60%;
+    max-width: 600px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 30px;
+    text-align: left;
+}
+
+
+
+.menu-item-content h3 {
+    font-size: 1.5em;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 0px;
+}
+
+.menu-item-content p {
+    line-height: 1.2;
+    color: #666;
+    font-size: 13px;
+}
+
+.menu-item-price p {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #007bff;
+}
+
+/* Responsive design (điều chỉnh khi cần thiết) */
+@media (max-width: 768px) {
+    .menu-item {
+        width: 95%;
+    }
+}

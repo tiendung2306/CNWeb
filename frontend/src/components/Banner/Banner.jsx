@@ -71,7 +71,7 @@ const Banner = () => {
                 </Swiper>
 
             </div>
-            <div className="bottom-section">
+            {/* <div className="bottom-section">
                 <div className='food-card'>
                     <img src={food1} alt="" />
                     <div className='text-foodcard'>
@@ -96,7 +96,7 @@ const Banner = () => {
                         <button>Xem thêm</button>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
 
     )
