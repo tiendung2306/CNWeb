@@ -1,15 +1,15 @@
 import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import "./Header.css";
 import LoginModal from "./LoginModal.js";
 import { CartContext } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext.js";
 
-
 function Header() {
   const [isLoginFormVisible, setLoginFormVisible] = useState(false);
   const { cart, notification } = useContext(CartContext);
-  const { isLoggedIn,user, logout } = useAuth();
-  
+  const { isLoggedIn, user, logout } = useAuth();
+
   // Tính tổng số sản phẩm trong giỏ
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
@@ -24,24 +24,24 @@ function Header() {
         <div className="header-menu">
           <ul className="header-menu-list">
             <li className="header-menu-item">
-              <a href="/" className="header-menu__link">
+              <Link to="/" className="header-menu__link">
                 <i className="fa-solid fa-house"></i> Trang chủ
-              </a>
+              </Link>
             </li>
             <li className="header-menu-item">
-              <a href="/menu" className="header-menu__link">
+              <Link to="/menu" className="header-menu__link">
                 <i className="fa-solid fa-utensils"></i> Thực đơn
-              </a>
+              </Link>
             </li>
             <li className="header-menu-item">
-              <a href="/" className="header-menu__link">
+              <Link to="/services" className="header-menu__link">
                 <i className="fa-solid fa-concierge-bell"></i> Dịch vụ
-              </a>
+              </Link>
             </li>
             <li className="header-menu-item">
-              <a href="/" className="header-menu__link">
+              <Link to="/contact" className="header-menu__link">
                 <i className="fa-solid fa-envelope"></i> Liên hệ
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -53,34 +53,38 @@ function Header() {
                 <span>0123 456 789</span>
               </a>
             </div>
-             {/* Nếu đã đăng nhập thì hiển thị Profile, nếu chưa thì hiển thị Login */}
+            {/* Nếu đã đăng nhập thì hiển thị Profile, nếu chưa thì hiển thị Login */}
             <div className="header-action-item header-action_account">
-              {isLoggedIn ? (
-                <div className="profile-dropdown">
-                  <button className="profile-btn">
-                    <i className="fa-solid fa-user"></i> {user.name}
-                  </button>
-                  <ul className="profile-menu">
-                    <li><link to="/profile">Tài khoản</link></li>
-                    <li><a href="/orders">Lịch sử đặt hàng</a></li>
-                    <li><button onClick={logout}>Đăng xuất</button></li>
-                  </ul>
-                </div>
-              ) : (<div class="show">
-                <a href="#" className="header-action__link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setLoginFormVisible(true);
-                  }}>
-                  <i className="fa-solid fa-user"></i>
-                </a></div>
-              )}
-            </div>
+  {isLoggedIn ? (
+    <div className="profile-dropdown">
+      <button className="profile-btn">
+        <i className="fa-solid fa-user"></i> {user && user.name}
+      </button>
+      <ul className="profile-menu">
+        <li><Link to="/profile">Tài khoản</Link></li>
+        <li><Link to="/orders">Lịch sử đặt hàng</Link></li>
+        <li><button onClick={logout}>Đăng xuất</button></li>
+      </ul>
+    </div>
+  ) : (
+    <a
+      href="#"
+      className="header-action__link"
+      onClick={(e) => {
+        e.preventDefault();
+        setLoginFormVisible(true);
+      }}
+    >
+      <i className="fa-solid fa-user"></i>
+    </a>
+  )}
+</div>
+
             <div className="header-action-item header-action_cart">
-              <a href="/cart" className="header-action__link">
+              <Link to="/cart" className="header-action__link">
                 <i className="fa-solid fa-shopping-cart"></i>
                 {totalItems > 0 && <span className="count-holder">{totalItems}</span>}
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -93,17 +97,17 @@ function Header() {
         </div>
       )}
 
-      {isLoginFormVisible && (
-        <div className="login-form-overlay active"
-             onClick={() => setLoginFormVisible(false)}>
-          <div className="login-form-wrapper" onClick={(e) => e.stopPropagation()}>
-            <LoginModal 
-              isVisible={isLoginFormVisible}
-              onClose={() => setLoginFormVisible(false)}
-            />
-          </div>
-        </div>
-      )}
+{isLoginFormVisible && !isLoggedIn && (
+  <div className="login-form-overlay active" onClick={() => setLoginFormVisible(false)}>
+    <div className="login-form-wrapper" onClick={(e) => e.stopPropagation()}>
+      <LoginModal 
+        isVisible={isLoginFormVisible}
+        onClose={() => setLoginFormVisible(false)}
+      />
+    </div>
+  </div>
+)}
+
     </div>
   );
 }

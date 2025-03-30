@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import foodData from "../data/mockData.js";
 import "./Menu.css"; // Import file CSS
-
+import { CartContext } from "../context/CartContext";
 function Menu() {
   const highRatedFoods = foodData.filter((food) => food.rating >= 4.5);
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
   // Danh mục món ăn
   const categories = ["Tất cả", "Đồ uống", "Cơm", "Phở", "Đồ ăn nhanh"];
-
+  const { addToCart } = useContext(CartContext);
   // Lọc món ăn theo danh mục đã chọn
   const filteredFoods =
     selectedCategory === "Tất cả"
@@ -55,7 +55,7 @@ function Menu() {
                 <div className="menu-info">
                   <h3 className="menu-name">{food.name}</h3>
                   <p className="menu-description">{food.description}</p>
-                  <button className="menu-add-to-cart">THÊM VÀO GIỎ</button>
+                  <button className="menu-add-to-cart" onClick={() => addToCart(food)}>THÊM VÀO GIỎ</button>
                   <Link to={`/food/${food.id}`} className="menu-link">
                     Xem chi tiết
                   </Link>

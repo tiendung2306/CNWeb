@@ -1,49 +1,73 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import foodData from "../data/mockData"; // Import dữ liệu giả
 import "./FoodDetail.css";
-import { FaCertificate, FaTruck, FaShieldAlt, FaBoxOpen, FaHeadset, FaUndo,FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+import {
+  FaCertificate,
+  FaTruck,
+  FaShieldAlt,
+  FaBoxOpen,
+  FaHeadset,
+  FaUndo,
+  FaStar,
+  FaStarHalfAlt,
+  FaRegStar,
+} from "react-icons/fa";
 import Review from "../components/Review";
+import { CartContext } from "../context/CartContext";
+
 const FoodDetail = () => {
   const { id } = useParams(); // Lấy ID món ăn từ URL
   const food = foodData.find((item) => item.id === Number(id)); // Tìm món ăn theo ID
   const navigate = useNavigate();
   const [averageRating, setAverageRating] = useState(0);
-  const userId = 1
- // Lấy điểm trung bình từ đánh giá
- useEffect(() => {
-  const storedReviews = JSON.parse(localStorage.getItem("reviews")) || [];
-  const foodReviews = storedReviews.filter((review) => review.foodId === Number(id));
+  const userId = 1;
+  const handleBuyNow = () => {
+    navigate("/checkout", { state: { product: { ...food, quantity: 1 } } });
+  };
 
-  if (foodReviews.length > 0) {
-    const avg = foodReviews.reduce((sum, r) => sum + Number(r.rating), 0) / foodReviews.length;
-    setAverageRating(avg);
-  } else {
-    setAverageRating(0);
-  }
-}, [id]);
+  // thêm số lượng sản phẩm
+  const { addToCart } = useContext(CartContext);
 
-const renderStars = (rating) => {
-  const stars = [];
-  for (let i = 1; i <= 5; i++) {
-    if (i <= Math.floor(rating)) {
-      stars.push(<FaStar key={i} className="star full-star" />);
-    } else if (i - 0.5 <= rating) {
-      stars.push(<FaStarHalfAlt key={i} className="star half-star" />);
+  // Lấy điểm trung bình từ đánh giá
+  useEffect(() => {
+    const storedReviews = JSON.parse(localStorage.getItem("reviews")) || [];
+    const foodReviews = storedReviews.filter(
+      (review) => review.foodId === Number(id)
+    );
+
+    if (foodReviews.length > 0) {
+      const avg =
+        foodReviews.reduce((sum, r) => sum + Number(r.rating), 0) /
+        foodReviews.length;
+      setAverageRating(avg);
     } else {
-      stars.push(<FaRegStar key={i} className="star empty-star" />);
+      setAverageRating(0);
     }
-  }
-  return stars;
-};
+  }, [id]);
 
-if (!food) {
-  return <div className="food-detail">Món ăn không tồn tại.</div>;
-}
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      if (i <= Math.floor(rating)) {
+        stars.push(<FaStar key={i} className="star full-star" />);
+      } else if (i - 0.5 <= rating) {
+        stars.push(<FaStarHalfAlt key={i} className="star half-star" />);
+      } else {
+        stars.push(<FaRegStar key={i} className="star empty-star" />);
+      }
+    }
+    return stars;
+  };
+
+  if (!food) {
+    return <div className="food-detail">Món ăn không tồn tại.</div>;
+  }
+
   return (
     <div className="food-detail">
-            {/* Nút quay lại */}
-            <button className="back-button" onClick={() => navigate(-1)}>
+      {/* Nút quay lại */}
+      <button className="back-button" onClick={() => navigate(-1)}>
         &#8592; Quay lại Menu
       </button>
       <div className="food-container">
@@ -64,23 +88,26 @@ if (!food) {
             {renderStars(averageRating)}
             <span className="rating-score">({averageRating.toFixed(1)})</span>
           </div>
+
           {/* Số lượng */}
-          <div className="quantity">
-            <span>Số lượng:</span>
-            <button>-</button>
-            <input type="text" value="1" readOnly />
-            <button>+</button>
+          <div className="quantity-control">
+            <span></span>
           </div>
 
           {/* Nút mua */}
           <div className="buttons">
-            <button className="add-to-cart">THÊM VÀO GIỎ</button>
-            <button className="buy-now">MUA NGAY</button>
+            <button className="add-to-cart" onClick={() => addToCart(food)}>
+              THÊM VÀO GIỎ
+            </button>
+            <button className="buy-now" onClick={handleBuyNow}>
+              Mua ngay
+            </button>
           </div>
-
           {/* Mã giảm giá */}
           <div className="discount">
-            <button className="discount-btn">CLICK VÀO ĐÂY ĐỂ NHẬN ƯU ĐÃI</button>
+            <button className="discount-btn">
+              CLICK VÀO ĐÂY ĐỂ NHẬN ƯU ĐÃI
+            </button>
           </div>
         </div>
       </div>
