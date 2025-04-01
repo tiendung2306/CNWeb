@@ -85,3 +85,23 @@ button:hover {
 .edit-form button {
   margin: 10px 5px;
 }
+
+/* <div className="order-history">
+        <h3>Lịch sử đặt hàng của bạn:</h3>
+        {currentUser.orders && currentUser.orders.length > 0 ? (
+          <ul>
+            {currentUser.orders.map((order) => (
+              <li key={order.id}>
+                <strong>Đơn hàng {order.id}</strong>
+                <ul>
+                  {order.items.map((item) => (
+                    <li key={item.id}>{item.name} x {item.quantity}</li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>Không có đơn hàng nào.</p>
+        )}
+      </div> */

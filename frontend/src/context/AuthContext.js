@@ -8,32 +8,32 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
 
   // Hàm fetch user từ API nếu có token
-  const fetchUser = async (authToken) => {
+  const fetchUser = async (authToken = token) => {
+    if (!authToken) return;
     try {
-      const response = await fetch("http://localhost:5000/api/users/me", {
+      const response = await fetch("http://localhost:3000/api/me", {
         method: "GET",
-        headers: { Authorization: `Bearer ${authToken}` },
+        headers: { "x-token": authToken }, // Sửa lỗi truyền token
       });
-
-      if (!response.ok) {
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data.user);
+        setIsLoggedIn(true);
+        localStorage.setItem("user", JSON.stringify(data.user));
+      } else {
         logout();
-        return;
       }
-
-      const data = await response.json();
-      setUser(data.user);
-      setIsLoggedIn(true);
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu user:", error);
     }
   };
 
-  // Kiểm tra localStorage khi mở trang
+  // Kiểm tra token khi mở trang
   useEffect(() => {
     if (token) {
       fetchUser(token);
     }
-  }, [token]);
+  }, [token]); // Đảm bảo gọi lại khi token thay đổi
 
   const login = (userInfo, authToken) => {
     setIsLoggedIn(true);
@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }) => {
     setToken(authToken);
     localStorage.setItem("user", JSON.stringify(userInfo));
     localStorage.setItem("token", authToken);
+    fetchUser(authToken); // Gọi fetch ngay khi đăng nhập
   };
 
   const logout = () => {
