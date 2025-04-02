@@ -1,0 +1,47 @@
+service: cnweb-backend
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'ap-southeast-1'}
+  environment:
+    NODE_ENV: development
+    DB_HOST: DB_HOST
+    DB_USER: admin
+    DB_PASS: DB_PASS
+    DB_NAME: cnweb
+    DB_DIALECT: mysql
+    DB_PORT: 3306
+    APP_HOST: localhost
+    APP_PORT: 3000
+    SECRET: adasxovnklnqklnkjdsankdnw
+    IS_GOOGLE_AUTH_ENABLE: false
+    GOOGLE_CAPTCHA_SECRET_CLIENT: secret
+    GOOGLE_CAPTCHA_SECRET_SERVER: secret
+    GOOGLE_CAPTCHA_URL: https://www.google.com/recaptcha/api/siteverify
+    VNP_TMNCODE: VNP_TMNCODE
+    VNP_HASHSECRET: VNP_HASHSECRET
+    VNP_URL: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+    VNP_RETURN_URL: http://localhost:3000/api/vnpay/return
+    VNP_API_URL: https://sandbox.vnpayment.vn/merchant_webapi/api/transaction
+
+functions:
+  app:
+    handler: index.handler
+    events:
+      - http:
+          path: /
+          method: ANY
+      - http:
+          path: /{proxy+}
+          method: ANY
+    timeout: 30
+    memorySize: 512
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    port: 3000

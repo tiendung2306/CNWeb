@@ -40,3 +40,13 @@ export const deletePayment = {
         id: Joi.number().required(),
     }),
 }
+
+export const createPaymentVNPAY = {
+    body: Joi.object({
+        amount: Joi.number().required(),
+        bankCode: Joi.number(),
+        orderDescription: Joi.string().required(),
+        orderType: Joi.string().required(),
+        language: Joi.string(),
+    })
+}

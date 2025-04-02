@@ -36,6 +36,9 @@ router.route('/order/user/:id')
 router.route('/payment')
   .post(validate(paymentValidator.createPayment), paymentController.createPayment);
 
+router.route('/payment/createPaymentVNPAY')
+  .post(validate(paymentValidator.createPaymentVNPAY), paymentController.createPaymentVNPAY);
+
 router.route('/payment/:id')
   .get(validate(paymentValidator.getPaymentById), paymentController.getPaymentById)
   .patch(validate(paymentValidator.updatePayment), paymentController.updatePayment)
