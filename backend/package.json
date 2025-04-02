@@ -31,6 +31,7 @@
     "cluster": "^0.7.7",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "dateformat": "^3.0.0",
     "dotenv": "^8.0.0",
     "express": "^4.16.4",
     "express-joi-validator": "^2.0.1",
@@ -48,6 +49,7 @@
     "sequelize-cli": "^5.4.0"
   },
   "devDependencies": {
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "babel-jest": "^24.8.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",

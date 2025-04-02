@@ -9,5 +9,5 @@
       }
     ]
   ],
-  "plugins": ["@babel/plugin-proposal-object-rest-spread", "@babel/transform-runtime"]
+  "plugins": ["@babel/plugin-proposal-object-rest-spread", "@babel/transform-runtime", "@babel/plugin-syntax-dynamic-import"]
 }
