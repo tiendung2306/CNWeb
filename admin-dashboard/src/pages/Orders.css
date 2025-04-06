@@ -1,0 +1,49 @@
+/* src/Orders.css */
+
+/* Container for the orders page */
+.orders-container {
+    padding: 24px;
+  }
+  
+  /* Title of the page */
+  .orders-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2d3748; /* text-gray-800 */
+  }
+  
+  /* Table styles */
+  .orders-table {
+    width: 100%;
+    margin-top: 16px;
+    border-collapse: collapse;
+  }
+  
+  .table-header {
+    padding: 12px;
+    text-align: left;
+    background-color: #f1f1f1; /* Light gray */
+    border: 1px solid #ddd;
+    color: #2d3748;
+  }
+  
+  .table-cell {
+    padding: 12px;
+    border: 1px solid #ddd;
+    color: #2d3748;
+  }
+  
+  /* Button to confirm order delivery */
+  .confirm-button {
+    background-color: #38a169; /* Green background */
+    color: rgb(9, 9, 9);
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .confirm-button:hover {
+    background-color: #2f855a; /* Darker green on hover */
+  }
+  

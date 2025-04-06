@@ -15,16 +15,18 @@ export const AuthProvider = ({ children }) => {
         method: "GET",
         headers: { "x-token": authToken }, // Sửa lỗi truyền token
       });
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
-        setIsLoggedIn(true);
-        localStorage.setItem("user", JSON.stringify(data.user));
+      const data = await response.json();
+      console.log("Fetched user data: ", data); // Debugging
+      if (data.success) {
+        setUser(data.data); // Đảm bảo set lại user
+        setIsLoggedIn(true); // Đảm bảo thay đổi trạng thái login
+        localStorage.setItem("user", JSON.stringify(data.data));
       } else {
         logout();
       }
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu user:", error);
+      logout(); // Nếu có lỗi, logout
     }
   };
 
@@ -32,6 +34,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (token) {
       fetchUser(token);
+    } else {
+      setIsLoggedIn(false); // Nếu không có token, logout
     }
   }, [token]); // Đảm bảo gọi lại khi token thay đổi
 

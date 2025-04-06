@@ -1,4 +1,9 @@
 /* Profile.css */
+.profile-info {
+  display: block !important;
+  visibility: visible !important;
+  color: black !important;
+}
 
 .profile-container {
   width: 80%;

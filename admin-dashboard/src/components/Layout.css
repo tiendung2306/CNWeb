@@ -1,0 +1,65 @@
+/* src/Layout.css */
+
+/* General layout */
+.layout-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f7fafc; /* background-gray-100 */
+  }
+  
+  /* Sidebar styling */
+  .sidebar {
+    width: 250px;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
+  .sidebar-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
+  
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .sidebar-link {
+    color: #2d3748; /* text-gray-800 */
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .sidebar-link:hover {
+    color: #3182ce; /* text-blue-600 */
+  }
+  
+  .logout-button {
+    margin-top: 32px;
+    color: #e53e3e; /* text-red-500 */
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+  
+  .logout-button:hover {
+    color: #c53030; /* dark red on hover */
+  }
+  
+  /* Main content area */
+  .main-content {
+    flex-grow: 1;
+    padding: 24px;
+  }
+  
+  .user-greeting {
+    font-size: 14px;
+    color: #6b7280; /* text-gray-500 */
+    margin-bottom: 16px;
+  }
+  

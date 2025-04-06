@@ -1,82 +1,77 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; // Import useAuth từ context
 import LoginModal from "../components/LoginModal";
 import "./Profile.css";
 
 const Profile = () => {
-  const { user, logout, login } = useAuth(); 
-  const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(user || { name: "", email: "", phone: "", address: "" });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedUser, setEditUser] = useState(currentUser);
-
+  const navigate = useNavigate();
+  const { user, logout, isLoggedIn } = useAuth(); // Lấy dữ liệu từ AuthContext
+  console.log("AuthContext:", { user, isLoggedIn });
+  // Kiểm tra người dùng đã đăng nhập chưa
   useEffect(() => {
-    if (user) {
-      setCurrentUser(user);
-      setEditUser(user);
+    if (!isLoggedIn) {
+      navigate("/"); // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+    } else {
+      setLoading(false); // Đã đăng nhập, không cần tải lại dữ liệu
     }
+  }, [isLoggedIn, navigate]);
+
+  // Debugging: Log dữ liệu người dùng để kiểm tra
+  useEffect(() => {
+    console.log("User data in Profile: ", user);
+  }, [user]);
+  useEffect(() => {
+    console.log("Profile component re-rendered với user:", user);
   }, [user]);
 
-  const handleEditChange = (e) => {
-    setEditUser((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value || "",
-    }));    
+  const handleLogout = () => {
+    logout(); // Gọi hàm logout từ AuthContext
+    setLoading(false); // Dừng loading sau khi logout
+    navigate("/"); // Chuyển hướng về trang chủ sau khi đăng xuất
   };
 
-  const handleSave = () => {
-    setCurrentUser(editedUser);
-    setIsEditing(false);
-  };
+  if (loading) return <p>Đang tải dữ liệu...</p>;
+  if (error) return <p>{error}</p>;
+  console.log("User condition check:", !user);
 
   return (
     <div className="profile-container">
       <h2>Hồ sơ cá nhân</h2>
+      <pre>{JSON.stringify(user, null, 2)}</pre>
 
-      {!currentUser?.name ? (
+      {user ? (
         <>
-          <p>Bạn chưa đăng nhập.</p>
-          <button onClick={() => setShowLoginModal(true)} className="login-btn">
-            Đăng nhập ngay
-          </button>
-          {showLoginModal && (
-            <LoginModal isVisible={showLoginModal} onClose={() => setShowLoginModal(false)} />
-          )}
-        </>
+        <div className="profile-user">
+          <div className="profile-image">
+            {/* Hiển thị avatar nếu có */}
+            {user.avatar ? (
+              <img src={user.avatar} alt="Avatar" className="profile-avatar" />
+            ) : (
+              <i className="fas fa-user-circle default-avatar-icon"></i>
+            )}
+          </div>
+          <div className="profile-info">
+            {/* Đảm bảo lấy thông tin đúng từ user */}
+            <p><strong>Tên:</strong> {user?.username ? user.username : "Dữ liệu chưa cập nhật"}</p>
+<p><strong>Email:</strong> {user?.email ? user.email : "Dữ liệu chưa cập nhật"}</p>
+<p><strong>Số điện thoại:</strong> {user?.phone ? user.phone : "Dữ liệu chưa cập nhật"}</p>
+<p><strong>Địa chỉ:</strong> {user?.address ? user.address : "Dữ liệu chưa cập nhật"}</p>
+
+          </div>
+        </div>
+
+        <button className="logout-btn" onClick={handleLogout}>
+          Đăng xuất
+        </button>
+      </>
+        
       ) : (
         <>
-          {isEditing ? (
-            <div className="edit-form">
-              <input type="text" name="name" value={editedUser.name} onChange={handleEditChange} />
-              <input type="email" name="email" value={editedUser.email} onChange={handleEditChange} />
-              <input type="text" name="phone" value={editedUser.phone} onChange={handleEditChange} />
-              <button onClick={handleSave}>Lưu</button>
-              <button onClick={() => setIsEditing(false)}>Hủy</button>
-            </div>
-          ) : (
-            <div className="profile-user">
-              <div className="profile-image">
-                {currentUser.avatar ? (
-                  <img src={currentUser.avatar} alt="Avatar" className="profile-avatar" />
-                ) : (
-                  <i className="fas fa-user-circle default-avatar-icon"></i>
-                )}
-              </div>
-              <div className="profile-info">
-                <p><strong>Tên:</strong> {currentUser.name}</p>
-                <p><strong>Email:</strong> {currentUser.email}</p>
-                <p><strong>Số điện thoại:</strong> {currentUser.phone || "Chưa cập nhật"}</p>
-                <p><strong>Địa chỉ:</strong> {currentUser.address || "Chưa cập nhật"}</p>
-                <button onClick={() => setIsEditing(true)}>Chỉnh sửa</button>
-              </div>
-            </div>
-          )}
-          
-          <button className="logout-btn" onClick={() => { logout(); navigate("/"); }}>
-            Đăng xuất
-          </button>
+          <p>Không có dữ liệu người dùng.</p>
         </>
       )}
     </div>

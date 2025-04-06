@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Home from "./components/Home.js"; // Trang chủ
 import FoodDetail from "./components/FoodDetail.js"; // TRang chi tiết món ăn
-// import Home from "./components/Home.js"; // Trang chủ
 import Menu from "./components/Menu.js"; // Trang thực đơn
 import Header from "./components/Headers.js"; // Thanh điều hướng
 import Review from "./components/Review.js"; // Trang đánh giá
@@ -18,7 +18,7 @@ function App() {
     <Router>
       <Header />
       <Routes>
-        {/* <Route path="/" element={<Home />} /> */}
+        <Route path="/" element={<Home />} /> 
         <Route path="/menu" element={<Menu />} />
         <Route path="/food/:id" element={<FoodDetail />} />
         <Route path="/review/:id" element={<Review />} />

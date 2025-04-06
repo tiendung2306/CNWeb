@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext"; // Import useAuth
+import axios from "axios"; // Import axios
 import "./LoginForm.css";
 
 function LoginForm({ onSwitch }) {
@@ -10,18 +11,23 @@ function LoginForm({ onSwitch }) {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://localhost:3000/pub/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      // Gửi yêu cầu đăng nhập tới backend
+      const response = await axios.post("http://localhost:3000/pub/login", {
+        email,
+        password,
       });
 
-      const data = await response.json();
-      if (!data.success) {
-        setError(data.errorMessage || "Đăng nhập thất bại");
-      } else {
-        login(data.data.user, data.data.token); // Gọi login() từ AuthContext
+      if (response.data.success) {
+        // Nếu đăng nhập thành công, lưu thông tin người dùng và token
+        login(response.data.data.user, response.data.data.token); // Gọi login() từ AuthContext
+
+        // Lưu token vào localStorage
+        localStorage.setItem("token", response.data.data.token);
+
         alert("Đăng nhập thành công!");
+      } else {
+        // Nếu đăng nhập không thành công
+        setError(response.data.errorMessage || "Đăng nhập thất bại");
       }
     } catch (err) {
       setError("Lỗi kết nối đến server!");
