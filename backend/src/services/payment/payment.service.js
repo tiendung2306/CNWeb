@@ -88,10 +88,11 @@ const createPaymentVNPAY = async (req, res) => {
     var vnpUrl = config.vnp_Url;
     var returnUrl = config.vnp_ReturnUrl;
 
-    var date = new Date();
-    
-    var createDate = dateFormat(date, 'yyyymmddHHmmss');
-    var orderId = dateFormat(date, 'HHmmss');
+    const moment = require("moment-timezone");
+
+    const createDate = moment().tz("Asia/Ho_Chi_Minh").format("YYYYMMDDHHmmss");
+
+    var orderId = moment(createDate, "YYYYMMDDHHmmss").format("HHmmss");
     var amount = req.body.amount;
     var bankCode = req.body.bankCode;
     
