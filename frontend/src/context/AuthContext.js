@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
@@ -16,7 +16,8 @@ export const AuthProvider = ({ children }) => {
         headers: { "x-token": authToken }, // Sửa lỗi truyền token
       });
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()).data;
+        console.log("Dữ liệu user:", data.user);
         setUser(data.user);
         setIsLoggedIn(true);
         localStorage.setItem("user", JSON.stringify(data.user));
