@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginModal from "../components/LoginModal";
+import { useAuth } from "../context/AuthContext";
 import "./Profile.css";
 
 const Profile = () => {
-  const { user, logout, login } = useAuth(); 
+  const { user, logout, login } = useAuth();
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(user || { name: "", email: "", phone: "", address: "" });
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -23,7 +23,7 @@ const Profile = () => {
     setEditUser((prev) => ({
       ...prev,
       [e.target.name]: e.target.value || "",
-    }));    
+    }));
   };
 
   const handleSave = () => {
@@ -35,7 +35,7 @@ const Profile = () => {
     <div className="profile-container">
       <h2>Hồ sơ cá nhân</h2>
 
-      {!currentUser?.name ? (
+      {!currentUser?.username ? (
         <>
           <p>Bạn chưa đăng nhập.</p>
           <button onClick={() => setShowLoginModal(true)} className="login-btn">
@@ -73,7 +73,7 @@ const Profile = () => {
               </div>
             </div>
           )}
-          
+
           <button className="logout-btn" onClick={() => { logout(); navigate("/"); }}>
             Đăng xuất
           </button>
