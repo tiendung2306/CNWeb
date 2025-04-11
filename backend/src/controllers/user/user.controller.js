@@ -7,7 +7,7 @@ import { successResponse, errorResponse, uniqueId } from '../../helpers';
 export const allUsers = async (req, res) => {
   try {
     const page = req.params.page || 1;
-    const limit = 2;
+    const limit = req.params.limit || 10;
     const users = await User.findAndCountAll({
       order: [['createdAt', 'DESC'], ['username', 'ASC']],
       offset: (page - 1) * limit,

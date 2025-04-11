@@ -2,7 +2,6 @@
   "name": "express-sequelize-api-boilerplate",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "jest",
