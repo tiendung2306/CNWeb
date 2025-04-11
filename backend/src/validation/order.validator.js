@@ -21,21 +21,27 @@ export const getOrderById = {
     }),
 };
 
+export const getOrderByUserId = {
+    params: Joi.object({
+        id: Joi.number().required(),
+    }),
+};
+
 export const updateOrder = {
     params: Joi.object({
         id: Joi.number().required(),
     }),
     body: Joi.object({
-        userId: Joi.number().required(),
-        totalAmount: Joi.number().min(0).required(),
+        userId: Joi.number(),
+        totalAmount: Joi.number().min(0),
         status: Joi.string().valid('Pending', 'Preparing', 'Delivering', 'Completed'),
         orderDate: Joi.date(),
-        deliveryAddress: Joi.string().required(),
+        deliveryAddress: Joi.string(),
         orderItems: Joi.array().items(Joi.object({
-            menuItemId: Joi.number().required(),
-            quantity: Joi.number().min(1).required(),
-            price: Joi.number().min(0).required(),
-        })).required(),
+            menuItemId: Joi.number(),
+            quantity: Joi.number().min(1),
+            price: Joi.number().min(0),
+        })),
     }),
 };
 

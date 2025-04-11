@@ -28,11 +28,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   
   OrderItem.associate = function(models) {
-    // Liên kết với bảng Orders
-    OrderItem.belongsTo(models.Order, { foreignKey: 'orderId' });
-    
-    // Liên kết với bảng MenuItems
-    OrderItem.belongsTo(models.MenuItem, { foreignKey: 'menuItemId' });
+    OrderItem.belongsTo(models.Order, { foreignKey: 'orderId', as: 'order' });
+    OrderItem.belongsTo(models.MenuItem, { foreignKey: 'menuItemId', as: 'menuItem' });
   };
   
   return OrderItem;

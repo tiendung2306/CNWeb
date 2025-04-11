@@ -1,0 +1,202 @@
+/* Định dạng toàn bộ menu */
+.menu-container {
+    max-width: 100%; /* Tăng chiều rộng tổng thể */
+    margin: 30px auto;
+    font-family: "Arial", sans-serif;
+}
+
+/* Tiêu đề */
+.menu-title {
+    text-align: center;
+    font-size: 32px; /* Tăng kích thước tiêu đề */
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+/* Danh sách món ăn */
+.menu-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+}
+
+/* Mỗi món ăn */
+.menu-item {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    width: 700px; /* Tăng kích thước khung */
+    height: 200px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 3px solid #f5f5f5;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Hiệu ứng hover */
+.menu-item:hover {
+    transform: scale(1.05);
+    border-color: #d4af37;
+}
+
+/* Nội dung món ăn */
+.menu-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Hình ảnh món ăn */
+.menu-image {
+    width: 130px;  /* Tăng kích thước ảnh */
+    height: 130px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+/* Thông tin món ăn */
+.menu-info {
+    flex-grow: 1;
+}
+
+/* Tên món ăn */
+.menu-name {
+    font-size: 22px;  /* Tăng kích thước chữ */
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+/* Mô tả món ăn */
+.menu-description {
+    font-size: 16px; /* Tăng kích thước chữ */
+    color: #666;
+    margin-bottom: 8px;
+}
+ /*button*/
+ .menu-add-to-cart {
+    background: #d3c288;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+ }
+ .menu-add-to-cart:hover {
+    background: #8c5a39;
+ }
+/* Link xem chi tiết */
+.menu-link {
+    text-decoration: none;
+    color: #d4af37;
+    font-weight: bold;
+    font-size: 16px;
+    margin-left: 20px;
+}
+
+.menu-link:hover {
+    text-decoration: underline;
+}
+
+/* Giá tiền */
+.menu-price {
+    background: #d4af37;
+    color: white;
+    font-size: 25px; /* Tăng kích thước giá */
+    font-weight: bold;
+    padding: 12px 40px;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 90px;
+    transform: rotate(-90deg);
+    position: absolute;
+    right: -40px;
+    top: 38%;
+    width: 100px;
+    transform-origin: center;
+}
+
+/* high-line */
+.menu-high-line {
+    margin: 20px 0;
+    padding: 10px;
+    background-color: #ffefc1;
+    border-radius: 10px;
+    text-align: center;
+  }
+  
+  .menu-high-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #d35400;
+    margin-bottom: 10px;
+  }
+  
+  .menu-high-list {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .menu-high-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .menu-high-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  
+  .menu-high-name {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 5px;
+  }
+/* selection */
+.menu-selection {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Tăng khoảng cách giữa các nút */
+    margin-bottom: 25px;
+  }
+  
+  .menu-selection-button {
+    padding: 12px 20px; /* Tăng kích thước nút */
+    border: none;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    border-radius: 8px; /* Bo góc mềm mại hơn */
+    transition: 0.3s;
+    font-weight: bold;
+    color: #444141;
+    font-size: 18px; /* Tăng kích thước chữ */
+  }
+  
+  .menu-selection-button:hover {
+    background-color: #ffcc66;
+  }
+  
+  .menu-selection-button.active {
+    background-color: #ff9900;
+    color: white;
+    transform: scale(1.05); /* Hiệu ứng phóng to nhẹ khi chọn */
+  }
+  
+  .menu-no-item {
+    text-align: center;
+    font-size: 18px; /* Tăng kích thước chữ */
+    color: gray;
+    font-weight: bold;
+  }
+  

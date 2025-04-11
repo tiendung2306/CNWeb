@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('Cash', 'Momo'),
       allowNull: false,
     },
-    amount: {
+    amount: { //so tien can thanh toan
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
   Payment.associate = function(models) {
-    Payment.belongsTo(models.Order, { foreignKey: 'orderId' });
+    Payment.belongsTo(models.Order, { foreignKey: 'orderId', as: 'order' });
   };
   return Payment;
 };
