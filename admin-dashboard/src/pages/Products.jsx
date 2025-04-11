@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Products.css";
-
-const API_PUBLIC = "http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/pub/menuitems";
-const API_ADMIN = "http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/menuitems";
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const API_PUBLIC = `${BASE_URL}/pub/menuitems`;
+const API_ADMIN = `${BASE_URL}/api/admin/menuitems`;
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -14,7 +14,7 @@ export default function Products() {
   const [newCategory, setNewCategory] = useState("");
   const [editId, setEditId] = useState(null);
   const [editForm, setEditForm] = useState({});
-
+  
   const token = localStorage.getItem("token");
 
   useEffect(() => {

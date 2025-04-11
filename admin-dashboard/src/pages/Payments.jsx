@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Payments.css";
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export default function Payments() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+ 
 
   const token = localStorage.getItem("token");
 
   const fetchPayments = async () => {
     try {
-      const res = await axios.get("http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/payment", {
+      const res = await axios.get(`${BASE_URL}/api/admin/payment` , {
         headers: {
           "x-token": token,
         },
@@ -28,7 +30,7 @@ export default function Payments() {
   const handleDelete = async (id) => {
     if (!window.confirm("Bạn có chắc chắn muốn xóa giao dịch này không?")) return;
     try {
-      await axios.delete(`http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/payment/${id}`, {
+      await axios.delete(`${BASE_URL}/api/admin/payment/${id}`, {
         headers: {
           "x-token": token,
         },

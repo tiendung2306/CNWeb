@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Orders.css";
 
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -16,7 +18,7 @@ export default function Orders() {
     setError(null);
     try {
       const response = await axios.get(
-        "http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/order",
+        `${BASE_URL}/api/admin/orders`,
         {
           headers: {
             "x-token": token,
@@ -35,7 +37,7 @@ export default function Orders() {
   const handleChangeStatus = async (id, newStatus) => {
     try {
       await axios.put(
-        `http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/orders/${id}`,
+        `${BASE_URL}/api/admin/orders/${id}/status`,
         {
           status: newStatus,
         },

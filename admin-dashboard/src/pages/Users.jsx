@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Users.css";
 
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +14,7 @@ export default function Users() {
   const fetchUsers = async () => {
     try {
       const res = await axios.get(
-        "http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/allUsers?limit=1000&offset=0",
+        `${BASE_URL}/api/admin/allUsers`,
         {
           headers: {
             "x-token": token,
@@ -37,7 +39,7 @@ export default function Users() {
   const handleRoleChange = async (id, newRole) => {
     try {
       await axios.put(
-        `http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/allUsers/${id}`,
+        `${BASE_URL}/api/admin/allUsers/${id}/role`,
         { role: newRole },
         {
           headers: {
@@ -61,7 +63,7 @@ export default function Users() {
       return;
     try {
       await axios.delete(
-        `http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/allUsers/${id}`,
+        `${BASE_URL}/api/admin/allUsers/${id}`,
         {
           headers: {
             "x-token": token,
