@@ -1,6 +1,10 @@
 import React from 'react';
 import './Footer.css'; // Import file CSS
-
+import facebookIcon from '../../assets/icons/facebook.png';
+import twitterIcon from '../../assets/icons/twitter.png';
+import instagramIcon from '../../assets/icons/instagram.png';
+import googleIcon from '../../assets/icons/google.png';
+import youtubeIcon from '../../assets/icons/youtube.png';
 const Footer = () => {
     return (
         <div className="footer-container">
@@ -23,11 +27,11 @@ const Footer = () => {
                 <div className="social-section">
                     <h3>Kết nối với chúng tôi</h3>
                     <div className="social-icons">
-                        <a href="#" className="social-icon"><img src="path/to/facebook-icon.png" alt="Facebook" /></a>
-                        <a href="#" className="social-icon"><img src="path/to/twitter-icon.png" alt="Twitter" /></a>
-                        <a href="#" className="social-icon"><img src="path/to/instagram-icon.png" alt="Instagram" /></a>
-                        <a href="#" className="social-icon"><img src="path/to/google-icon.png" alt="Google" /></a>
-                        <a href="#" className="social-icon"><img src="path/to/youtube-icon.png" alt="YouTube" /></a>
+                        <a href="#" className="social-icon"><img src={facebookIcon} alt="Facebook" /></a>
+                        <a href="#" className="social-icon"><img src={twitterIcon} alt="Twitter" /></a>
+                        <a href="#" className="social-icon"><img src={instagramIcon} alt="Instagram" /></a>
+                        <a href="#" className="social-icon"><img src={googleIcon} alt="Google" /></a>
+                        <a href="#" className="social-icon"><img src={youtubeIcon} alt="YouTube" /></a>
                     </div>
                 </div>
             </div>

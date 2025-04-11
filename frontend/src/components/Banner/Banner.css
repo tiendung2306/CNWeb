@@ -39,14 +39,17 @@
 
 .text-overlay h2 {
     font-size: 60px;
+    color: white;
 }
 
 .text-overlay h1 {
     font-size: 80px;
+    color: white;
 }
 
 .text-overlay p {
     font-size: 20px;
+    color: white;
 }
 
 .bottom-section {

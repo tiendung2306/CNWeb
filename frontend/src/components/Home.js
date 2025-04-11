@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext"; // Import useAuth từ context
 import LoginModal from "../components/LoginModal";
+import Home from "../page/home/Home";
 
 
 const Profile = () => {
@@ -73,6 +74,7 @@ const Profile = () => {
           </button>
         </>
       )}
+
     </div>
   );
 };

@@ -28,7 +28,7 @@ const Banner = () => {
                     className="mySwiper"
                 >
                     <SwiperSlide className='swiperSlide'>
-                        <img src={banner1} alt="" />
+                        <img src={"https://theme.hstatic.net/200000915839/1001276949/14/home_banner_3_img.jpg?v=1518"} alt="" />
                         <div className='text-overlay'>
                             <h2>Khuyến mãi khai trương</h2>
                             <h1>Tất cả sản phẩm tại<br /> quán & Online </h1>

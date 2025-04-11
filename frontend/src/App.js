@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./components/Home.js"; // Trang chủ
+// import Home from "./components/Home.js"; 
+import Home from "./page/home/Home.jsx";// Trang chủ
 import FoodDetail from "./components/FoodDetail.js"; // Trang chi tiết món ăn
 import Menu from "./components/Menu.js"; // Trang thực đơn
 import Footer from "./components/Footer.js"; // Footer từ nhánh develop
@@ -9,6 +10,7 @@ import Review from "./components/Review.js"; // Trang đánh giá
 import { AuthProvider } from "./context/AuthContext.js";
 import { CartProvider } from "./context/CartContext";
 import Cart from "./pages/Cart.js"; // Trang giỏ hàng
+import ListUserOrder from './page/listUserOrder/ListUserOrder.jsx'
 import CheckoutPage from "./pages/CheckoutPage.js";
 import Profile from "./pages/Profile.js";
 
@@ -26,6 +28,7 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/history" element={<ListUserOrder />} />
           </Routes>
           <Footer />
         </Router>

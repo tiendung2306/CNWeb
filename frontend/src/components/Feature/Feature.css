@@ -42,7 +42,10 @@
 }
 
 .read-more-link {
-    display: inline-block;
+    direction: ltr;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 10px 20px;
     background-color: #e0e0e0;
     color: #333;
