@@ -72,6 +72,15 @@ const deletePayment = async (req, res) => {
     }
 }
 
+const createPaymentVNPAY = async (req, res) => {
+    try {
+        const vnpUrl = await paymentService.createPaymentVNPAY(req, res);
+        res.json({vnpUrl});
+    } catch(error) {
+        return errorResponse(req, res, error.message);
+    }
+}
+
 module.exports = {
     createPayment,
     getAllPayments,
@@ -79,4 +88,5 @@ module.exports = {
     getPaymentByUserId,
     updatePayment,
     deletePayment,
+    createPaymentVNPAY,
 };

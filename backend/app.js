@@ -23,6 +23,11 @@ app.use(
 
 app.use(cors());
 app.use(bodyParser.json());
+
+app.get ('/health', (req, res) => {
+  res.json({statusCode: 200, body: JSON.stringify({ message: "Server is healthy" })});
+});
+
 app.use('/pub', publicRoutes);
 app.use('/api', apiMiddleware, apiRoutes);
 app.use('/api/admin', apiMiddleware, adminMiddleware, adminRoutes);

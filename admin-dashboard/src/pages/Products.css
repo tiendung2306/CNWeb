@@ -1,0 +1,130 @@
+/* Container */
+.products-container {
+  padding: 24px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Title */
+.products-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+/* Add Product Form */
+.add-product-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.add-product-form input {
+  padding: 8px 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  min-width: 200px;
+  background-color: #f1f1f1;
+  color: #000;
+}
+
+/* Add Button */
+.btn-add-product {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-add-product:hover {
+  background-color: #45a049;
+}
+
+/* Table */
+.products-table {
+  width: 100%;
+  margin-top: 16px;
+  border-collapse: collapse;
+  color:#718096;
+  border: 1px solid #ccc;
+}
+
+.table-header {
+  padding: 12px;
+  text-align: left;
+  background-color: #f1f1f1;
+  border: 1px solid #666666;
+}
+
+.table-cell {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Image */
+.products-table img {
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+/* Buttons - Shared Styles */
+button {
+  padding: 6px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0 2px;
+  transition: background-color 0.2s ease;
+}
+
+/* Edit Button */
+.btn-edit {
+  background-color: #ecc94b;
+  color: #fff;
+}
+
+.btn-edit:hover {
+  background-color: #d69e2e;
+}
+
+/* Delete Button */
+.btn-delete {
+  background-color: #e53e3e;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #c53030;
+}
+
+/* Save & Cancel Buttons */
+.btn-save {
+  background-color: #38a169;
+  color: white;
+}
+
+.btn-save:hover {
+  background-color: #2f855a;
+}
+
+.btn-cancel {
+  background-color: #718096;
+  color: white;
+}
+
+.btn-cancel:hover {
+  background-color: #4a5568;
+}

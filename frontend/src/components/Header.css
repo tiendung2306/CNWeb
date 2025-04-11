@@ -1,26 +1,27 @@
 /* ========== Header ========== */
 .header-wrap {
   background-color: #f8f8f8;
-  padding: 20px 0; /* Increased padding for a larger appearance */
+  padding: 15px 0;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1600px; /* Increased width to make it longer */
-  width: 95%; /* Ensures better responsiveness */
+  max-width: 1400px;
+  width: 90%;
   margin: 0 auto;
 }
 
 .header-logo__link i {
-  max-height: 70px; /* Larger logo for better visibility */
-font-size: 20px; /* Larger icon size */
+  font-size: 24px;
+  color: #333;
 }
 
+/* Menu chính */
 .header-menu {
   flex-grow: 1;
-  margin-left: 30px; /* Balanced spacing for wider layout */
+  margin-left: 40px;
 }
 
 .header-menu-list {
@@ -31,14 +32,14 @@ font-size: 20px; /* Larger icon size */
 }
 
 .header-menu-item {
-  margin-left: 25px; /* Increased spacing between menu items */
+  margin-left: 30px;
 }
 
 .header-menu__link {
   text-decoration: none;
   color: #333;
-  font-weight: bold;
-  font-size: 18px; /* Larger font size */
+  font-weight: 600;
+  font-size: 17px;
   transition: color 0.3s ease;
 }
 
@@ -46,6 +47,7 @@ font-size: 20px; /* Larger icon size */
   color: #007bff;
 }
 
+/* ========== Hành động (icon, tài khoản, giỏ hàng) ========== */
 .header-wrap-action {
   display: flex;
   align-items: center;
@@ -53,10 +55,12 @@ font-size: 20px; /* Larger icon size */
 
 .header-action {
   display: flex;
+  gap: 20px;
+  align-items: center; /* Căn giữa theo chiều dọc */
+
 }
 
 .header-action-item {
-  margin-left: 25px; /* Adjusted spacing for larger layout */
   position: relative;
 }
 
@@ -65,7 +69,7 @@ font-size: 20px; /* Larger icon size */
   align-items: center;
   text-decoration: none;
   color: #333;
-  font-size: 18px; /* Larger font size */
+  font-size: 18px;
   transition: color 0.3s ease;
 }
 
@@ -74,58 +78,117 @@ font-size: 20px; /* Larger icon size */
 }
 
 .header-action-item .fa-solid {
-  font-size: 24px; /* Larger icon size */
-  margin-right: 5px;
+  font-size: 22px;
 }
 
+/* ========== Hotline ========== */
 .header-action_hotline span {
   color: #ff0000;
   font-weight: bold;
-  font-size: 20px; /* Increased font size for emphasis */
+  font-size: 18px;
 }
 
 /* ========== Giỏ hàng ========== */
 .header-action_cart .count-holder {
-  min-width: 25px; /* Larger counter */
-  height: 25px;
-  font-size: 14px; /* Increased font size */
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  min-width: 22px;
+  height: 22px;
+  font-size: 13px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: red;
   color: white;
   border-radius: 50%;
-  position: absolute;
-  top: -5px;
-  right: -10px;
 }
-/* thông báo */
+
+/* ========== Thông báo giỏ hàng ========== */
 .cart-notification {
   position: fixed;
   bottom: 20px;
   right: 20px;
   background-color: #4caf50;
   color: white;
-  padding: 12px 20px;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  font-size: 16px;
-  transition: opacity 0.5s ease-in-out;
+  padding: 10px 16px;
+  border-radius: 6px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  font-size: 15px;
   opacity: 1;
+  transition: opacity 0.4s ease-in-out;
   z-index: 1000;
 }
 
 .cart-notification.hidden {
   opacity: 0;
 }
-.show{
+
+/* ========== Dropdown tài khoản ========== */
+.profile-dropdown {
   position: relative;
+  display: inline-block;
 }
-.close-btn {
-  position: absolute;
-  top: 1px;
-  right: 30px;
+
+.profile-btn {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  font-size: 16px;
   cursor: pointer;
-  font-size: 20px;
-  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.3s ease;
+}
+
+.profile-menu {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  list-style: none;
+  padding: 8px 0;
+  min-width: 170px;
+  display: none;
+  z-index: 1000;
+}
+
+.profile-dropdown:hover .profile-menu {
+  display: block;
+}
+
+.profile-menu li {
+  padding: 8px 15px;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.profile-menu li:last-child {
+  border-bottom: none;
+}
+
+.profile-menu li:hover {
+  background: #f5f5f5;
+}
+
+/* Nút đăng xuất */
+.profile-menu button {
+  width: 100%;
+  padding: 8px 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: left;
+  color: #d9534f;
+  font-weight: bold;
+}
+
+.profile-menu button:hover {
+  background: #f8d7da;
 }
