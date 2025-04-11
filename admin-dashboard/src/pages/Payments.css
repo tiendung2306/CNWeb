@@ -1,0 +1,41 @@
+.payments-container {
+    padding: 24px;
+  }
+  
+  .payments-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2d3748;
+  }
+  
+  .payments-table {
+    width: 100%;
+    margin-top: 16px;
+    border-collapse: collapse;
+  }
+  
+  .payments-table th,
+  .payments-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+    color: #000;
+  }
+  
+  .payments-table th {
+    background-color: #f1f1f1;
+  }
+  
+  .btn-delete {
+    background-color: #e53e3e;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .btn-delete:hover {
+    background-color: #c53030;
+  }
+  

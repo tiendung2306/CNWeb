@@ -15,7 +15,7 @@ function RegisterForm({ onSwitch }) {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/pub/register", {
+      const response = await fetch("http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/pub/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

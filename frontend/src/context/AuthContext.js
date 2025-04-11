@@ -13,19 +13,22 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await fetch("http://localhost:3000/api/me", {
         method: "GET",
-        headers: { "x-token": authToken }, // Sửa lỗi truyền token
+        headers: { "x-token": authToken },
       });
+
       if (response.ok) {
-        const data = (await response.json()).data;
-        console.log("Dữ liệu user:", data.user);
-        setUser(data.user);
+        const data = await response.json();
+        const userData = data.data.user || data.data; // Đảm bảo tương thích 2 định dạng
+        console.log("Fetched user data: ", userData);
+        setUser(userData);
         setIsLoggedIn(true);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("user", JSON.stringify(userData));
       } else {
         logout();
       }
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu user:", error);
+      logout();
     }
   };
 
@@ -33,8 +36,10 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (token) {
       fetchUser(token);
+    } else {
+      setIsLoggedIn(false);
     }
-  }, [token]); // Đảm bảo gọi lại khi token thay đổi
+  }, [token]);
 
   const login = (userInfo, authToken) => {
     setIsLoggedIn(true);
@@ -42,7 +47,7 @@ export const AuthProvider = ({ children }) => {
     setToken(authToken);
     localStorage.setItem("user", JSON.stringify(userInfo));
     localStorage.setItem("token", authToken);
-    fetchUser(authToken); // Gọi fetch ngay khi đăng nhập
+    fetchUser(authToken);
   };
 
   const logout = () => {
