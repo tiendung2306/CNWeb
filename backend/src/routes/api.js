@@ -22,6 +22,8 @@ router.post(
   validate(userValidator.changePassword),
   userController.changePassword,
 );
+router.patch('/user/:userId', validate(userValidator.updateUserById), userController.updateUserById);
+
 router.route('/order')
   .post(validate(orderValidator.createOrder), orderController.createOrder);
 
