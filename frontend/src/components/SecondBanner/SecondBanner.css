@@ -1,0 +1,92 @@
+.bistro-west-container {
+    font-family: sans-serif;
+    color: #333;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.image-container {
+    width: 100%;
+    max-width: 800px;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hero-image {
+    width: 100%;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.hero-image:hover {
+    transform: scale(1.1);
+}
+
+.text-container {
+    text-align: left;
+    padding: 20px;
+}
+
+.text-container h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.text-container p {
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.view-more-button {
+    background-color: #c8a96a;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.stats-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 20px;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+}
+
+.stat {
+    text-align: center;
+    margin: 10px;
+}
+
+.stat-number {
+    font-size: 2em;
+    font-weight: bold;
+    display: block;
+}
+
+.stat-label {
+    display: block;
+}
+
+/* Responsive design (điều chỉnh khi cần thiết) */
+@media (min-width: 768px) {
+    .content-wrapper {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .image-container,
+    .text-container {
+        width: 48%;
+    }
+}

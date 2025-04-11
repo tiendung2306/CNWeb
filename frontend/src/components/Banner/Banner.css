@@ -1,0 +1,86 @@
+.stacked-layout {
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+.top-section {
+    top: 0;
+    height: 90vh;
+    width: 100vw;
+}
+
+.mySwiper {
+    width: 100%;
+    height: 100%;
+
+}
+
+.swiperSlide {
+    position: relative;
+}
+
+.swiperSlide img {
+    height: 100vh;
+    width: 100vw;
+
+
+}
+
+.text-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Căn giữa h2 */
+    color: white;
+    z-index: 1;
+}
+
+.text-overlay h2 {
+    font-size: 60px;
+    color: white;
+}
+
+.text-overlay h1 {
+    font-size: 80px;
+    color: white;
+}
+
+.text-overlay p {
+    font-size: 20px;
+    color: white;
+}
+
+.bottom-section {
+    position: absolute;
+    z-index: 1;
+    top: 90%;
+    padding-left: 10vw;
+    display: flex;
+    flex-direction: row;
+    gap: 5vw;
+}
+
+.food-card {
+    width: 25vw;
+    height: 60vh;
+    border: black 1px solid;
+    position: relative;
+}
+
+.food-card img {
+    width: 25vw;
+    height: 60vh;
+
+}
+
+.text-foodcard {
+    justify-content: center;
+    position: absolute;
+    z-index: 1;
+    bottom: 20px;
+    color: white;
+    left: 50%;
+    transform: translate(-50%);
+}

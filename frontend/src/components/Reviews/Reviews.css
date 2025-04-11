@@ -1,0 +1,99 @@
+.reviews-container {
+    font-family: sans-serif;
+    color: #fff;
+    background-color: #222;
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.reviews-title h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.reviews-title p {
+    font-size: 1.2em;
+    color: #aaa;
+    margin-bottom: 30px;
+}
+
+.reviews-items {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.review-item {
+    width: 400px;
+    margin: 20px;
+    background-color: #333;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: left;
+    position: relative;
+}
+
+.review-item p {
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #ddd;
+}
+
+.review-author {
+    display: flex;
+    align-items: center;
+}
+
+.review-author img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 15px;
+    object-fit: cover;
+}
+
+.review-author h3 {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+.review-author p {
+    font-size: 0.9em;
+    color: #aaa;
+}
+
+.quote-icon {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+}
+
+.quote-icon img {
+    width: 100%;
+}
+
+.reviews-dots {
+    margin-top: 30px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #aaa;
+    margin: 0 5px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.dot.active {
+    background-color: #fff;
+}
+
+/* Responsive design (điều chỉnh khi cần thiết) */
+@media (max-width: 768px) {
+    .review-item {
+        width: 90%;
+    }
+}
