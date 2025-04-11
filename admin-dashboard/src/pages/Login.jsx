@@ -1,26 +1,43 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
-import "./Login.css"; // Import CSS của bạn
+import axios from "axios";
+import "./Login.css";
+import { useAuth } from "../contexts/AuthContext"; // tùy vào nơi bạn lưu AuthContext
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); // Trạng thái loading
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth(); // Gọi login từ context
   const navigate = useNavigate();
-  const { login } = useAuth();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true); // Bắt đầu loading khi form được submit
+    setLoading(true);
+    setError("");
+
     try {
-      await login(email, password); // Gọi login với email và mật khẩu
-      navigate("/"); // Nếu đăng nhập thành công, chuyển đến trang dashboard
+      const response = await axios.post("http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/pub/login", {
+        email,
+        password,
+      });
+
+      if (response.data.success) {
+        const { user, token } = response.data.data;
+
+        localStorage.setItem("token", token);
+        login(user); // lưu user vào context
+
+        alert("Đăng nhập thành công!");
+        navigate("/"); // chuyển hướng
+      } else {
+        setError(response.data.errorMessage || "Đăng nhập thất bại");
+      }
     } catch (err) {
-      setError("Email hoặc mật khẩu không đúng");
+      setError("Lỗi kết nối đến server!");
     } finally {
-      setLoading(false); // Dừng loading sau khi hoàn tất xử lý
+      setLoading(false);
     }
   };
 
@@ -29,7 +46,7 @@ export default function Login() {
       <div className="login-box">
         <h2>Đăng nhập Admin</h2>
         {error && <div className="error-message">{error}</div>}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleLogin}>
           <div className="form-group">
             <label>Email</label>
             <input
@@ -50,11 +67,7 @@ export default function Login() {
               required
             />
           </div>
-          <button
-            type="submit"
-            className="login-btn"
-            disabled={loading}
-          >
+          <button type="submit" className="login-btn" disabled={loading}>
             {loading ? "Đang xử lý..." : "Đăng nhập"}
           </button>
         </form>

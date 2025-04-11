@@ -1,36 +1,48 @@
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext"; // Import useAuth
-import axios from "axios"; // Import axios
+import { useAuth } from "../context/AuthContext";
+import axios from "axios";
 import "./LoginForm.css";
 
 function LoginForm({ onSwitch }) {
-  const { login } = useAuth(); // Lấy hàm login từ AuthContext
+  const { login } = useAuth(); // login: (user, token)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+    setError("");
+    setLoading(true);
     try {
-      // Gửi yêu cầu đăng nhập tới backend
-      const response = await axios.post("http://localhost:3000/pub/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/pub/login",
+        {
+          email,
+          password,
+        }
+      );
 
       if (response.data.success) {
-        // Nếu đăng nhập thành công, lưu thông tin người dùng và token
-        login(response.data.data.user, response.data.data.token); // Gọi login() từ AuthContext
+        const { user, token } = response.data.data;
+
+        // Gọi hàm login từ AuthContext để lưu thông tin người dùng
+        login(user, token);
 
         // Lưu token vào localStorage
-        localStorage.setItem("token", response.data.data.token);
+        localStorage.setItem("token", token);
 
         alert("Đăng nhập thành công!");
       } else {
-        // Nếu đăng nhập không thành công
         setError(response.data.errorMessage || "Đăng nhập thất bại");
       }
     } catch (err) {
-      setError("Lỗi kết nối đến server!");
+      if (err.response && err.response.data?.errorMessage) {
+        setError(err.response.data.errorMessage);
+      } else {
+        setError("Lỗi kết nối đến server!");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,21 +55,29 @@ function LoginForm({ onSwitch }) {
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        required
       />
       <input
         type="password"
         placeholder="Mật khẩu"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        required
       />
       {error && <p className="error-message">{error}</p>}
-      <button className="login-button" onClick={handleLogin}>
-        ĐĂNG NHẬP
+      <button className="login-button" onClick={handleLogin} disabled={loading}>
+        {loading ? "Đang xử lý..." : "ĐĂNG NHẬP"}
       </button>
 
       <p>
         Chưa có tài khoản?{" "}
-        <a href="#" onClick={(e) => { e.preventDefault(); onSwitch(); }}>
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            onSwitch();
+          }}
+        >
           Đăng ký
         </a>
       </p>

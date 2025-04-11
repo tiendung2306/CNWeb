@@ -22,6 +22,7 @@ export default function Layout() {
           <Link to="/products" className="sidebar-link">Sản phẩm</Link>
           <Link to="/orders" className="sidebar-link">Đơn hàng</Link>
           <Link to="/users" className="sidebar-link">Tài khoản</Link>
+          <Link to="/payments" className="sidebar-link">Thanh toán</Link>
         </nav>
         <button onClick={handleLogout} className="logout-button">Đăng xuất</button>
       </aside>

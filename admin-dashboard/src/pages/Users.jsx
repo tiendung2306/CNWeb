@@ -1,19 +1,81 @@
-import React, { useState } from "react";
-import "./Users.css"; // Import CSS của bạn
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./Users.css";
 
 export default function Users() {
-  const [users, setUsers] = useState([
-    { id: 1, name: "Nguyễn Văn A", role: "Admin" },
-    { id: 2, name: "Trần Thị B", role: "User" },
-  ]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const handleRoleChange = (id, newRole) => {
-    setUsers(users.map(user => user.id === id ? { ...user, role: newRole } : user));
+  const token = localStorage.getItem("token");
+
+  const fetchUsers = async () => {
+    try {
+      const res = await axios.get(
+        "http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/allUsers?limit=1000&offset=0",
+        {
+          headers: {
+            "x-token": token,
+          },
+        }
+      );
+      console.log(res.data);
+      console.log("Số lượng user nhận được:", res.data.data.users.rows.length);
+
+      setUsers(res.data.data.users.rows);
+      setLoading(false);
+    } catch (err) {
+      setError("Lỗi khi tải người dùng");
+      setLoading(false);
+    }
   };
 
-  const handleDelete = (id) => {
-    setUsers(users.filter(user => user.id !== id));
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleRoleChange = async (id, newRole) => {
+    try {
+      await axios.put(
+        `http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/allUsers/${id}`,
+        { role: newRole },
+        {
+          headers: {
+            "x-token": token,
+          },
+        }
+      );
+
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === id ? { ...user, role: newRole } : user
+        )
+      );
+    } catch (err) {
+      alert("Cập nhật vai trò thất bại!");
+    }
   };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Bạn có chắc chắn muốn xóa người dùng này không?"))
+      return;
+    try {
+      await axios.delete(
+        `http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/allUsers/${id}`,
+        {
+          headers: {
+            "x-token": token,
+          },
+        }
+      );
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+    } catch (err) {
+      alert("Xóa người dùng thất bại!");
+    }
+  };
+
+  if (loading) return <p>Đang tải...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="users-container">
@@ -29,20 +91,22 @@ export default function Users() {
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
-              <td className="table-cell">{user.name}</td>
+              <td className="table-cell">{user.username}</td>
               <td className="table-cell">
-                <select 
-                  value={user.role} 
-                  onChange={(e) => handleRoleChange(user.id, e.target.value)} 
-                  className="role-select">
-                  <option value="Admin">Admin</option>
-                  <option value="User">User</option>
+                <select
+                  value={user.role}
+                  onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                  className="role-select"
+                >
+                  <option value="admin">Admin</option>
+                  <option value="user">User</option>
                 </select>
               </td>
               <td className="table-cell">
-                <button 
-                  onClick={() => handleDelete(user.id)} 
-                  className="btn-delete">
+                <button
+                  onClick={() => handleDelete(user.id)}
+                  className="btn-delete"
+                >
                   Xóa
                 </button>
               </td>
