@@ -8,6 +8,7 @@
     "test:cover": "jest --coverage",
     "start": "nodemon server.js",
     "deploy": "serverless deploy",
+     
     "dev": "serverless offline",
     "package": "serverless package",
     "model:generate": "npx sequelize-cli model:generate --name",

@@ -102,4 +102,19 @@ function Header() {
   );
 }
 
+//       {isLoginFormVisible && (
+//         <div className="login-form-overlay active"
+//           onClick={() => setLoginFormVisible(false)}>
+//           <div className="login-form-wrapper" onClick={(e) => e.stopPropagation()}>
+//             <LoginModal
+//               isVisible={isLoginFormVisible}
+//               onClose={() => setLoginFormVisible(false)}
+//             />
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+
 export default Header;
