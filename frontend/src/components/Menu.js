@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import "./Menu.css";
 import { CartContext } from "../context/CartContext";
+
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 
 function Menu() {
   const [foods, setFoods] = useState([]);
@@ -9,23 +13,28 @@ function Menu() {
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
 
-  const categories = ["Tất cả", "Đồ uống", "Cơm", "Phở", "Đồ ăn nhanh"];
   const { addToCart } = useContext(CartContext);
 
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await fetch("http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/pub/menuitems");
-        if (!response.ok) throw new Error("Không thể tải danh sách món ăn");
+        const response = await axios.get(`${BASE_URL}/pub/menuitems`);
+        const result = response.data;
 
-        const result = await response.json();
         if (result.success && Array.isArray(result.data)) {
-          setFoods(result.data);
+          const foodsWithFallback = result.data.map((food) => ({
+            ...food,
+            category: food.category || "Khác",
+            price: parseInt(food.price),
+            rating: parseFloat(food.rating) || 0,
+          }));
+          setFoods(foodsWithFallback);
         } else {
           setError("Không có dữ liệu món ăn.");
         }
       } catch (err) {
-        setError(err.message);
+        console.error("Lỗi khi gọi API:", err);
+        setError("Không thể tải danh sách món ăn.");
       } finally {
         setLoading(false);
       }
@@ -34,12 +43,11 @@ function Menu() {
     fetchMenuItems();
   }, []);
 
-  const filteredFoods =
-    selectedCategory === "Tất cả"
-      ? foods
-      : foods.filter((food) => food.category === selectedCategory);
-
-  const highRatedFoods = foods.filter((food) => parseFloat(food.rating) >= 4.5);
+  const categories = ["Tất cả", ...Array.from(new Set(foods.map((f) => f.category)))];
+  const filteredFoods = selectedCategory === "Tất cả"
+    ? foods
+    : foods.filter((food) => food.category === selectedCategory);
+  const highRatedFoods = foods.filter((food) => food.rating >= 4.5);
 
   if (loading) return <p>Đang tải thực đơn...</p>;
   if (error) return <p>{error}</p>;
@@ -48,6 +56,7 @@ function Menu() {
     <div className="menu-container">
       <h2 className="menu-title">Thực Đơn</h2>
 
+      {/* Món ăn được yêu thích */}
       {highRatedFoods.length > 0 && (
         <div className="menu-high-line">
           <h3 className="menu-high-title">Món Ăn Được Yêu Thích</h3>
@@ -66,13 +75,12 @@ function Menu() {
         </div>
       )}
 
+      {/* Lọc danh mục */}
       <div className="menu-selection">
         {categories.map((category) => (
           <button
             key={category}
-            className={`menu-selection-button ${
-              selectedCategory === category ? "active" : ""
-            }`}
+            className={`menu-selection-button ${selectedCategory === category ? "active" : ""}`}
             onClick={() => setSelectedCategory(category)}
           >
             {category}
@@ -80,6 +88,7 @@ function Menu() {
         ))}
       </div>
 
+      {/* Danh sách món ăn */}
       <div className="menu-list">
         {filteredFoods.length > 0 ? (
           filteredFoods.map((food) => (
@@ -104,15 +113,13 @@ function Menu() {
                   </Link>
                 </div>
                 <div className="menu-price">
-                  {parseInt(food.price).toLocaleString()}₫
+                  {food.price.toLocaleString()}₫
                 </div>
               </div>
             </div>
           ))
         ) : (
-          <p className="menu-no-item">
-            Không có món ăn nào trong danh mục này.
-          </p>
+          <p className="menu-no-item">Không có món ăn nào trong danh mục này.</p>
         )}
       </div>
     </div>

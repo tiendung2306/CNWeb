@@ -1,0 +1,69 @@
+/* Container chính */
+.profile-container.modern-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Tiêu đề */
+.profile-title {
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 32px;
+  color: #333;
+}
+
+/* Thẻ người dùng */
+.profile-user.modern-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background-color: #f9fafb;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Avatar */
+.profile-avatar.modern-avatar-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+}
+
+.default-avatar-icon.modern-icon {
+  font-size: 80px;
+  color: #bbb;
+}
+
+/* Thông tin người dùng */
+.profile-info.modern-info p {
+  font-size: 16px;
+  margin: 6px 0;
+  color: #444;
+}
+
+/* Nút logout */
+.logout-btn.modern-button {
+  display: block;
+  margin: 30px auto 0;
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #ff5252;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn.modern-button:hover {
+  background-color: #e04646;
+}

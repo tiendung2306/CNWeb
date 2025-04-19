@@ -1,0 +1,110 @@
+.order-status {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.order-status.success {
+  background-color: #e6ffed;
+  color: #2e7d32;
+}
+
+.order-status.fail {
+  background-color: #ffeaea;
+  color: #c62828;
+}
+
+.order-status .icon {
+  font-size: 60px;
+  margin-bottom: 20px;
+}
+
+.order-status h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.order-status p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.order-status .btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 4px;
+  background-color: inherit;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.order-status.success .btn {
+  background-color: #4caf50;
+}
+
+.order-status.success .btn:hover {
+  background-color: #388e3c;
+}
+
+.order-status.fail .btn {
+  background-color: #f44336;
+}
+
+.order-status.fail .btn:hover {
+  background-color: #d32f2f;
+}
+
+/* Media Queries cho responsive */
+@media screen and (max-width: 768px) {
+  .order-status .icon {
+    font-size: 50px;
+  }
+
+  .order-status h1 {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .order-status p {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  .order-status .btn {
+    padding: 12px 22px;
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .order-status {
+    padding: 20px 15px;
+  }
+
+  .order-status .icon {
+    font-size: 40px;
+  }
+
+  .order-status h1 {
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+
+  .order-status p {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  .order-status .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}

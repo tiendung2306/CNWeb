@@ -13,7 +13,8 @@ import Cart from "./pages/Cart.js"; // Trang giỏ hàng
 import ListUserOrder from './page/listUserOrder/ListUserOrder.jsx'
 import CheckoutPage from "./pages/CheckoutPage.js";
 import Profile from "./pages/Profile.js";
-
+import OrderFail from "./status/OrderFail.js";
+import OrderSuccess from "./status/OrderSuccess.js"; // Trang trạng thái đơn hàng thành công
 function App() {
   return (
     <CartProvider>
@@ -29,6 +30,8 @@ function App() {
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/history" element={<ListUserOrder />} />
+            <Route path="/order-success" element={<OrderSuccess />} /> {/* Trang trạng thái đơn hàng thành công */}
+            <Route path="/order-fail" element={<OrderFail />} /> {/* Trang trạng thái đơn hàng thất bại */}
           </Routes>
           <Footer />
         </Router>

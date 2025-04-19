@@ -4,8 +4,6 @@ import axios from "axios";
 import "./Login.css";
 import { useAuth } from "../contexts/AuthContext"; // tùy vào nơi bạn lưu AuthContext
 
-const BASE_URL = process.env.REACT_APP_API_BASE_URL
-
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +18,7 @@ export default function Login() {
     setError("");
 
     try {
-      const response = await axios.post(`${BASE_URL}/pub/login`, {
+      const response = await axios.post("http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/pub/login", {
         email,
         password,
       });

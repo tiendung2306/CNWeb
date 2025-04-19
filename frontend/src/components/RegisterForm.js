@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./RegisterForm.css";
-
+import axios from "axios";
+const BASE_URL = process.env.REACT_APP_API_BASE_URL; // Đường dẫn đến API của bạn
 function RegisterForm({ onSwitch }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -14,13 +15,11 @@ function RegisterForm({ onSwitch }) {
       return;
     }
 
-    try {
-      const response = await fetch("http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/pub/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, email, password }),
+try {
+      const response = await axios.post(`${BASE_URL}/pub/register`, {
+        username,
+        email,
+        password,
       });
 
       const data = await response.json();

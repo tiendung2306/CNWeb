@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Payments.css";
-const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 export default function Payments() {
   const [payments, setPayments] = useState([]);
@@ -30,7 +31,7 @@ export default function Payments() {
   const handleDelete = async (id) => {
     if (!window.confirm("Bạn có chắc chắn muốn xóa giao dịch này không?")) return;
     try {
-      await axios.delete(`${BASE_URL}/api/admin/payment/${id}`, {
+      await axios.delete(`${BASE_URL}/api/payment/${id}`, {
         headers: {
           "x-token": token,
         },
@@ -68,7 +69,7 @@ export default function Payments() {
               <td>{payment.id}</td>
               <td>{payment.userId || payment.username || "N/A"}</td>
               <td>{payment.amount} VND</td>
-              <td>{payment.status}</td>
+              <td>{payment.paymentStatus}</td>
               <td>{new Date(payment.createdAt).toLocaleString()}</td>
               <td>
                 <button className="btn-delete" onClick={() => handleDelete(payment.id)}>Xóa</button>
