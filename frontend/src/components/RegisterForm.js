@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./RegisterForm.css";
 import axios from "axios";
 const BASE_URL = process.env.REACT_APP_API_BASE_URL; // Đường dẫn đến API của bạn
