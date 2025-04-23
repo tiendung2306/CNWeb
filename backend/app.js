@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
 
   socket.on('chat message', (msg) => {
     console.log('message:', msg);
-    io.emit('chat message', msg);
+    socket.broadcast.emit('chat message', msg);
   });
 
   socket.on('disconnect', () => {
@@ -44,7 +44,7 @@ io.on('connection', (socket) => {
 
 app.post('/send', (req, res) => {
   const message = req.body.message;
-  io.emit('chat message', message);
+  socket.broadcast.emit('chat message', msg);
   res.send('Tin nhắn đã được gửi đến tất cả client');
 });
 

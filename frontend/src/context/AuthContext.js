@@ -1,8 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react";
-<<<<<<< HEAD
 import axios from "axios";
-=======
->>>>>>> 127712d (config tailwind and add chat bubble)
+import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
