@@ -7,12 +7,11 @@ import { useAuth } from "../context/AuthContext.js";
 
 function Header() {
   const [isLoginFormVisible, setLoginFormVisible] = useState(false);
-  const [isProfileMenuOpen, setProfileMenuOpen] = useState(false); // Thêm trạng thái dropdown
+  const [isProfileMenuOpen, setProfileMenuOpen] = useState(false);
   const { cart, notification } = useContext(CartContext);
   const { isLoggedIn, user, logout } = useAuth();
   const navigate = useNavigate();
 
-  // Tính tổng số sản phẩm trong giỏ
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
@@ -23,6 +22,7 @@ function Header() {
             <i className="fa-solid fa-store"> Bistro West</i>
           </Link>
         </div>
+        
         <div className="header-menu">
           <ul className="header-menu-list">
             <li className="header-menu-item"><Link to="/" className="header-menu__link"><i className="fa-solid fa-house"></i> Trang chủ</Link></li>
@@ -31,6 +31,7 @@ function Header() {
             <li className="header-menu-item"><Link to="/contact" className="header-menu__link"><i className="fa-solid fa-envelope"></i> Liên hệ</Link></li>
           </ul>
         </div>
+
         <div className="header-wrap-action">
           <div className="header-action">
             <div className="header-action-item header-action_hotline">
@@ -53,7 +54,7 @@ function Header() {
                   {isProfileMenuOpen && (
                     <ul className="profile-menu">
                       <li><Link to="/profile">Tài khoản</Link></li>
-                      <li><Link to="/orders">Lịch sử đặt hàng</Link></li>
+                      <li><Link to="/history">Lịch sử đặt hàng</Link></li>
                       <li>
                         <button
                           onClick={() => {
@@ -101,20 +102,5 @@ function Header() {
     </div>
   );
 }
-
-//       {isLoginFormVisible && (
-//         <div className="login-form-overlay active"
-//           onClick={() => setLoginFormVisible(false)}>
-//           <div className="login-form-wrapper" onClick={(e) => e.stopPropagation()}>
-//             <LoginModal
-//               isVisible={isLoginFormVisible}
-//               onClose={() => setLoginFormVisible(false)}
-//             />
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
 
 export default Header;

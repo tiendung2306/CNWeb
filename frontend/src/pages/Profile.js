@@ -32,18 +32,18 @@ const Profile = () => {
   if (!user) return <p>Không có dữ liệu người dùng.</p>;
 
   return (
-    <div className="profile-container modern-container">
-      <h2 className="profile-title">Hồ sơ cá nhân</h2>
+    <div className="profile-container">
+      <h2>Hồ sơ cá nhân</h2>
 
-      <div className="profile-user modern-card">
-        <div className="profile-image modern-avatar">
+      <div className="profile-user">
+        <div className="profile-image">
           {user.avatar ? (
-            <img src={user.avatar} alt="Avatar" className="profile-avatar modern-avatar-img" />
+            <img src={user.avatar} alt="Avatar" className="profile-avatar" />
           ) : (
-            <i className="fas fa-user-circle default-avatar-icon modern-icon"></i>
+            <i className="fas fa-user-circle default-avatar-icon"></i>
           )}
         </div>
-        <div className="profile-info modern-info">
+        <div className="profile-info">
           <p><strong>Tên:</strong> {user.username || "Chưa cập nhật"}</p>
           <p><strong>Email:</strong> {user.email || "Chưa cập nhật"}</p>
           <p><strong>Số điện thoại:</strong> {user.phone || "Chưa cập nhật"}</p>
@@ -51,7 +51,7 @@ const Profile = () => {
         </div>
       </div>
 
-      <button className="logout-btn modern-button" onClick={handleLogout}>
+      <button className="logout-btn" onClick={handleLogout}>
         Đăng xuất
       </button>
     </div>
