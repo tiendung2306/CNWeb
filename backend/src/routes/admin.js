@@ -5,6 +5,8 @@ import * as paymentController from '../controllers/payment/payment.controller';
 import * as menuItemController from '../controllers/menu/menuitem.controller';
 import * as userValidator from '../validation/user.validator';
 import validate from 'express-validation';
+import * as categoryController from '../controllers/category/category.controller';
+import * as categoryValidator from '../validation/category.validator';
 
 const router = express.Router();
 
@@ -21,5 +23,10 @@ router.get('/payment', paymentController.getAllPayments);
 router.post("/menuitems", menuItemController.createMenuItem);
 router.put("/menuitems/:id", menuItemController.updateMenuItem); 
 router.delete("/menuitems/:id", menuItemController.deleteMenuItem);
+
+//api category
+router.post("/categories", validate(categoryValidator.createCategory), categoryController.createCategory);
+router.patch("/categories/:id", validate(categoryValidator.updateCategory), categoryController.updateCategory);
+router.delete("/categories/:id", categoryController.deleteCategory);
 
 module.exports = router;

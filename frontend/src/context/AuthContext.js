@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
