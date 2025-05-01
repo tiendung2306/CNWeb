@@ -7,6 +7,9 @@ import * as userValidator from '../validation/user.validator';
 import validate from 'express-validation';
 import * as categoryController from '../controllers/category/category.controller';
 import * as categoryValidator from '../validation/category.validator';
+import * as reviewController from '../controllers/review/review.controller';
+import uploadImage from '../middleware/uploadImage.js';
+
 
 const router = express.Router();
 
@@ -20,9 +23,17 @@ router.get('/order', orderController.getAllOrders);
 
 router.get('/payment', paymentController.getAllPayments);
 //api menu-item
-router.post("/menuitems", menuItemController.createMenuItem);
-router.put("/menuitems/:id", menuItemController.updateMenuItem); 
+router.post('/menuitems', uploadImage, menuItemController.createMenuItem);
+router.put('/menuitems/:id', uploadImage, menuItemController.updateMenuItem);
 router.delete("/menuitems/:id", menuItemController.deleteMenuItem);
+router.get("/menuitems", menuItemController.getAllMenuItems);   
+router.get("/menuitems/:id", menuItemController.getMenuItemById); 
+
+// Route cho Review
+router.post("/reviews", reviewController.createReview);                   
+router.get("/reviews/menuitem/:menuItemId", reviewController.getReviewsByMenuItem); 
+router.put("/reviews/:id", reviewController.updateReview);               
+router.delete("/reviews/:id", reviewController.deleteReview); 
 
 //api category
 router.post("/categories", validate(categoryValidator.createCategory), categoryController.createCategory);
