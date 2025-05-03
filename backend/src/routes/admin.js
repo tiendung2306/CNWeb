@@ -9,6 +9,8 @@ import * as categoryController from '../controllers/category/category.controller
 import * as categoryValidator from '../validation/category.validator';
 import * as reviewController from '../controllers/review/review.controller';
 import uploadImage from '../middleware/uploadImage.js';
+import * as statisticController from '../controllers/statistic/statistic.controller.js';
+
 
 
 const router = express.Router();
@@ -34,6 +36,10 @@ router.post("/reviews", reviewController.createReview);
 router.get("/reviews/menuitem/:menuItemId", reviewController.getReviewsByMenuItem); 
 router.put("/reviews/:id", reviewController.updateReview);               
 router.delete("/reviews/:id", reviewController.deleteReview); 
+
+// Thống kê đơn hàng, doanh thu, số lượng món theo khoảng thời gian
+router.get('/statistics', statisticController.getStatistics);
+
 
 //api category
 router.post("/categories", validate(categoryValidator.createCategory), categoryController.createCategory);
