@@ -1,8 +1,9 @@
-/* ========== Toàn bộ MENU ========== */
+/* ========== TOÀN BỘ MENU ========== */
 .menu-container {
   max-width: 100%;
   margin: 30px auto;
   font-family: "Segoe UI", Arial, sans-serif;
+  padding: 0 20px;
 }
 
 /* Tiêu đề */
@@ -13,10 +14,11 @@
   margin-bottom: 25px;
 }
 
-/* Lọc theo danh mục */
+/* ===== Lọc theo danh mục ===== */
 .menu-selection {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 15px;
   margin-bottom: 25px;
 }
@@ -24,13 +26,13 @@
 .menu-selection-button {
   padding: 12px 20px;
   border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 18px;
+  color: #444;
   background-color: #f1f1f1;
   cursor: pointer;
-  border-radius: 8px;
-  transition: 0.3s;
-  font-weight: bold;
-  color: #444141;
-  font-size: 18px;
+  transition: all 0.3s ease;
 }
 
 .menu-selection-button:hover {
@@ -44,36 +46,44 @@
   box-shadow: 0 4px 10px rgba(255, 153, 0, 0.4);
 }
 
-/* Không có món */
+/* ===== Không có món ===== */
 .menu-no-item {
   text-align: center;
   font-size: 18px;
-  color: gray;
   font-weight: bold;
+  color: gray;
 }
 
-/* Danh sách món ăn */
+/* ===== Danh sách món ===== */
 .menu-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 25px;
   justify-content: center;
+  gap: 40px 50px; /* 40px dọc, 30px ngang */
+  max-width: 1280px; /* hoặc 1000px nếu bạn muốn nhỏ hơn */
+  margin: 0 auto; /* căn giữa cả block */
+  box-sizing: border-box;
 }
 
+
 .menu-item {
+  flex: 0 0 calc(50% - 10px); /* Chiếm đúng 50% - nửa gap */
+  max-width: calc(50% - 10px);
   background: #fff;
   border-radius: 15px;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
   padding: 20px;
-  width: 700px;
-  height: 200px;
+  box-sizing: border-box;
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   border: 3px solid #f5f5f5;
   transition: transform 0.2s ease-in-out;
 }
+
+
+
 
 .menu-item:hover {
   transform: scale(1.05);
@@ -85,6 +95,7 @@
   align-items: center;
   gap: 20px;
   width: 100%;
+  padding-right: 60px; /* Thêm padding để né vùng giá */
 }
 
 .menu-image {
@@ -96,38 +107,45 @@
 
 .menu-info {
   flex-grow: 1;
+  max-width: 365px;
+  margin-right: 60px; /* Né vùng bị giá đè */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .menu-name {
   font-size: 22px;
   font-weight: bold;
   margin-bottom: 8px;
+  word-wrap: break-word;
 }
 
 .menu-description {
   font-size: 16px;
   color: #666;
   margin-bottom: 8px;
+  word-wrap: break-word;
 }
 
 .menu-price {
   background: #d4af37;
   color: white;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: bold;
-  padding: 12px 40px;
+  padding: 8px 16px;
   border-radius: 8px;
-  text-align: center;
-  min-width: 90px;
-  transform: rotate(-90deg);
   position: absolute;
-  right: -40px;
-  top: 38%;
-  width: 100px;
+  right: -45px;
+  top: 50%;
+  width: 120px;
+  text-align: center;
+  transform: rotate(-90deg) translateY(-50%);
   transform-origin: center;
+  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.4);
 }
 
-/* Nút Thêm vào giỏ */
+/* ===== Nút thêm vào giỏ ===== */
 .menu-add-to-cart {
   background: #d3c288;
   color: white;
@@ -137,27 +155,28 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .menu-add-to-cart:hover {
   background: #8c5a39;
+  transform: scale(1.05);
 }
 
-/* Link xem chi tiết */
+/* ===== Link xem chi tiết ===== */
 .menu-link {
-  text-decoration: none;
   color: #d4af37;
   font-weight: bold;
   font-size: 16px;
   margin-left: 20px;
+  text-decoration: none;
 }
 
 .menu-link:hover {
   text-decoration: underline;
 }
 
-/* ========== Món nổi bật ========== */
+/* ========== MÓN NỔI BẬT ========== */
 .menu-high-line {
   margin: 20px 0;
   padding: 10px;
@@ -176,8 +195,8 @@
 .menu-high-list {
   display: flex;
   justify-content: center;
-  gap: 15px;
   flex-wrap: wrap;
+  gap: 15px;
 }
 
 .menu-high-item {
@@ -204,12 +223,12 @@
   margin-top: 5px;
 }
 
-/* ========== Responsive ========== */
+/* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
   .menu-item {
     flex-direction: column;
-    height: auto;
     width: 90%;
+    height: auto;
   }
 
   .menu-content {
@@ -224,8 +243,8 @@
   }
 
   .menu-price {
-    transform: rotate(0deg);
     position: static;
+    transform: none;
     margin-top: 10px;
     width: auto;
     display: inline-block;
@@ -234,7 +253,39 @@
   .menu-add-to-cart,
   .menu-link {
     width: 100%;
-    margin-top: 10px;
     text-align: center;
+    margin-top: 10px;
   }
+}
+/* phân trang */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #d4af37;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #c1a033;
+}
+
+.pagination span {
+  font-size: 16px;
+  align-self: center;
 }

@@ -6,9 +6,14 @@ const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    // Kiểm tra localStorage để lấy user nếu có
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   const [token, setToken] = useState(localStorage.getItem("token") || null);
 
+  // Lấy thông tin người dùng từ API
   const fetchUser = async (authToken = token) => {
     if (!authToken) return;
     try {
@@ -31,6 +36,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Lần đầu tiên khi app khởi chạy và khi token thay đổi
   useEffect(() => {
     if (token) {
       fetchUser(token);

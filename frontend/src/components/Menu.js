@@ -6,12 +6,13 @@ import { CartContext } from "../context/CartContext";
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-
 function Menu() {
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
+  const [currentPage, setCurrentPage] = useState(1); // Thêm state cho trang hiện tại
+  const [itemsPerPage] = useState(6); // Số món ăn mỗi trang
 
   const { addToCart } = useContext(CartContext);
 
@@ -47,7 +48,13 @@ function Menu() {
   const filteredFoods = selectedCategory === "Tất cả"
     ? foods
     : foods.filter((food) => food.category === selectedCategory);
-  const highRatedFoods = foods.filter((food) => food.rating >= 4.5);
+
+  // Phân trang các món ăn
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentFoods = filteredFoods.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredFoods.length / itemsPerPage); // Tổng số trang
 
   if (loading) return <p>Đang tải thực đơn...</p>;
   if (error) return <p>{error}</p>;
@@ -57,11 +64,11 @@ function Menu() {
       <h2 className="menu-title">Thực Đơn</h2>
 
       {/* Món ăn được yêu thích */}
-      {highRatedFoods.length > 0 && (
+      {filteredFoods.filter((food) => food.rating >= 4.5).length > 0 && (
         <div className="menu-high-line">
           <h3 className="menu-high-title">Món Ăn Được Yêu Thích</h3>
           <div className="menu-high-list">
-            {highRatedFoods.map((food) => (
+            {filteredFoods.filter((food) => food.rating >= 4.5).map((food) => (
               <div className="menu-high-item" key={food.id}>
                 <img
                   src={food.imageUrl || food.image}
@@ -90,8 +97,8 @@ function Menu() {
 
       {/* Danh sách món ăn */}
       <div className="menu-list">
-        {filteredFoods.length > 0 ? (
-          filteredFoods.map((food) => (
+        {currentFoods.length > 0 ? (
+          currentFoods.map((food) => (
             <div className="menu-item" key={food.id}>
               <div className="menu-content">
                 <img
@@ -121,6 +128,25 @@ function Menu() {
         ) : (
           <p className="menu-no-item">Không có món ăn nào trong danh mục này.</p>
         )}
+      </div>
+
+      {/* Phân trang */}
+      <div className="pagination">
+        <button
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Trang Trước
+        </button>
+        <span>
+          Trang {currentPage} / {totalPages}
+        </span>
+        <button
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Trang Sau
+        </button>
       </div>
     </div>
   );
