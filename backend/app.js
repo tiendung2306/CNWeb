@@ -10,6 +10,7 @@ import errorHandler from './src/middleware/errorHandler';
 import adminRoutes from './src/routes/admin';
 import apiRoutes from './src/routes/api';
 import publicRoutes from './src/routes/public';
+const { Message } = require('./src/models/');
 
 dotenv.config();
 require('./src/config/sequelize');
@@ -32,8 +33,20 @@ app.use(express.static('public'));
 io.on('connection', (socket) => {
   console.log('Connected to socket.io');
 
-  socket.on('chat message', (msg) => {
+  socket.on('chat message', async (msg) => {
     console.log('message:', msg);
+    console.log('sender:', msg.sender.id);
+
+    try {
+      await Message.create({
+        userId: msg.sender.id,
+        content: msg.content,
+      });
+      console.log('Message saved to database');
+    } catch (error) {
+      console.error('Error saving message to database:', error);
+    }
+
     socket.broadcast.emit('chat message', msg);
   });
 
