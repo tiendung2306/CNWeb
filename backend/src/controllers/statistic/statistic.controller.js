@@ -14,3 +14,12 @@ export const getStatistics = async (req, res) => {
     return errorResponse(req, res, err.message);
   }
 };
+
+export const getSystemStats = async (req, res) => {
+  try {
+    const stats = await statisticService.getUserAndMenuStats();
+    return successResponse(req, res, stats);
+  } catch (err) {
+    return errorResponse(req, res, err.message);
+  }
+};

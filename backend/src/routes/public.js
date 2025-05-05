@@ -34,4 +34,8 @@ router.get("/message", messageController.getRecentMessages);
 router.get("/categories", categoryController.getAllCategories);
 router.get("/categories/:id", categoryController.getCategoryById);
 
+// Lấy món ăn ngẫu nhiên
+router.get('/menuitems/random', menuItemController.getRandomMenuItems);
+
+
 module.exports = router;

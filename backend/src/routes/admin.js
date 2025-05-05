@@ -40,6 +40,11 @@ router.delete("/reviews/:id", reviewController.deleteReview);
 // Thống kê đơn hàng, doanh thu, số lượng món theo khoảng thời gian
 router.get('/statistics', statisticController.getStatistics);
 
+// Thống kê tổng user & tổng menu items
+router.get('/statistics/overview', statisticController.getSystemStats );
+  
+// Lấy món ăn ngẫu nhiên
+router.get('/menuitems/random', menuItemController.getRandomMenuItems);
 
 //api category
 router.post("/categories", validate(categoryValidator.createCategory), categoryController.createCategory);
