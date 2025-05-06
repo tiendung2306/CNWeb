@@ -25,7 +25,11 @@ export default function Login() {
 
       if (response.data.success) {
         const { user, token } = response.data.data;
-
+        if (user.role !== "admin") {
+          setError("Bạn không có quyền truy cập trang này!");
+          setLoading(false);
+          return;
+        }
         localStorage.setItem("token", token);
         login(user); // lưu user vào context
 

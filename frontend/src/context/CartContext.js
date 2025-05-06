@@ -9,14 +9,12 @@ export const CartProvider = ({ children }) => {
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  const [notification, setNotification] = useState(""); // Thông báo khi thêm sản phẩm
+  const [notification, setNotification] = useState("");
 
-  // Lưu giỏ hàng vào localStorage khi có thay đổi
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  // Thêm sản phẩm vào giỏ hàng
   const addToCart = (product, quantity = 1) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === product.id);
@@ -29,19 +27,14 @@ export const CartProvider = ({ children }) => {
       }
     });
 
-    // Hiển thị thông báo
     setNotification(`Đã thêm ${quantity} "${product.name}" vào giỏ hàng!`);
-
-    // Ẩn thông báo sau 2 giây
     setTimeout(() => setNotification(""), 2000);
   };
 
-  // Xóa sản phẩm khỏi giỏ
   const removeFromCart = (id) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
-  // Thay đổi số lượng sản phẩm
   const updateQuantity = (id, quantity) => {
     setCart((prevCart) =>
       prevCart.map((item) =>
@@ -50,8 +43,12 @@ export const CartProvider = ({ children }) => {
     );
   };
 
+  const clearCart = () => {
+    setCart([]);
+  };
+
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, notification }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, notification, clearCart }}>
       {children}
     </CartContext.Provider>
   );

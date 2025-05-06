@@ -1,50 +1,77 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useAuth } from "../context/AuthContext"; // Import useAuth để lấy user
 import "./Review.css";
 
-const Review = ({ foodId, userId }) => {
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+const Review = ({ foodId }) => {
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
-  const [editingId, setEditingId] = useState(null); // ID review đang chỉnh sửa
+  const [editingId, setEditingId] = useState(null);
+  const { user } = useAuth(); // Lấy user từ AuthContext
+  const token = localStorage.getItem("token");
 
-  // Load đánh giá từ localStorage
+  // Lấy danh sách review khi foodId thay đổi
+  const fetchReviews = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/reviews/menuitem/${foodId}`, {
+        headers: { "x-token": token },
+      });
+      setReviews(response.data); // Lưu đánh giá vào state
+    } catch (error) {
+      console.error("Lỗi khi lấy đánh giá:", error);
+    }
+  };
+
   useEffect(() => {
-    const storedReviews = JSON.parse(localStorage.getItem("reviews")) || [];
-    const foodReviews = storedReviews.filter((review) => review.foodId === foodId);
-    setReviews(foodReviews);
+    fetchReviews(); // Lấy danh sách review
   }, [foodId]);
 
-  // Thêm hoặc cập nhật đánh giá
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newReview = { id: editingId || Date.now(), foodId, userId, rating, comment };
-    let updatedReviews = [...reviews];
-
-    if (editingId) {
-      // Cập nhật review đã có
-      updatedReviews = reviews.map((rev) =>
-        rev.id === editingId ? { ...rev, rating, comment } : rev
-      );
-    } else {
-      // Thêm review mới
-      updatedReviews.push(newReview);
+    if (!foodId || !user?.id || rating <= 0 || !comment.trim()) {
+      alert("Vui lòng nhập đầy đủ thông tin!");
+      return;
     }
 
-    setReviews(updatedReviews);
-    localStorage.setItem("reviews", JSON.stringify([...JSON.parse(localStorage.getItem("reviews") || "[]").filter(r => r.foodId !== foodId), ...updatedReviews]));
-    setEditingId(null); // Thoát chế độ chỉnh sửa
-    setRating(0);
-    setComment("");
+    const newReview = { id: editingId || Date.now(), foodId, userId: user.id, rating, comment };
+    
+    try {
+      if (editingId) {
+        await axios.put(`${BASE_URL}/api/reviews/${editingId}`, newReview, {
+          headers: { "x-token": token },
+        });
+        alert("Cập nhật đánh giá thành công!");
+      } else {
+        await axios.post(`${BASE_URL}/api/reviews`, newReview, {
+          headers: { "x-token": token },
+        });
+        alert("Thêm đánh giá thành công!");
+      }
+
+      fetchReviews(); // Cập nhật lại danh sách review
+      setRating(0);
+      setComment("");
+      setEditingId(null);
+    } catch (error) {
+      console.error("Lỗi khi gửi đánh giá:", error);
+      alert("Đã có lỗi xảy ra khi gửi đánh giá.");
+    }
   };
 
-  // Xóa review
-  const handleDelete = (id) => {
-    const updatedReviews = reviews.filter((review) => review.id !== id);
-    setReviews(updatedReviews);
-    localStorage.setItem("reviews", JSON.stringify([...JSON.parse(localStorage.getItem("reviews") || "[]").filter(r => r.foodId !== foodId), ...updatedReviews]));
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${BASE_URL}/api/reviews/${id}`, {
+        headers: { "x-token": token },
+      });
+      setReviews((prev) => prev.filter((review) => review.id !== id)); // Cập nhật lại danh sách review
+    } catch (error) {
+      console.error("Lỗi khi xóa đánh giá:", error);
+    }
   };
 
-  // Chỉnh sửa review
   const handleEdit = (review) => {
     setEditingId(review.id);
     setRating(review.rating);
@@ -57,9 +84,21 @@ const Review = ({ foodId, userId }) => {
       <form onSubmit={handleSubmit}>
         <label>
           Chọn số sao:
-          <input type="number" min="1" max="5" value={rating} onChange={(e) => setRating(Number(e.target.value))} required />
+          <input
+            type="number"
+            min="1"
+            max="5"
+            value={rating}
+            onChange={(e) => setRating(Number(e.target.value))}
+            required
+          />
         </label>
-        <textarea placeholder="Viết đánh giá..." value={comment} onChange={(e) => setComment(e.target.value)} required />
+        <textarea
+          placeholder="Viết đánh giá..."
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          required
+        />
         <button type="submit">{editingId ? "Cập Nhật" : "Gửi Đánh Giá"}</button>
       </form>
 
@@ -69,7 +108,7 @@ const Review = ({ foodId, userId }) => {
             <div key={review.id} className="review-item">
               <p><strong>⭐ {review.rating} sao</strong></p>
               <p>{review.comment}</p>
-              {review.userId === userId && (
+              {review.userId === user?.id && (
                 <div>
                   <button onClick={() => handleEdit(review)}>Chỉnh sửa</button>
                   <button onClick={() => handleDelete(review.id)}>Xóa</button>

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Orders.css";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -15,15 +17,10 @@ export default function Orders() {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(
-        "http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/order",
-        {
-          headers: {
-            "x-token": token,
-          },
-        }
-      );
-      setOrders(response.data.data.orders);
+      const response = await axios.get(`${BASE_URL}/api/admin/order`, {
+        headers: { "x-token": token },
+      });
+      setOrders(response.data.data.orders || []);
     } catch (error) {
       console.error("Lỗi khi tải đơn hàng:", error);
       setError("Không thể tải danh sách đơn hàng.");
@@ -35,23 +32,38 @@ export default function Orders() {
   const handleChangeStatus = async (id, newStatus) => {
     try {
       await axios.put(
-        `http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/orders/${id}`,
+        `${BASE_URL}/api/payment/${id}`,
+        { status: newStatus },
         {
-          status: newStatus,
-        },
-        {
-          headers: {
-            "x-token": token,
-          },
+          headers: { "x-token": token },
         }
       );
       setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order.id === id ? { ...order, status: newStatus } : order
+        prevOrders.map((item) =>
+          item.order.id === id
+            ? { ...item, order: { ...item.order, status: newStatus } }
+            : item
         )
       );
     } catch (error) {
       console.error("Lỗi khi cập nhật trạng thái:", error);
+      alert("Không thể cập nhật trạng thái đơn hàng.");
+    }
+  };
+
+  const handleDeleteOrder = async (id) => {
+    if (!window.confirm("Bạn có chắc chắn muốn xóa đơn hàng này?")) return;
+
+    try {
+      await axios.delete(`${BASE_URL}/api/order/${id}`, {
+        headers: { "x-token": token },
+      });
+      setOrders((prevOrders) =>
+        prevOrders.filter((item) => item.order.id !== id)
+      );
+    } catch (error) {
+      console.error("Lỗi khi xóa đơn hàng:", error);
+      alert("Xóa đơn hàng thất bại.");
     }
   };
 
@@ -59,10 +71,29 @@ export default function Orders() {
     fetchOrders();
   }, []);
 
+  const formatMoney = (amount) =>
+    new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(Number(amount));
+
+  const translateStatus = (status) => {
+    switch (status) {
+      case "Pending":
+        return "Chờ xử lý";
+      case "Delivered":
+        return "Đã giao";
+      default:
+        return status;
+    }
+  };
+
   const filteredOrders =
     filterStatus === "Tất cả"
       ? orders
-      : orders.filter((order) => order.status === filterStatus);
+      : orders.filter(
+          (item) => translateStatus(item.order.status) === filterStatus
+        );
 
   return (
     <div className="orders-container">
@@ -86,64 +117,87 @@ export default function Orders() {
           <tr>
             <th className="table-header">ID</th>
             <th className="table-header">Người dùng</th>
-            <th className="table-header">Địa chỉ</th>
+            <th className="table-header">Người nhận - SĐT - Địa chỉ</th>
             <th className="table-header">Tổng tiền</th>
             <th className="table-header">Trạng thái</th>
             <th className="table-header">Thao tác</th>
           </tr>
         </thead>
         <tbody>
-          {filteredOrders.map((order) => (
-            <React.Fragment key={order.id}>
-              <tr>
-                <td className="table-cell">{order.id}</td>
-                <td className="table-cell">{order.user?.username}</td>
-                <td className="table-cell">{order.deliveryAddress}</td>
-                <td className="table-cell">{order.totalAmount}</td>
-                <td className="table-cell">{order.status}</td>
-                <td className="table-cell">
-                  {order.status === "Chờ xử lý" && (
+          {filteredOrders.map((item, index) => {
+            const order = item.order;
+            const orderItems = item.orderItems || [];
+
+            return (
+              <React.Fragment key={order.id || index}>
+                <tr>
+                  <td className="table-cell">{order.id}</td>
+                  <td className="table-cell">ID: {order.userId}</td>
+                  <td className="table-cell">
+                    {order.deliveryAddress || "Chưa có"}
+                  </td>
+                  <td className="table-cell">
+                    {formatMoney(order.totalAmount)}
+                  </td>
+                  <td className="table-cell">
+                    {translateStatus(order.status)}
+                  </td>
+                  <td className="table-cell">
+                    {order.status === "Pending" && (
+                      <button
+                        onClick={() =>
+                          handleChangeStatus(order.id, "Delivered")
+                        }
+                        className="confirm-button"
+                      >
+                        Xác nhận giao
+                      </button>
+                    )}
                     <button
                       onClick={() =>
-                        handleChangeStatus(order.id, "Đã giao")
+                        setExpandedOrderId(
+                          expandedOrderId === order.id ? null : order.id
+                        )
                       }
-                      className="confirm-button"
+                      className="details-button"
                     >
-                      Xác nhận giao
+                      {expandedOrderId === order.id
+                        ? "Ẩn chi tiết"
+                        : "Xem chi tiết"}
                     </button>
-                  )}
-                  <button
-                    onClick={() =>
-                      setExpandedOrderId(
-                        expandedOrderId === order.id ? null : order.id
-                      )
-                    }
-                    className="details-button"
-                  >
-                    {expandedOrderId === order.id
-                      ? "Ẩn chi tiết"
-                      : "Xem chi tiết"}
-                  </button>
-                </td>
-              </tr>
-
-              {expandedOrderId === order.id && (
-                <tr>
-                  <td colSpan="6" className="table-cell">
-                    <strong>Món ăn trong đơn hàng:</strong>
-                    <ul>
-                      {order.orderItems?.map((item, index) => (
-                        <li key={index}>
-                          {item.menuItem?.name} - SL: {item.quantity} - Giá:{" "}
-                          {item.menuItem?.price}
-                        </li>
-                      ))}
-                    </ul>
+                    <button
+                      onClick={() => handleDeleteOrder(order.id)}
+                      className="delete-button"
+                      style={{
+                        backgroundColor: "#dc3545",
+                        color: "white",
+                        marginLeft: "8px",
+                      }}
+                    >
+                      Xóa
+                    </button>
                   </td>
                 </tr>
-              )}
-            </React.Fragment>
-          ))}
+
+                {expandedOrderId === order.id && (
+                  <tr>
+                    <td colSpan="6" className="table-cell">
+                      <strong>Món ăn trong đơn hàng:</strong>
+                      <ul>
+                        {orderItems.map((itemDetail, idx) => (
+                          <li key={itemDetail.id || idx}>
+                            Món ID: {itemDetail.menuItemId} - SL:{" "}
+                            {itemDetail.quantity} - Giá:{" "}
+                            {formatMoney(itemDetail.price)}
+                          </li>
+                        ))}
+                      </ul>
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
+            );
+          })}
         </tbody>
       </table>
     </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import "./LoginForm.css";
-
+const BASE_URL = process.env.REACT_APP_API_BASE_URL; // Đường dẫn đến API của bạn
 function LoginForm({ onSwitch }) {
   const { login } = useAuth(); // login: (user, token)
   const [email, setEmail] = useState("");
@@ -15,8 +15,7 @@ function LoginForm({ onSwitch }) {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/pub/login",
-        {
+        `${BASE_URL}/pub/login`,{
           email,
           password,
         }

@@ -1,91 +1,7 @@
-// import React, { useContext } from "react";
-// import { CartContext } from "../context/CartContext";
-// import "./Checkout.css";
-
-// const suggestedProducts = [
-//     { id: 101, name: "Bánh Mì Thịt", price: 25000, image: "/images/banhmi.jpg" },
-//     { id: 102, name: "Nước Ép Cam", price: 30000, image: "/images/nuocep.jpg" },
-//     { id: 103, name: "Trà Sữa Trân Châu", price: 40000, image: "/images/trasua.jpg" },
-//   ];
-
-// const CheckoutPage = () => {
-//   const { cart, addToCart } = useContext(CartContext);
-
-//   // Tính tổng tiền giỏ hàng
-//   const totalAmount = cart.reduce((total, item) => total + item.price * item.quantity, 0);
-
-//   // Gợi ý phương thức thanh toán
-//   const paymentSuggestion = totalAmount > 100000 ? "Thanh toán qua ngân hàng để nhận ưu đãi" : "Thanh toán khi nhận hàng (COD)";
-
-//   // Kiểm tra điều kiện mã giảm giá
-//   const discountCode = totalAmount > 50000 ? "GIAM10K" : null;
-
-//   return (
-//     <div className="checkout-container">
-//       <h2>Trang thanh toán</h2>
-//       {cart.length === 0 ? (
-//         <p>Không có sản phẩm nào trong giỏ hàng.</p>
-//       ) : (
-//         <div className="checkout-content">
-//           {/* Thông tin đơn hàng */}
-//           <div className="checkout-details">
-//             <h3>Thông tin đơn hàng</h3>
-//             {cart.map((item) => (
-//               <div key={item.id} className="checkout-item">
-//                 <img src={item.image} alt={item.name} className="checkout-image" />
-//                 <div>
-//                   <h4>{item.name}</h4>
-//                   <p>{item.price.toLocaleString()}₫ x {item.quantity}</p>
-//                 </div>
-//               </div>
-//             ))}
-//             <h3>Tổng tiền: {totalAmount.toLocaleString()}₫</h3>
-//             <p className="payment-suggestion">🛒 {paymentSuggestion}</p>
-
-//             {discountCode && (
-//               <p className="discount-code">🎉 Bạn được giảm 50K! Mã giảm giá: <strong>{discountCode}</strong></p>
-//             )}
-//           </div>
-
-//           {/* Form nhập thông tin giao hàng */}
-//           <div className="checkout-form">
-//             <h3>Thông tin giao hàng</h3>
-//             <input type="text" placeholder="Họ và tên" />
-//             <input type="text" placeholder="Số điện thoại" />
-//             <input type="text" placeholder="Địa chỉ giao hàng" />
-//             <select>
-//               <option>Giao hàng tiêu chuẩn</option>
-//               <option>Giao hàng ngay - Miễn phí nếu trên 1 triệu</option>
-//             </select>
-//             <button className="order-button">Đặt hàng ngay</button>
-//           </div>
-//         </div>
-//       )}
-
-//       {/* Gợi ý sản phẩm kèm theo */}
-//       {cart.length > 0 && (
-//         <div className="suggested-products">
-//           <h3>Sản phẩm bạn có thể quan tâm</h3>
-//           <div className="suggested-items">
-//             {suggestedProducts.map((product) => (
-//               <div key={product.id} className="suggested-item">
-//                 <img src={product.image} alt={product.name} className="suggested-image" />
-//                 <p>{product.name}</p>
-//                 <p className="price">{product.price.toLocaleString()}₫</p>
-//                 <button onClick={() => addToCart(product)}>Thêm vào giỏ</button>
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default CheckoutPage;
 import React, { useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom"; // Để lấy dữ liệu truyền qua URL
+import { useLocation, useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
+import axios from "axios";
 import "./Checkout.css";
 
 const suggestedProducts = [
@@ -95,80 +11,192 @@ const suggestedProducts = [
 ];
 
 const CheckoutPage = () => {
-  const { cart, addToCart } = useContext(CartContext);
+  const { cart, addToCart, clearCart } = useContext(CartContext);
   const location = useLocation();
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const navigate = useNavigate();
 
-  // Nếu có sản phẩm thanh toán riêng, lưu vào state
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    phone: "",
+    address: "",
+    deliveryMethod: "Giao hàng tiêu chuẩn",
+    paymentMethod: "Cash",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [error, setError] = useState("");
+
+  const token = localStorage.getItem("token");
+  const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
   useEffect(() => {
     if (location.state?.product) {
       setSelectedProduct(location.state.product);
     }
   }, [location.state]);
 
-  // Tính tổng tiền
-  const totalAmount = selectedProduct
-    ? selectedProduct.price * selectedProduct.quantity
-    : cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  const productsToBuy = selectedProduct ? [selectedProduct] : cart;
 
-  const paymentSuggestion =
-    totalAmount > 100000 ? "Thanh toán qua ngân hàng để nhận ưu đãi" : "Thanh toán khi nhận hàng (COD)";
+  const totalAmount = productsToBuy.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
-  const discountCode = totalAmount > 50000 ? "GIAM10K" : null;
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleOrder = async () => {
+    setLoading(true);
+    setError("");
+    setSuccessMessage("");
+
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const userId = payload.user.userId;
+
+      const deliveryAddress = `${formData.fullName}, ${formData.phone}, ${formData.address}`;
+
+      const orderItems = productsToBuy.map((item) => ({
+        menuItemId: item.id,
+        quantity: item.quantity,
+        price: item.price,
+      }));
+
+      // Tạo đơn hàng
+      const orderRes = await axios.post(
+        `${BASE_URL}/api/order`,
+        {
+          userId,
+          deliveryAddress,
+          deliveryMethod: formData.deliveryMethod,
+          orderItems,
+          totalAmount,
+        },
+        {
+          headers: { "x-token": token },
+        }
+      );
+
+      
+      const orderId = orderRes.data?.data?.order?.id;
+      if (!orderId) throw new Error("Không lấy được ID đơn hàng.");
+      console.log("📦 Payload gửi thanh toán:", {
+        orderId,
+        amount: totalAmount,
+        paymentMethod: "Cash",
+        paymentStatus: "Pending",
+      });
+      if (formData.paymentMethod === "Cash") {
+        console.log("⚙️ Bắt đầu thanh toán COD");
+      
+        await axios.post(`${BASE_URL}/api/payment`, {
+          orderId,
+          amount: totalAmount,
+          paymentMethod: "Cash",
+          paymentStatus: "Pending",
+        }, {
+          headers: { "x-token": token },
+        });
+      
+        console.log("📩 Đang gửi hóa đơn...");
+        try {
+          await axios.post(`${BASE_URL}/api/orders/${orderId}/invoice`, null, {
+            headers: { "x-token": token },
+          });
+        } catch (err) {
+          console.error("❌ Gửi hóa đơn thất bại:", err.response?.data || err.message);
+          // không throw lỗi ở đây để không chặn navigate
+        }
+      
+        console.log("✅ Thành công! Đang chuyển trang...");
+        clearCart();
+        navigate("/order-success");
+      }
+      
+       else if (formData.paymentMethod === "Momo") {
+        // Gửi yêu cầu lấy URL VNPAY
+        const vnpayRes = await axios.post(
+          `${BASE_URL}/api/payment/vnpay`,
+          {
+            amount: totalAmount,
+            bankCode: "",
+            orderDescription: `Thanh toán đơn hàng #${orderId}`,
+            orderType: "other",
+            language: "vn",
+          },
+          {
+            headers: { "x-token": token },
+          }
+        );
+
+        const vnpayUrl = vnpayRes.data;
+        if (!vnpayUrl.startsWith("http")) throw new Error("Không tạo được URL thanh toán.");
+
+        window.location.href = vnpayUrl;
+      }
+
+    } catch (err) {
+      console.error("Lỗi khi đặt hàng:", err.response?.data || err.message);
+      setError("❌ Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="checkout-container">
       <h2>Trang thanh toán</h2>
-      {selectedProduct || cart.length > 0 ? (
+
+      {successMessage && <div className="success-message">{successMessage}</div>}
+      {error && <div className="error-message">{error}</div>}
+
+      {productsToBuy.length > 0 ? (
         <div className="checkout-content">
-          {/* Thông tin đơn hàng */}
+          {/* Chi tiết đơn hàng */}
           <div className="checkout-details">
             <h3>Thông tin đơn hàng</h3>
-            {selectedProduct ? (
-              <div className="checkout-item">
-                <img src={selectedProduct.image} alt={selectedProduct.name} className="checkout-image" />
+            {productsToBuy.map((item) => (
+              <div key={item.id} className="checkout-item">
+                <img src={item.image || item.imageUrl} alt={item.name} className="checkout-image" />
                 <div>
-                  <h4>{selectedProduct.name}</h4>
-                  <p>{selectedProduct.price.toLocaleString()}₫ x {selectedProduct.quantity}</p>
+                  <h4>{item.name}</h4>
+                  <p>{item.price.toLocaleString()}₫ x {item.quantity}</p>
                 </div>
               </div>
-            ) : (
-              cart.map((item) => (
-                <div key={item.id} className="checkout-item">
-                  <img src={item.image} alt={item.name} className="checkout-image" />
-                  <div>
-                    <h4>{item.name}</h4>
-                    <p>{item.price.toLocaleString()}₫ x {item.quantity}</p>
-                  </div>
-                </div>
-              ))
-            )}
+            ))}
             <h3>Tổng tiền: {totalAmount.toLocaleString()}₫</h3>
-            <p className="payment-suggestion">🛒 {paymentSuggestion}</p>
-
-            {discountCode && (
-              <p className="discount-code">🎉 Bạn được giảm 50K! Mã giảm giá: <strong>{discountCode}</strong></p>
-            )}
           </div>
 
-          {/* Form nhập thông tin giao hàng */}
+          {/* Form giao hàng */}
           <div className="checkout-form">
             <h3>Thông tin giao hàng</h3>
-            <input type="text" placeholder="Họ và tên" />
-            <input type="text" placeholder="Số điện thoại" />
-            <input type="text" placeholder="Địa chỉ giao hàng" />
-            <select>
+            <input type="text" name="fullName" placeholder="Họ và tên" value={formData.fullName} onChange={handleChange} />
+            <input type="text" name="phone" placeholder="Số điện thoại" value={formData.phone} onChange={handleChange} />
+            <input type="text" name="address" placeholder="Địa chỉ giao hàng" value={formData.address} onChange={handleChange} />
+            <select name="deliveryMethod" value={formData.deliveryMethod} onChange={handleChange}>
               <option>Giao hàng tiêu chuẩn</option>
               <option>Giao hàng ngay - Miễn phí nếu trên 1 triệu</option>
             </select>
-            <button className="order-button">Đặt hàng ngay</button>
+            <select name="paymentMethod" value={formData.paymentMethod} onChange={handleChange}>
+            <option value="Cash">Thanh toán khi nhận hàng (COD)</option>
+            <option value="Momo">Thanh toán qua Momo</option>
+            </select>
+            <button className="order-button" onClick={handleOrder} disabled={loading}>
+              {loading ? "Đang xử lý..." : "Đặt hàng ngay"}
+            </button>
           </div>
         </div>
       ) : (
         <p>Không có sản phẩm nào trong giỏ hàng.</p>
       )}
 
-      {/* Gợi ý sản phẩm kèm theo */}
+      {/* Gợi ý sản phẩm */}
       {cart.length > 0 && (
         <div className="suggested-products">
           <h3>Sản phẩm bạn có thể quan tâm</h3>
