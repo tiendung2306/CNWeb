@@ -63,6 +63,10 @@ router.get("/reviews/menuitem/:menuItemId", reviewController.getReviewsByMenuIte
 router.put("/reviews/:id", reviewController.updateReview);               
 router.delete("/reviews/:id", reviewController.deleteReview);   
 
+// Lấy món ăn ngẫu nhiên
+router.get('/menuitems/random', menuItemController.getRandomMenuItems);
+
+
 // Route gửi hóa đơn
 router.post("/orders/:orderId/invoice", sendInvoice);
 

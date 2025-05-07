@@ -41,3 +41,11 @@ export const getStatistics = async (startDate, endDate) => {
 
   return { totalOrders, totalRevenue, ordersPerItem };
 };
+
+export const getUserAndMenuStats = async () => {
+  // Số người dùng
+  const totalUsers = await db.User.count();
+  // Số món ăn
+  const totalMenuItems = await db.MenuItem.count();
+  return { totalUsers, totalMenuItems };
+};

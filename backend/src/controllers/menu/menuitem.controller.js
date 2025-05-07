@@ -145,3 +145,27 @@ export const deleteMenuItem = async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+
+// RANDOM: Lấy danh sách món ở thứ tự ngẫu nhiên
+export const getRandomMenuItems = async (req, res) => {
+  try {
+    // 1) Lấy tất cả món kèm thông tin category
+    const menuItems = await MenuItem.findAll({
+      include: [
+        { model: Category, through: { attributes: [] }, as: 'categories' }
+      ]
+    });
+
+    // 2) Xáo trộn mảng bằng Fisher–Yates shuffle
+    for (let i = menuItems.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [menuItems[i], menuItems[j]] = [menuItems[j], menuItems[i]];
+    }
+
+    // 3) Trả về kết quả
+    return res.status(200).json({ success: true, data: menuItems });
+  } catch (error) {
+    console.error('Error fetching random menu items:', error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
