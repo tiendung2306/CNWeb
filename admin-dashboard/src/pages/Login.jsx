@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 import "./Login.css";
-import { useAuth } from "../contexts/AuthContext"; // tùy vào nơi bạn lưu AuthContext
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL; // Đường dẫn đến API của bạn
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { login } = useAuth(); // Gọi login từ context
+  const [loading, setLoading] = useState(false); // thêm loading
+
   const navigate = useNavigate();
+  const { login } = useAuth(); // dùng context
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -18,23 +19,28 @@ export default function Login() {
     setError("");
 
     try {
-      const response = await axios.post("http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/pub/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${BASE_URL}/pub/login`, // Đường dẫn đến API của bạn
+        {
+          email,
+          password,
+        }
+      );
 
       if (response.data.success) {
         const { user, token } = response.data.data;
+
         if (user.role !== "admin") {
           setError("Bạn không có quyền truy cập trang này!");
           setLoading(false);
           return;
         }
+
         localStorage.setItem("token", token);
-        login(user); // lưu user vào context
+        login(user,token); // gọi hàm login từ context
 
         alert("Đăng nhập thành công!");
-        navigate("/"); // chuyển hướng
+        navigate("/"); // chuyển trang
       } else {
         setError(response.data.errorMessage || "Đăng nhập thất bại");
       }

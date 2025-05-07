@@ -37,28 +37,7 @@ export default function Users() {
     fetchUsers();
   }, []);
 
-  const handleRoleChange = async (id, newRole) => {
-    try {
-      await axios.put(
-        `${BASE_URL}/api/admin/allUsers/${id}/role`,
-        { role: newRole },
-        {
-          headers: {
-            "x-token": token,
-          },
-        }
-      );
-
-      setUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user.id === id ? { ...user, role: newRole } : user
-        )
-      );
-    } catch (err) {
-      alert("Cập nhật vai trò thất bại!");
-    }
-  };
-
+ 
   const handleDelete = async (id) => {
     if (!window.confirm("Bạn có chắc chắn muốn xóa người dùng này không?"))
       return;
@@ -87,6 +66,7 @@ export default function Users() {
         <thead>
           <tr>
             <th className="table-header">Tên người dùng</th>
+            <th className="table-header">Email</th>
             <th className="table-header">Vai trò</th>
             <th className="table-header">Thao tác</th>
           </tr>
@@ -95,15 +75,9 @@ export default function Users() {
           {users.map((user) => (
             <tr key={user.id}>
               <td className="table-cell">{user.username}</td>
+              <td className="table-cell">{user.email}</td>
               <td className="table-cell">
-                <select
-                  value={user.role}
-                  onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                  className="role-select"
-                >
-                  <option value="admin">Admin</option>
-                  <option value="user">User</option>
-                </select>
+                {user.role === "admin" ? "Quản trị viên" : "Người dùng"}
               </td>
               <td className="table-cell">
                 <button

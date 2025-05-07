@@ -55,46 +55,38 @@ const CheckoutPage = () => {
     setLoading(true);
     setError("");
     setSuccessMessage("");
-
+  
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
       const userId = payload.user.userId;
-
+  
       const deliveryAddress = `${formData.fullName}, ${formData.phone}, ${formData.address}`;
-
+  
       const orderItems = productsToBuy.map((item) => ({
         menuItemId: item.id,
         quantity: item.quantity,
         price: item.price,
       }));
-
-      // Tạo đơn hàng
-      const orderRes = await axios.post(
-        `${BASE_URL}/api/order`,
-        {
-          userId,
-          deliveryAddress,
-          deliveryMethod: formData.deliveryMethod,
-          orderItems,
-          totalAmount,
-        },
-        {
-          headers: { "x-token": token },
-        }
-      );
-
-      
-      const orderId = orderRes.data?.data?.order?.id;
-      if (!orderId) throw new Error("Không lấy được ID đơn hàng.");
-      console.log("📦 Payload gửi thanh toán:", {
-        orderId,
-        amount: totalAmount,
-        paymentMethod: "Cash",
-        paymentStatus: "Pending",
-      });
+  
       if (formData.paymentMethod === "Cash") {
-        console.log("⚙️ Bắt đầu thanh toán COD");
-      
+        // ✅ COD: Tạo đơn hàng rồi thanh toán
+        const orderRes = await axios.post(
+          `${BASE_URL}/api/order`,
+          {
+            userId,
+            deliveryAddress,
+            deliveryMethod: formData.deliveryMethod,
+            orderItems,
+            totalAmount,
+          },
+          {
+            headers: { "x-token": token },
+          }
+        );
+  
+        const orderId = orderRes.data?.data?.order?.id;
+        if (!orderId) throw new Error("Không lấy được ID đơn hàng.");
+  
         await axios.post(`${BASE_URL}/api/payment`, {
           orderId,
           amount: totalAmount,
@@ -103,51 +95,53 @@ const CheckoutPage = () => {
         }, {
           headers: { "x-token": token },
         });
-      
-        console.log("📩 Đang gửi hóa đơn...");
+  
+        // Gửi hóa đơn
         try {
           await axios.post(`${BASE_URL}/api/orders/${orderId}/invoice`, null, {
             headers: { "x-token": token },
           });
         } catch (err) {
           console.error("❌ Gửi hóa đơn thất bại:", err.response?.data || err.message);
-          // không throw lỗi ở đây để không chặn navigate
         }
-      
-        console.log("✅ Thành công! Đang chuyển trang...");
+  
         clearCart();
         navigate("/order-success");
-      }
-      
-       else if (formData.paymentMethod === "Momo") {
-        // Gửi yêu cầu lấy URL VNPAY
+      } else if (formData.paymentMethod === "Momo") {
+        // ✅ Momo: Gửi thông tin sang gateway, chưa tạo đơn hàng
         const vnpayRes = await axios.post(
           `${BASE_URL}/api/payment/vnpay`,
           {
             amount: totalAmount,
             bankCode: "",
-            orderDescription: `Thanh toán đơn hàng #${orderId}`,
+            orderDescription: `Thanh toán đơn hàng`,
             orderType: "other",
             language: "vn",
+            items: orderItems,
+            deliveryAddress,
+            deliveryMethod: formData.deliveryMethod,
           },
           {
             headers: { "x-token": token },
           }
         );
-
-        const vnpayUrl = vnpayRes.data;
-        if (!vnpayUrl.startsWith("http")) throw new Error("Không tạo được URL thanh toán.");
-
-        window.location.href = vnpayUrl;
+  
+        const paymentUrl = vnpayRes.data;
+        if (!paymentUrl.startsWith("http")) throw new Error("Không tạo được URL thanh toán.");
+  
+        // 👉 redirect sang trang thanh toán
+        window.location.href = paymentUrl;
       }
-
+  
     } catch (err) {
       console.error("Lỗi khi đặt hàng:", err.response?.data || err.message);
       setError("❌ Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.");
+      navigate("/order-fail");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="checkout-container">

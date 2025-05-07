@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./LoginForm.css";
 const BASE_URL = process.env.REACT_APP_API_BASE_URL; // Đường dẫn đến API của bạn
@@ -9,6 +10,7 @@ function LoginForm({ onSwitch }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     setError("");
@@ -31,6 +33,7 @@ function LoginForm({ onSwitch }) {
         localStorage.setItem("token", token);
 
         alert("Đăng nhập thành công!");
+        navigate("/");
       } else {
         setError(response.data.errorMessage || "Đăng nhập thất bại");
       }
