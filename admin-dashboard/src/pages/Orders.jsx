@@ -31,8 +31,8 @@ export default function Orders() {
 
   const handleChangeStatus = async (id, newStatus) => {
     try {
-      await axios.put(
-        `${BASE_URL}/api/payment/${id}`,
+      await axios.patch(
+        `${BASE_URL}/api/order/${id}`,
         { status: newStatus },
         {
           headers: { "x-token": token },
@@ -81,7 +81,7 @@ export default function Orders() {
     switch (status) {
       case "Pending":
         return "Chờ xử lý";
-      case "Delivered":
+      case "Completed":
         return "Đã giao";
       default:
         return status;
@@ -146,7 +146,7 @@ export default function Orders() {
                     {order.status === "Pending" && (
                       <button
                         onClick={() =>
-                          handleChangeStatus(order.id, "Delivered")
+                          handleChangeStatus(order.id, "Completed")
                         }
                         className="confirm-button"
                       >

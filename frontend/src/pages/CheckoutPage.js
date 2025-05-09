@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
-import axios from "axios";
 import "./Checkout.css";
 
 const suggestedProducts = [
@@ -68,7 +68,6 @@ const CheckoutPage = () => {
         price: item.price,
       }));
 
-      // Tạo đơn hàng
       const orderRes = await axios.post(
         `${BASE_URL}/api/order`,
         {
@@ -83,71 +82,63 @@ const CheckoutPage = () => {
         }
       );
 
-      
       const orderId = orderRes.data?.data?.order?.id;
       if (!orderId) throw new Error("Không lấy được ID đơn hàng.");
-      console.log("📦 Payload gửi thanh toán:", {
-        orderId,
-        amount: totalAmount,
-        paymentMethod: "Cash",
-        paymentStatus: "Pending",
-      });
+
       if (formData.paymentMethod === "Cash") {
-        console.log("⚙️ Bắt đầu thanh toán COD");
-      
+        // ✅ COD: Tạo đơn hàng rồi thanh toán
+
         await axios.post(`${BASE_URL}/api/payment`, {
           orderId,
           amount: totalAmount,
           paymentMethod: "Cash",
-          paymentStatus: "Pending",
+          paymentStatus: "Completed",
         }, {
           headers: { "x-token": token },
         });
-      
-        console.log("📩 Đang gửi hóa đơn...");
+
+        // Gửi hóa đơn
         try {
           await axios.post(`${BASE_URL}/api/orders/${orderId}/invoice`, null, {
             headers: { "x-token": token },
           });
         } catch (err) {
           console.error("❌ Gửi hóa đơn thất bại:", err.response?.data || err.message);
-          // không throw lỗi ở đây để không chặn navigate
         }
-      
-        console.log("✅ Thành công! Đang chuyển trang...");
+
         clearCart();
-        navigate("/order-success");
-      }
-      
-       else if (formData.paymentMethod === "Momo") {
-        // Gửi yêu cầu lấy URL VNPAY
+        navigate("/order-status?vnp_ResponseCode=00");
+      } else if (formData.paymentMethod === "Momo") {
+        // ✅ Momo: Gửi thông tin sang gateway, chưa tạo đơn hàng
         const vnpayRes = await axios.post(
-          `${BASE_URL}/api/payment/vnpay`,
+          `${BASE_URL}/api/payment/createPaymentVNPAY`,
           {
             amount: totalAmount,
-            bankCode: "",
-            orderDescription: `Thanh toán đơn hàng #${orderId}`,
-            orderType: "other",
-            language: "vn",
+            orderType: "Other",
+            orderDescription: `Thanh toan don hang ${orderId}`
           },
           {
             headers: { "x-token": token },
           }
         );
 
-        const vnpayUrl = vnpayRes.data;
-        if (!vnpayUrl.startsWith("http")) throw new Error("Không tạo được URL thanh toán.");
+        const paymentUrl = vnpayRes.data.vnpUrl;
+        if (!paymentUrl || typeof paymentUrl !== 'string' || !paymentUrl.startsWith("https"))
+          throw new Error("Không tạo được URL thanh toán.");
 
-        window.location.href = vnpayUrl;
+        // 👉 redirect sang trang thanh toán
+        window.location.href = paymentUrl;
       }
 
     } catch (err) {
       console.error("Lỗi khi đặt hàng:", err.response?.data || err.message);
       setError("❌ Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.");
+      navigate("/order-status");
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="checkout-container">
@@ -184,8 +175,8 @@ const CheckoutPage = () => {
               <option>Giao hàng ngay - Miễn phí nếu trên 1 triệu</option>
             </select>
             <select name="paymentMethod" value={formData.paymentMethod} onChange={handleChange}>
-            <option value="Cash">Thanh toán khi nhận hàng (COD)</option>
-            <option value="Momo">Thanh toán qua Momo</option>
+              <option value="Cash">Thanh toán khi nhận hàng (COD)</option>
+              <option value="Momo">Thanh toán qua Momo</option>
             </select>
             <button className="order-button" onClick={handleOrder} disabled={loading}>
               {loading ? "Đang xử lý..." : "Đặt hàng ngay"}

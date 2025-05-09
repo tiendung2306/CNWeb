@@ -10,12 +10,17 @@ function Menu() {
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(6);
+
+  const [categories, setCategories] = useState([]); // [{ id, name }]
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
-  const [currentPage, setCurrentPage] = useState(1); // Thêm state cho trang hiện tại
-  const [itemsPerPage] = useState(6); // Số món ăn mỗi trang
+  const [categoryDetail, setCategoryDetail] = useState(null);
 
   const { addToCart } = useContext(CartContext);
 
+  // Fetch menu items
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
@@ -41,20 +46,67 @@ function Menu() {
       }
     };
 
+    // const fetchCategories = async () => {
+    //   try {
+    //     const response = await axios.get(`${BASE_URL}/pub/categories`);
+    //     const result = response.data;
+
+    //     if (result.success && Array.isArray(result.data)) {
+    //       setCategories([{ id: null, name: "Tất cả" }, ...result.data]);
+    //     } else {
+    //       setError("Không có dữ liệu danh mục.");
+    //     }
+    //   } catch (err) {
+    //     console.error("Lỗi khi gọi API danh mục:", err);
+    //     setError("Không thể tải danh sách danh mục.");
+    //   }
+    // };
+
     fetchMenuItems();
+    // fetchCategories();
+    
   }, []);
 
-  const categories = ["Tất cả", ...Array.from(new Set(foods.map((f) => f.category)))];
-  const filteredFoods = selectedCategory === "Tất cả"
-    ? foods
-    : foods.filter((food) => food.category === selectedCategory);
+  // Fetch chi tiết danh mục khi selectedCategory thay đổi
+  useEffect(() => {
+    const fetchCategoryDetail = async () => {
+      if (selectedCategory === "Tất cả") {
+        setCategoryDetail(null);
+        return;
+      }
 
-  // Phân trang các món ăn
+      const categoryObj = categories.find((cat) => cat.name === selectedCategory);
+      if (!categoryObj || !categoryObj.id) {
+        setCategoryDetail(null);
+        return;
+      }
+
+      try {
+        const response = await axios.get(`${BASE_URL}/pub/categories/${categoryObj.id}`);
+        const result = response.data;
+        if (result.success && result.data) {
+          setCategoryDetail(result.data);
+        } else {
+          setCategoryDetail(null);
+        }
+      } catch (err) {
+        console.error("Lỗi khi gọi API chi tiết danh mục:", err);
+        setCategoryDetail(null);
+      }
+    };
+
+    fetchCategoryDetail();
+  }, [selectedCategory, categories]);
+
+  const filteredFoods =
+    selectedCategory === "Tất cả"
+      ? foods
+      : foods.filter((food) => food.category === selectedCategory);
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentFoods = filteredFoods.slice(indexOfFirstItem, indexOfLastItem);
-
-  const totalPages = Math.ceil(filteredFoods.length / itemsPerPage); // Tổng số trang
+  const totalPages = Math.ceil(filteredFoods.length / itemsPerPage);
 
   if (loading) return <p>Đang tải thực đơn...</p>;
   if (error) return <p>{error}</p>;
@@ -68,16 +120,18 @@ function Menu() {
         <div className="menu-high-line">
           <h3 className="menu-high-title">Món Ăn Được Yêu Thích</h3>
           <div className="menu-high-list">
-            {filteredFoods.filter((food) => food.rating >= 4.5).map((food) => (
-              <div className="menu-high-item" key={food.id}>
-                <img
-                  src={food.imageUrl || food.image}
-                  alt={food.name}
-                  className="menu-high-image"
-                />
-                <p className="menu-high-name">{food.name}</p>
-              </div>
-            ))}
+            {filteredFoods
+              .filter((food) => food.rating >= 4.5)
+              .map((food) => (
+                <div className="menu-high-item" key={food.id}>
+                  <img
+                    src={food.imageUrl || food.image}
+                    alt={food.name}
+                    className="menu-high-image"
+                  />
+                  <p className="menu-high-name">{food.name}</p>
+                </div>
+              ))}
           </div>
         </div>
       )}
@@ -86,14 +140,34 @@ function Menu() {
       <div className="menu-selection">
         {categories.map((category) => (
           <button
-            key={category}
-            className={`menu-selection-button ${selectedCategory === category ? "active" : ""}`}
-            onClick={() => setSelectedCategory(category)}
+            key={category.name}
+            className={`menu-selection-button ${
+              selectedCategory === category.name ? "active" : ""
+            }`}
+            onClick={() => {
+              setSelectedCategory(category.name);
+              setCurrentPage(1); // reset lại trang về 1
+            }}
           >
-            {category}
+            {category.name}
           </button>
         ))}
       </div>
+
+      {/* Hiển thị chi tiết danh mục */}
+      {categoryDetail && (
+        <div className="category-detail">
+          <h3>{categoryDetail.name}</h3>
+          {categoryDetail.description && <p>{categoryDetail.description}</p>}
+          {categoryDetail.image && (
+            <img
+              src={categoryDetail.image}
+              alt={categoryDetail.name}
+              style={{ maxWidth: "200px", marginTop: "10px" }}
+            />
+          )}
+        </div>
+      )}
 
       {/* Danh sách món ăn */}
       <div className="menu-list">

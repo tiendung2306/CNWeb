@@ -51,6 +51,33 @@
   color: #2d3748;
 }
 
+.table-cell ul {
+  list-style-type: none; /* Remove default list styling */
+  padding: 0;
+  margin: 10px 0;
+}
+
+.table-cell ul li {
+  padding: 8px 12px;
+  background-color: #f9f9f9; /* Light background for list items */
+  border: 1px solid #ddd; /* Add border for separation */
+  border-radius: 5px; /* Rounded corners */
+  margin-bottom: 8px; /* Space between items */
+  font-size: 14px; /* Adjust font size */
+  color: #333; /* Text color */
+}
+
+.table-cell ul li:last-child {
+  margin-bottom: 0; /* Remove margin for the last item */
+}
+
+.table-cell strong {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #555; /* Softer text color for the title */
+}
+
 .table-cell:last-child {
   text-align: center;
 }
