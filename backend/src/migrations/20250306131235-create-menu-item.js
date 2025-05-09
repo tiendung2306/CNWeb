@@ -23,6 +23,11 @@ module.exports = {
       imageUrl: {
         type: Sequelize.STRING(255),
       },
+      status: {
+        type: Sequelize.ENUM('available', 'unavailable'),
+        allowNull: false,
+        defaultValue: 'available',
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -37,6 +42,9 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
+    // Gỡ bảng
     await queryInterface.dropTable('MenuItems');
+    // Xóa ENUM type nếu dùng Postgres
+    await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_MenuItems_status";');
   }
 };
