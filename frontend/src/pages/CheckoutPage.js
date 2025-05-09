@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
-import axios from "axios";
 import "./Checkout.css";
 
 const suggestedProducts = [
@@ -55,47 +55,48 @@ const CheckoutPage = () => {
     setLoading(true);
     setError("");
     setSuccessMessage("");
-  
+
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
       const userId = payload.user.userId;
-  
+
       const deliveryAddress = `${formData.fullName}, ${formData.phone}, ${formData.address}`;
-  
+
       const orderItems = productsToBuy.map((item) => ({
         menuItemId: item.id,
         quantity: item.quantity,
         price: item.price,
       }));
-  
+
+      const orderRes = await axios.post(
+        `${BASE_URL}/api/order`,
+        {
+          userId,
+          deliveryAddress,
+          deliveryMethod: formData.deliveryMethod,
+          orderItems,
+          totalAmount,
+        },
+        {
+          headers: { "x-token": token },
+        }
+      );
+
+      const orderId = orderRes.data?.data?.order?.id;
+      if (!orderId) throw new Error("Không lấy được ID đơn hàng.");
+
       if (formData.paymentMethod === "Cash") {
         // ✅ COD: Tạo đơn hàng rồi thanh toán
-        const orderRes = await axios.post(
-          `${BASE_URL}/api/order`,
-          {
-            userId,
-            deliveryAddress,
-            deliveryMethod: formData.deliveryMethod,
-            orderItems,
-            totalAmount,
-          },
-          {
-            headers: { "x-token": token },
-          }
-        );
-  
-        const orderId = orderRes.data?.data?.order?.id;
-        if (!orderId) throw new Error("Không lấy được ID đơn hàng.");
-  
+
         await axios.post(`${BASE_URL}/api/payment`, {
           orderId,
           amount: totalAmount,
           paymentMethod: "Cash",
-          paymentStatus: "Pending",
+          paymentStatus: "Completed",
         }, {
           headers: { "x-token": token },
         });
-  
+
         // Gửi hóa đơn
         try {
           await axios.post(`${BASE_URL}/api/orders/${orderId}/invoice`, null, {
@@ -104,44 +105,40 @@ const CheckoutPage = () => {
         } catch (err) {
           console.error("❌ Gửi hóa đơn thất bại:", err.response?.data || err.message);
         }
-  
+
         clearCart();
-        navigate("/order-success");
+        navigate("/order-status?vnp_ResponseCode=00");
       } else if (formData.paymentMethod === "Momo") {
         // ✅ Momo: Gửi thông tin sang gateway, chưa tạo đơn hàng
         const vnpayRes = await axios.post(
-          `${BASE_URL}/api/payment/vnpay`,
+          `${BASE_URL}/api/payment/createPaymentVNPAY`,
           {
             amount: totalAmount,
-            bankCode: "",
-            orderDescription: `Thanh toán đơn hàng`,
-            orderType: "other",
-            language: "vn",
-            items: orderItems,
-            deliveryAddress,
-            deliveryMethod: formData.deliveryMethod,
+            orderType: "Other",
+            orderDescription: `Thanh toan don hang ${orderId}`
           },
           {
             headers: { "x-token": token },
           }
         );
-  
-        const paymentUrl = vnpayRes.data;
-        if (!paymentUrl.startsWith("http")) throw new Error("Không tạo được URL thanh toán.");
-  
+
+        const paymentUrl = vnpayRes.data.vnpUrl;
+        if (!paymentUrl || typeof paymentUrl !== 'string' || !paymentUrl.startsWith("https"))
+          throw new Error("Không tạo được URL thanh toán.");
+
         // 👉 redirect sang trang thanh toán
         window.location.href = paymentUrl;
       }
-  
+
     } catch (err) {
       console.error("Lỗi khi đặt hàng:", err.response?.data || err.message);
       setError("❌ Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.");
-      navigate("/order-fail");
+      navigate("/order-status");
     } finally {
       setLoading(false);
     }
   };
-  
+
 
   return (
     <div className="checkout-container">
@@ -178,8 +175,8 @@ const CheckoutPage = () => {
               <option>Giao hàng ngay - Miễn phí nếu trên 1 triệu</option>
             </select>
             <select name="paymentMethod" value={formData.paymentMethod} onChange={handleChange}>
-            <option value="Cash">Thanh toán khi nhận hàng (COD)</option>
-            <option value="Momo">Thanh toán qua Momo</option>
+              <option value="Cash">Thanh toán khi nhận hàng (COD)</option>
+              <option value="Momo">Thanh toán qua Momo</option>
             </select>
             <button className="order-button" onClick={handleOrder} disabled={loading}>
               {loading ? "Đang xử lý..." : "Đặt hàng ngay"}
