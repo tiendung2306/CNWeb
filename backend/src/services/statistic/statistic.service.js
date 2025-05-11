@@ -45,7 +45,7 @@ export const getStatistics = async (startDate, endDate) => {
 
   const ordersPerItem = perItem.map(item => ({
     menuItemId: item.menuItemId,
-    name:       item.MenuItem.name,
+    name:       item.menuItem.name,
     totalQuantity: parseInt(item.get('totalQuantity'), 10)
   }));
 
