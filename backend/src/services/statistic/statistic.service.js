@@ -27,15 +27,25 @@ export const getStatistics = async (startDate, endDate) => {
       [Sequelize.fn('sum', Sequelize.col('quantity')), 'totalQuantity']
     ],
     include: [
-      { model: Order, where: { orderDate: { [Op.between]: [start, end] } }, attributes: [] },
-      { model: MenuItem, attributes: ['name'] }
+      {
+        model: Order,
+        as: 'order',             // ← thêm alias đúng
+        where: { orderDate: { [Op.between]: [start, end] } },
+        attributes: []
+      },
+      {
+        model: MenuItem,
+        as: 'menuItem',          // ← thêm alias đúng
+        attributes: ['name']
+      }
     ],
-    group: ['menuItemId', 'MenuItem.id', 'MenuItem.name']
+    group: ['menuItemId', 'menuItem.id', 'menuItem.name']
   });
+  
 
   const ordersPerItem = perItem.map(item => ({
     menuItemId: item.menuItemId,
-    name:       item.MenuItem.name,
+    name:       item.menuItem.name,
     totalQuantity: parseInt(item.get('totalQuantity'), 10)
   }));
 

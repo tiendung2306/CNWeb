@@ -18,7 +18,7 @@ async function uploadToCloudinary(buffer) {
 // CREATE: Tạo món mới, hỗ trợ cả URL cũ hoặc upload file ảnh
 export const createMenuItem = async (req, res) => {
   try {
-    const { name, price, description, categoryIds } = req.body;
+    const { name, price, description, categoryIds, status } = req.body;
 
     // 1) Upload ảnh nếu có file
     let imageUrl = req.body.imageUrl || null;
@@ -28,7 +28,7 @@ export const createMenuItem = async (req, res) => {
     }
 
     // 2) Tạo món ăn
-    const newItem = await MenuItem.create({ name, price, description, imageUrl });
+    const newItem = await MenuItem.create({ name, price, description, imageUrl, status });
 
     // 3) Gán category nếu có
     if (Array.isArray(categoryIds) && categoryIds.length) {
@@ -84,7 +84,7 @@ export const getMenuItemById = async (req, res) => {
 export const updateMenuItem = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, price, description, categoryIds } = req.body;
+    const { name, price, description, categoryIds, status } = req.body;
     const item = await MenuItem.findByPk(id);
     if (!item) {
       return res.status(404).json({ success: false, message: 'Menu item not found' });
@@ -100,6 +100,8 @@ export const updateMenuItem = async (req, res) => {
     if (name !== undefined)        item.name        = name;
     if (price !== undefined)       item.price       = price;
     if (description !== undefined) item.description = description;
+    if (status !== undefined)      item.status = status;
+    
     await item.save();
 
     // 3) Cập nhật danh mục nếu client gửi categoryIds
