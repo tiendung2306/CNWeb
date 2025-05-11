@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Products.css";
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
- // Đường dẫn đến API của bạn
+// Đường dẫn đến API của bạn
 const API_PUBLIC = `${BASE_URL}/pub/menuitems`;
 const API_ADMIN = `${BASE_URL}/api/admin/menuitems`;
 
@@ -15,7 +15,7 @@ export default function Products() {
   const [newCategory, setNewCategory] = useState("");
   const [editId, setEditId] = useState(null);
   const [editForm, setEditForm] = useState({});
-  
+
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export default function Products() {
       description: product.description,
       price: product.price,
       imageUrl: product.imageUrl,
-      category: product.category,
+      category: product.categories?.[0]?.name || "",
     });
   };
 
@@ -138,9 +138,8 @@ export default function Products() {
         />
         <input
           type="text"
-          placeholder="Danh mục"
-          value={newCategory}
-          onChange={(e) => setNewCategory(e.target.value)}
+          value={editForm.category}
+          onChange={(e) => handleEditChange("category", e.target.value)}
         />
         <button className="btn-add-product" onClick={handleAddProduct}>
           Thêm sản phẩm
@@ -161,67 +160,89 @@ export default function Products() {
         <tbody>
           {products.map((product) => (
             <tr key={product.id}>
-            <td>
-              <img src={product.imageUrl} alt={product.name} width="60" />
-            </td>
-          
-            {editId === product.id ? (
-              <>
-                <td>
-                  <input
-                    type="text"
-                    value={editForm.name}
-                    onChange={(e) => handleEditChange("name", e.target.value)}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    value={editForm.description}
-                    onChange={(e) => handleEditChange("description", e.target.value)}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    value={editForm.price}
-                    onChange={(e) => handleEditChange("price", e.target.value)}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    value={editForm.category}
-                    onChange={(e) => handleEditChange("category", e.target.value)}
-                  />
-                </td>
-                <td>
-                  <button className="btn-save" onClick={() => handleUpdate(product.id)}>
-                    Lưu
-                  </button>
-                  <button className="btn-cancel" onClick={() => setEditId(null)}>
-                    Hủy
-                  </button>
-                </td>
-              </>
-            ) : (
-              <>
-                <td>{product.name}</td>
-                <td>{product.description}</td>
-                <td>{product.price}₫</td>
-                <td>{product.category || "Chưa xác định"}</td>
-                <td>
-                  <button className="btn-edit" onClick={() => startEdit(product)}>
-                    Sửa
-                  </button>
-                  <button className="btn-delete" onClick={() => handleDelete(product.id)}>
-                    Xoá
-                  </button>
-                </td>
-              </>
-            )}
-          </tr>
-          
+              <td>
+                <img src={product.imageUrl} alt={product.name} width="60" />
+              </td>
+
+              {editId === product.id ? (
+                <>
+                  <td>
+                    <input
+                      type="text"
+                      value={editForm.name}
+                      onChange={(e) => handleEditChange("name", e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={editForm.description}
+                      onChange={(e) =>
+                        handleEditChange("description", e.target.value)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={editForm.price}
+                      onChange={(e) =>
+                        handleEditChange("price", e.target.value)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={editForm.categorys}
+                      onChange={(e) =>
+                        handleEditChange("category", e.target.value)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <button
+                      className="btn-save"
+                      onClick={() => handleUpdate(product.id)}
+                    >
+                      Lưu
+                    </button>
+                    <button
+                      className="btn-cancel"
+                      onClick={() => setEditId(null)}
+                    >
+                      Hủy
+                    </button>
+                  </td>
+                </>
+              ) : (
+                <>
+                  <td>{product.name}</td>
+                  <td>{product.description}</td>
+                  <td>{product.price}₫</td>
+                  <td>
+                    {product.categories && product.categories.length > 0
+                      ? product.categories.map((c) => c.name).join(", ")
+                      : "Chưa xác định"}
+                  </td>
+
+                  <td>
+                    <button
+                      className="btn-edit"
+                      onClick={() => startEdit(product)}
+                    >
+                      Sửa
+                    </button>
+                    <button
+                      className="btn-delete"
+                      onClick={() => handleDelete(product.id)}
+                    >
+                      Xoá
+                    </button>
+                  </td>
+                </>
+              )}
+            </tr>
           ))}
         </tbody>
       </table>

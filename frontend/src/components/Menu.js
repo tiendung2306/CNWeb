@@ -7,106 +7,51 @@ import { CartContext } from "../context/CartContext";
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 function Menu() {
-  const [foods, setFoods] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(6);
-
-  const [categories, setCategories] = useState([]); // [{ id, name }]
-  const [selectedCategory, setSelectedCategory] = useState("Tất cả");
-  const [categoryDetail, setCategoryDetail] = useState(null);
+  const [categories, setCategories] = useState([]); // Danh sách danh mục
+  const [selectedCategory, setSelectedCategory] = useState(null); // Danh mục được chọn
+  const [foods, setFoods] = useState([]); // Danh sách món ăn
+  const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
+  const [error, setError] = useState(null); // Trạng thái lỗi
 
   const { addToCart } = useContext(CartContext);
 
-  // Fetch menu items
+  // Fetch tất cả danh mục
   useEffect(() => {
-    const fetchMenuItems = async () => {
+    const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/pub/menuitems`);
+        const response = await axios.get(`${BASE_URL}/pub/categories`);
         const result = response.data;
 
-        if (result.success && Array.isArray(result.data)) {
-          const foodsWithFallback = result.data.map((food) => ({
-            ...food,
-            category: food.category || "Khác",
-            price: parseInt(food.price),
-            rating: parseFloat(food.rating) || 0,
-          }));
-          setFoods(foodsWithFallback);
+        if (result.success && Array.isArray(result.data.categories)) {
+          setCategories(result.data.categories);
         } else {
-          setError("Không có dữ liệu món ăn.");
+          setError("Không có dữ liệu danh mục.");
         }
       } catch (err) {
-        console.error("Lỗi khi gọi API:", err);
-        setError("Không thể tải danh sách món ăn.");
+        console.error("Lỗi khi gọi API danh mục:", err);
+        setError("Không thể tải danh sách danh mục.");
       } finally {
-        setLoading(false);
+        setLoading(false); // Đảm bảo loading là false sau khi fetch xong
       }
     };
 
-    // const fetchCategories = async () => {
-    //   try {
-    //     const response = await axios.get(`${BASE_URL}/pub/categories`);
-    //     const result = response.data;
-
-    //     if (result.success && Array.isArray(result.data)) {
-    //       setCategories([{ id: null, name: "Tất cả" }, ...result.data]);
-    //     } else {
-    //       setError("Không có dữ liệu danh mục.");
-    //     }
-    //   } catch (err) {
-    //     console.error("Lỗi khi gọi API danh mục:", err);
-    //     setError("Không thể tải danh sách danh mục.");
-    //   }
-    // };
-
-    fetchMenuItems();
-    // fetchCategories();
-    
+    fetchCategories();
   }, []);
 
-  // Fetch chi tiết danh mục khi selectedCategory thay đổi
+  // Fetch món ăn theo danh mục đã chọn
   useEffect(() => {
-    const fetchCategoryDetail = async () => {
-      if (selectedCategory === "Tất cả") {
-        setCategoryDetail(null);
-        return;
-      }
+    if (selectedCategory !== null) {
+      const category = categories.find((cat) => cat.id === selectedCategory);
 
-      const categoryObj = categories.find((cat) => cat.name === selectedCategory);
-      if (!categoryObj || !categoryObj.id) {
-        setCategoryDetail(null);
-        return;
+      if (category) {
+        setFoods(category.menuItems); // Lấy món ăn từ danh mục đã chọn
       }
-
-      try {
-        const response = await axios.get(`${BASE_URL}/pub/categories/${categoryObj.id}`);
-        const result = response.data;
-        if (result.success && result.data) {
-          setCategoryDetail(result.data);
-        } else {
-          setCategoryDetail(null);
-        }
-      } catch (err) {
-        console.error("Lỗi khi gọi API chi tiết danh mục:", err);
-        setCategoryDetail(null);
-      }
-    };
-
-    fetchCategoryDetail();
+    } else {
+      // Khi không chọn danh mục, lấy tất cả món ăn
+      const allMenuItems = categories.flatMap((category) => category.menuItems);
+      setFoods(allMenuItems);
+    }
   }, [selectedCategory, categories]);
-
-  const filteredFoods =
-    selectedCategory === "Tất cả"
-      ? foods
-      : foods.filter((food) => food.category === selectedCategory);
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentFoods = filteredFoods.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredFoods.length / itemsPerPage);
 
   if (loading) return <p>Đang tải thực đơn...</p>;
   if (error) return <p>{error}</p>;
@@ -115,78 +60,40 @@ function Menu() {
     <div className="menu-container">
       <h2 className="menu-title">Thực Đơn</h2>
 
-      {/* Món ăn được yêu thích */}
-      {filteredFoods.filter((food) => food.rating >= 4.5).length > 0 && (
-        <div className="menu-high-line">
-          <h3 className="menu-high-title">Món Ăn Được Yêu Thích</h3>
-          <div className="menu-high-list">
-            {filteredFoods
-              .filter((food) => food.rating >= 4.5)
-              .map((food) => (
-                <div className="menu-high-item" key={food.id}>
-                  <img
-                    src={food.imageUrl || food.image}
-                    alt={food.name}
-                    className="menu-high-image"
-                  />
-                  <p className="menu-high-name">{food.name}</p>
-                </div>
-              ))}
-          </div>
-        </div>
-      )}
-
       {/* Lọc danh mục */}
       <div className="menu-selection">
+        <button
+          className={`menu-selection-button ${selectedCategory === null ? "active" : ""}`}
+          onClick={() => setSelectedCategory(null)}
+        >
+          Tất cả
+        </button>
         {categories.map((category) => (
           <button
-            key={category.name}
-            className={`menu-selection-button ${
-              selectedCategory === category.name ? "active" : ""
-            }`}
-            onClick={() => {
-              setSelectedCategory(category.name);
-              setCurrentPage(1); // reset lại trang về 1
-            }}
+            key={category.id}
+            className={`menu-selection-button ${selectedCategory === category.id ? "active" : ""}`}
+            onClick={() => setSelectedCategory(category.id)}
           >
             {category.name}
           </button>
         ))}
       </div>
 
-      {/* Hiển thị chi tiết danh mục */}
-      {categoryDetail && (
-        <div className="category-detail">
-          <h3>{categoryDetail.name}</h3>
-          {categoryDetail.description && <p>{categoryDetail.description}</p>}
-          {categoryDetail.image && (
-            <img
-              src={categoryDetail.image}
-              alt={categoryDetail.name}
-              style={{ maxWidth: "200px", marginTop: "10px" }}
-            />
-          )}
-        </div>
-      )}
-
       {/* Danh sách món ăn */}
       <div className="menu-list">
-        {currentFoods.length > 0 ? (
-          currentFoods.map((food) => (
+        {foods.length > 0 ? (
+          foods.map((food) => (
             <div className="menu-item" key={food.id}>
               <div className="menu-content">
                 <img
-                  src={food.imageUrl || food.image}
+                  src={food.imageUrl || food.image || "default-image.jpg"}
                   alt={food.name}
                   className="menu-image"
                 />
                 <div className="menu-info">
                   <h3 className="menu-name">{food.name}</h3>
-                  <p className="menu-description">{food.description}</p>
-                  <button
-                    className="menu-add-to-cart"
-                    onClick={() => addToCart(food)}
-                  >
+                  <p className="menu-description">{food.description || "Không có mô tả"}</p>
+                  <button className="menu-add-to-cart" onClick={() => addToCart(food)}>
                     THÊM VÀO GIỎ
                   </button>
                   <Link to={`/food/${food.id}`} className="menu-link">
@@ -194,7 +101,7 @@ function Menu() {
                   </Link>
                 </div>
                 <div className="menu-price">
-                  {food.price.toLocaleString()}₫
+                  {parseFloat(food.price).toLocaleString()}₫
                 </div>
               </div>
             </div>
@@ -202,25 +109,6 @@ function Menu() {
         ) : (
           <p className="menu-no-item">Không có món ăn nào trong danh mục này.</p>
         )}
-      </div>
-
-      {/* Phân trang */}
-      <div className="pagination">
-        <button
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Trang Trước
-        </button>
-        <span>
-          Trang {currentPage} / {totalPages}
-        </span>
-        <button
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          Trang Sau
-        </button>
       </div>
     </div>
   );

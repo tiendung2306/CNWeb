@@ -2,67 +2,76 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f7fafc;
     margin: 0;
     padding: 0;
-  }
-  
-  .login-container {
+    background-color: #ffffff;
+}
+
+.login-container {
+    position: absolute; /* Center the form */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    background-color: #f7fafc;
-  }
-  
-  .login-box {
-    background-color: white;
+    width: 100%;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.login-box {
+    background-color: #ffffff;
     padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(47, 37, 37, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow */
     width: 100%;
     max-width: 400px;
-  }
-  
-  .login-box h2 {
     text-align: center;
+}
+
+.login-box h2 {
     font-size: 24px;
     margin-bottom: 20px;
-  }
-  
-  .error-message {
+    color: #2d3748;
+}
+
+.error-message {
     color: #e53e3e;
     text-align: center;
     margin-bottom: 15px;
-  }
-  
-  .form-group {
+    font-weight: bold;
+}
+
+.form-group {
     margin-bottom: 15px;
-  }
-  
-  .form-group label {
+    text-align: left;
+}
+
+.form-group label {
     font-size: 14px;
     color: #4a5568;
     display: block;
     margin-bottom: 8px;
-  }
-  
-  .input-field {
+}
+
+.input-field {
     width: 100%;
     padding: 12px;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     font-size: 16px;
-    margin-bottom: 12px;
     box-sizing: border-box;
-  }
-  
-  .input-field:focus {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-field:focus {
     border-color: #3182ce;
+    box-shadow: 0 0 5px rgba(49, 130, 206, 0.5);
     outline: none;
-  }
-  
-  .login-btn {
+}
+
+.login-btn {
     width: 100%;
     padding: 12px;
     background-color: #3182ce;
@@ -71,15 +80,15 @@ body {
     border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .login-btn:hover {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.login-btn:hover {
     background-color: #2b6cb0;
-  }
-  
-  .login-btn:disabled {
+    transform: translateY(-2px); /* Hover effect */
+}
+
+.login-btn:disabled {
     background-color: #e2e8f0;
     cursor: not-allowed;
-  }
-  
+}
