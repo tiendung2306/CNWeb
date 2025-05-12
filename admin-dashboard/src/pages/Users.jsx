@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Users.css";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +15,7 @@ export default function Users() {
   const fetchUsers = async () => {
     try {
       const res = await axios.get(
-        "http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/allUsers?limit=1000&offset=0",
+        `${BASE_URL}/api/admin/allUsers`,
         {
           headers: {
             "x-token": token,
@@ -34,34 +37,13 @@ export default function Users() {
     fetchUsers();
   }, []);
 
-  const handleRoleChange = async (id, newRole) => {
-    try {
-      await axios.put(
-        `http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/allUsers/${id}`,
-        { role: newRole },
-        {
-          headers: {
-            "x-token": token,
-          },
-        }
-      );
-
-      setUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user.id === id ? { ...user, role: newRole } : user
-        )
-      );
-    } catch (err) {
-      alert("Cập nhật vai trò thất bại!");
-    }
-  };
-
+ 
   const handleDelete = async (id) => {
     if (!window.confirm("Bạn có chắc chắn muốn xóa người dùng này không?"))
       return;
     try {
       await axios.delete(
-        `http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/allUsers/${id}`,
+        `${BASE_URL}/api/admin/allUsers/${id}`,
         {
           headers: {
             "x-token": token,
@@ -84,6 +66,7 @@ export default function Users() {
         <thead>
           <tr>
             <th className="table-header">Tên người dùng</th>
+            <th className="table-header">Email</th>
             <th className="table-header">Vai trò</th>
             <th className="table-header">Thao tác</th>
           </tr>
@@ -92,15 +75,9 @@ export default function Users() {
           {users.map((user) => (
             <tr key={user.id}>
               <td className="table-cell">{user.username}</td>
+              <td className="table-cell">{user.email}</td>
               <td className="table-cell">
-                <select
-                  value={user.role}
-                  onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                  className="role-select"
-                >
-                  <option value="admin">Admin</option>
-                  <option value="user">User</option>
-                </select>
+                {user.role === "admin" ? "Quản trị viên" : "Người dùng"}
               </td>
               <td className="table-cell">
                 <button

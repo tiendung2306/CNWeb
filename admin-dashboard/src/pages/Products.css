@@ -1,130 +1,201 @@
-/* Container */
+/* ---------- Layout Container ---------- */
 .products-container {
   padding: 24px;
   font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #2d3748;
 }
 
-/* Title */
+/* ---------- Title ---------- */
 .products-title {
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 28px;
+  font-weight: 600;
   margin-bottom: 20px;
-  color: #000;
+  color: #1a202c;
 }
 
-/* Add Product Form */
+/* ---------- Add Product Form ---------- */
 .add-product-form {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  align-items: center;
   flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
 .add-product-form input {
-  padding: 8px 12px;
-  font-size: 16px;
+  flex: 1;
+  min-width: 180px;
+  padding: 10px 14px;
+  font-size: 15px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  outline: none;
-  min-width: 200px;
-  background-color: #f1f1f1;
-  color: #000;
+  background-color: #ffffff;
+  transition: border-color 0.2s;
+  color: #2d3748; /* Darker text color for better visibility */
 }
 
-/* Add Button */
+.add-product-form input:focus {
+  border-color: #3182ce;
+  outline: none;
+}
+
+/* ---------- Add Button ---------- */
 .btn-add-product {
-  background-color: #4caf50;
-  color: white;
+  background-color: #3182ce;
+  color: #ffffff;
   border: none;
   padding: 10px 16px;
-  font-size: 16px;
+  font-size: 15px;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .btn-add-product:hover {
-  background-color: #45a049;
+  background-color: #2b6cb0;
 }
 
-/* Table */
+/* ---------- Table ---------- */
 .products-table {
   width: 100%;
-  margin-top: 16px;
   border-collapse: collapse;
-  color:#718096;
-  border: 1px solid #ccc;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.table-header {
+.products-table th,
+.products-table td {
   padding: 12px;
-  text-align: left;
-  background-color: #f1f1f1;
-  border: 1px solid #666666;
-}
-
-.table-cell {
-  padding: 12px;
-  border: 1px solid #ddd;
   text-align: center;
-  vertical-align: middle;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-/* Image */
+.products-table th {
+  background-color: #edf2f7;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+/* ---------- Product Image ---------- */
 .products-table img {
   width: 60px;
   height: 60px;
-  border-radius: 6px;
   object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
-/* Buttons - Shared Styles */
+/* ---------- Buttons ---------- */
 button {
   padding: 6px 12px;
   font-size: 14px;
+  border-radius: 6px;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
-  margin: 0 2px;
+  margin: 2px;
   transition: background-color 0.2s ease;
 }
 
 /* Edit Button */
 .btn-edit {
-  background-color: #ecc94b;
+  background-color: #f6ad55;
   color: #fff;
 }
 
 .btn-edit:hover {
-  background-color: #d69e2e;
+  background-color: #dd6b20;
 }
 
 /* Delete Button */
 .btn-delete {
   background-color: #e53e3e;
-  color: white;
+  color: #fff;
 }
 
 .btn-delete:hover {
   background-color: #c53030;
 }
 
-/* Save & Cancel Buttons */
+/* Save Button */
 .btn-save {
   background-color: #38a169;
-  color: white;
+  color: #fff;
 }
 
 .btn-save:hover {
   background-color: #2f855a;
 }
 
+/* Cancel Button */
 .btn-cancel {
-  background-color: #718096;
-  color: white;
+  background-color: #a0aec0;
+  color: #fff;
 }
 
 .btn-cancel:hover {
-  background-color: #4a5568;
+  background-color: #718096;
+}
+
+/* ---------- Edit Mode Input ---------- */
+.edit-input {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 14px;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #2d3748;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .add-product-form {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .add-product-form input,
+  .btn-add-product {
+    width: 100%;
+  }
+
+  .products-table {
+    font-size: 14px;
+  }
+
+  .products-container {
+    padding: 16px;
+  }
+}
+/* Responsive cho màn hình nhỏ */
+@media (max-width: 768px) {
+  /* Tạo dạng cột cho form thêm sản phẩm */
+  .add-product-form {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .add-product-form input,
+  .btn-add-product {
+    width: 100%;
+  }
+
+  .products-table {
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .products-container {
+    padding: 16px;
+  }
+
+  /* Cải thiện bảng cho dễ nhìn trên màn hình nhỏ */
+  .products-table th, .products-table td {
+    padding: 10px;
+  }
+
+  .products-title {
+    font-size: 22px;
+  }
 }

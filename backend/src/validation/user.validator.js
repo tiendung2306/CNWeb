@@ -6,6 +6,21 @@ export const getOtherUserProfile = {
   },
 };
 
+export const updateUserById = {
+  params: {
+    userId: Joi.number().required(),
+  },
+  body: {
+    username: Joi.string(),
+  }
+};
+
+export const deleteUserById = {
+  params: {
+    userId: Joi.number().required(),
+  },
+};
+
 export const changePassword = {
   body: {
     oldPassword: Joi.string().required(),

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Products.css";
-
-const API_PUBLIC = "http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/pub/menuitems";
-const API_ADMIN = "http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/admin/menuitems";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// Đường dẫn đến API của bạn
+const API_PUBLIC = `${BASE_URL}/pub/menuitems`;
+const API_ADMIN = `${BASE_URL}/api/admin/menuitems`;
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -81,7 +82,7 @@ export default function Products() {
       description: product.description,
       price: product.price,
       imageUrl: product.imageUrl,
-      category: product.category,
+      category: product.categories?.[0]?.name || "",
     });
   };
 
@@ -137,9 +138,8 @@ export default function Products() {
         />
         <input
           type="text"
-          placeholder="Danh mục"
-          value={newCategory}
-          onChange={(e) => setNewCategory(e.target.value)}
+          value={editForm.category}
+          onChange={(e) => handleEditChange("category", e.target.value)}
         />
         <button className="btn-add-product" onClick={handleAddProduct}>
           Thêm sản phẩm
@@ -153,6 +153,7 @@ export default function Products() {
             <th>Tên</th>
             <th>Mô tả</th>
             <th>Giá</th>
+            <th>Danh mục</th>
             <th>Thao tác</th>
           </tr>
         </thead>
@@ -176,21 +177,40 @@ export default function Products() {
                     <input
                       type="text"
                       value={editForm.description}
-                      onChange={(e) => handleEditChange("description", e.target.value)}
+                      onChange={(e) =>
+                        handleEditChange("description", e.target.value)
+                      }
                     />
                   </td>
                   <td>
                     <input
                       type="text"
                       value={editForm.price}
-                      onChange={(e) => handleEditChange("price", e.target.value)}
+                      onChange={(e) =>
+                        handleEditChange("price", e.target.value)
+                      }
                     />
                   </td>
                   <td>
-                    <button className="btn-save" onClick={() => handleUpdate(product.id)}>
+                    <input
+                      type="text"
+                      value={editForm.categorys}
+                      onChange={(e) =>
+                        handleEditChange("category", e.target.value)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <button
+                      className="btn-save"
+                      onClick={() => handleUpdate(product.id)}
+                    >
                       Lưu
                     </button>
-                    <button className="btn-cancel" onClick={() => setEditId(null)}>
+                    <button
+                      className="btn-cancel"
+                      onClick={() => setEditId(null)}
+                    >
                       Hủy
                     </button>
                   </td>
@@ -201,10 +221,22 @@ export default function Products() {
                   <td>{product.description}</td>
                   <td>{product.price}₫</td>
                   <td>
-                    <button className="btn-edit" onClick={() => startEdit(product)}>
+                    {product.categories && product.categories.length > 0
+                      ? product.categories.map((c) => c.name).join(", ")
+                      : "Chưa xác định"}
+                  </td>
+
+                  <td>
+                    <button
+                      className="btn-edit"
+                      onClick={() => startEdit(product)}
+                    >
                       Sửa
                     </button>
-                    <button className="btn-delete" onClick={() => handleDelete(product.id)}>
+                    <button
+                      className="btn-delete"
+                      onClick={() => handleDelete(product.id)}
+                    >
                       Xoá
                     </button>
                   </td>

@@ -13,6 +13,18 @@
   margin-bottom: 16px;
 }
 
+/* Filter dropdown */
+.filter-dropdown {
+  margin-top: 16px;
+  padding: 8px;
+  font-size: 16px;
+  margin-bottom: 8px;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+  background-color: white;
+  color: #2d3748;
+}
+
 /* Table styles */
 .orders-table {
   width: 100%;
@@ -27,7 +39,7 @@
 .table-header {
   padding: 14px;
   text-align: left;
-  background-color: #e2e8f0; /* Tailwind gray-200 */
+  background-color: #e2e8f0;
   border-bottom: 2px solid #cbd5e0;
   color: #2d3748;
   font-weight: 600;
@@ -39,13 +51,57 @@
   color: #2d3748;
 }
 
+.table-cell ul {
+  list-style-type: none; /* Remove default list styling */
+  padding: 0;
+  margin: 10px 0;
+}
+
+.table-cell ul li {
+  padding: 8px 12px;
+  background-color: #f9f9f9; /* Light background for list items */
+  border: 1px solid #ddd; /* Add border for separation */
+  border-radius: 5px; /* Rounded corners */
+  margin-bottom: 8px; /* Space between items */
+  font-size: 14px; /* Adjust font size */
+  color: #333; /* Text color */
+}
+
+.table-cell ul li:last-child {
+  margin-bottom: 0; /* Remove margin for the last item */
+}
+
+.table-cell strong {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #555; /* Softer text color for the title */
+}
+
 .table-cell:last-child {
   text-align: center;
 }
 
-/* Button to confirm order delivery */
+/* Hover row effect */
+.orders-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.orders-table tbody tr:hover {
+  background-color: #edf2f7;
+}
+
+/* Action button wrapper */
+.table-cell.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Confirm button */
 .confirm-button {
-  background-color: #38a169; /* Green */
+  background-color: #38a169;
   color: white;
   padding: 8px 16px;
   border-radius: 6px;
@@ -60,29 +116,47 @@
   transform: scale(1.05);
 }
 
-/* Add a disabled button style (optional) */
+.confirm-button:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
 .confirm-button:disabled {
   background-color: #a0aec0;
   cursor: not-allowed;
 }
 
-/* Responsive tweaks */
-@media (max-width: 768px) {
-  .orders-table {
-    font-size: 14px;
-  }
-
-  .table-header,
-  .table-cell {
-    padding: 10px;
-  }
-
-  .orders-title {
-    font-size: 22px;
-  }
+/* Details button */
+.details-button {
+  background-color: #3182ce;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-/* Optional: Loading animation */
+.details-button:hover {
+  background-color: #2b6cb0;
+  transform: scale(1.05);
+}
+
+.details-button:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Empty message when no orders */
+.empty-message {
+  text-align: center;
+  padding: 40px 0;
+  font-size: 18px;
+  color: #718096;
+  font-style: italic;
+}
+
+/* Loading state */
 .orders-loading {
   text-align: center;
   font-size: 18px;
@@ -95,23 +169,50 @@
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.details-button {
-  background-color: #3182ce;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 4px;
-  margin-left: 8px;
-  border: none;
-  cursor: pointer;
+
+/* Fade when filtering */
+.orders-filtering {
+  animation: fadeSlide 0.4s ease;
 }
 
-.details-button:hover {
-  background-color: #2b6cb0;
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.filter-dropdown {
-  margin-top: 16px;
-  padding: 8px;
-  font-size: 16px;
-  margin-bottom: 8px;
+/* Responsive styles */
+@media (max-width: 768px) {
+  .orders-title {
+    font-size: 22px;
+    text-align: center;
+  }
+
+  .filter-dropdown {
+    width: 100%;
+    font-size: 14px;
+    padding: 6px;
+  }
+
+  .orders-table {
+    font-size: 14px;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .table-header,
+  .table-cell {
+    padding: 10px;
+  }
+
+  .confirm-button,
+  .details-button {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+
+  .table-cell.actions {
+    flex-direction: column;
+    gap: 6px;
+  }
 }

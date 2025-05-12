@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import foodData from "../data/mockData"; // Import dữ liệu giả
+import axios from "axios";
 import "./FoodDetail.css";
 import {
   FaCertificate,
@@ -16,35 +16,53 @@ import {
 import Review from "../components/Review";
 import { CartContext } from "../context/CartContext";
 
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const FoodDetail = () => {
-  const { id } = useParams(); // Lấy ID món ăn từ URL
-  const food = foodData.find((item) => item.id === Number(id)); // Tìm món ăn theo ID
+  const { id } = useParams();
   const navigate = useNavigate();
-  const [averageRating, setAverageRating] = useState(0);
+  const { addToCart } = useContext(CartContext);
   const userId = 1;
+
+  const [food, setFood] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [averageRating, setAverageRating] = useState(0);
+  const token = localStorage.getItem("token");
+  console.log("BASE_URL:", BASE_URL);
+  console.log("id:", id);
+  
+  useEffect(() => {
+    const fetchFood = async () => {
+      try {
+        const res = await axios.get(`${BASE_URL}/api/menuitems/${id}`, {
+          headers: { "x-token": token },
+        });
+    
+        const item = res.data.data;
+        console.log("Món ăn đã lấy:", item);
+    
+        setFood({
+          ...item,
+          price: parseInt(item.price) || 0,
+          rating: parseFloat(item.rating) || 0,
+        });
+    
+        setAverageRating(parseFloat(item.rating) || 0);
+      } catch (err) {
+        console.error("Lỗi khi lấy món ăn:", err);
+        setError("Không thể tải món ăn.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchFood();
+  }, [id]);
+
   const handleBuyNow = () => {
     navigate("/checkout", { state: { product: { ...food, quantity: 1 } } });
   };
-
-  // thêm số lượng sản phẩm
-  const { addToCart } = useContext(CartContext);
-
-  // Lấy điểm trung bình từ đánh giá
-  useEffect(() => {
-    const storedReviews = JSON.parse(localStorage.getItem("reviews")) || [];
-    const foodReviews = storedReviews.filter(
-      (review) => review.foodId === Number(id)
-    );
-
-    if (foodReviews.length > 0) {
-      const avg =
-        foodReviews.reduce((sum, r) => sum + Number(r.rating), 0) /
-        foodReviews.length;
-      setAverageRating(avg);
-    } else {
-      setAverageRating(0);
-    }
-  }, [id]);
 
   const renderStars = (rating) => {
     const stars = [];
@@ -60,23 +78,21 @@ const FoodDetail = () => {
     return stars;
   };
 
-  if (!food) {
-    return <div className="food-detail">Món ăn không tồn tại.</div>;
-  }
+  if (loading) return <div className="food-detail">Đang tải món ăn...</div>;
+  if (error) return <div className="food-detail">{error}</div>;
+  if (!food) return <div className="food-detail">Món ăn không tồn tại.</div>;
 
   return (
     <div className="food-detail">
-      {/* Nút quay lại */}
       <button className="back-button" onClick={() => navigate(-1)}>
         &#8592; Quay lại Menu
       </button>
+
       <div className="food-container">
-        {/* Hình ảnh sản phẩm */}
         <div className="food-image">
-          <img src={food.image} alt={food.name} />
+          <img src={food.imageUrl || food.image} alt={food.name} />
         </div>
 
-        {/* Thông tin sản phẩm */}
         <div className="food-info">
           <h2>{food.name}</h2>
           <p className="status">
@@ -89,12 +105,6 @@ const FoodDetail = () => {
             <span className="rating-score">({averageRating.toFixed(1)})</span>
           </div>
 
-          {/* Số lượng */}
-          <div className="quantity-control">
-            <span></span>
-          </div>
-
-          {/* Nút mua */}
           <div className="buttons">
             <button className="add-to-cart" onClick={() => addToCart(food)}>
               THÊM VÀO GIỎ
@@ -103,7 +113,7 @@ const FoodDetail = () => {
               Mua ngay
             </button>
           </div>
-          {/* Mã giảm giá */}
+
           <div className="discount">
             <button className="discount-btn">
               CLICK VÀO ĐÂY ĐỂ NHẬN ƯU ĐÃI
@@ -112,7 +122,6 @@ const FoodDetail = () => {
         </div>
       </div>
 
-      {/* Chia sẻ */}
       <div className="share">
         <span>Chia sẻ: </span>
         <i className="fa-brands fa-facebook"></i>
@@ -122,7 +131,6 @@ const FoodDetail = () => {
         <i className="fa-solid fa-link"></i>
       </div>
 
-      {/* Lợi ích khi mua hàng */}
       <div className="product-benefits">
         <div className="benefit-item">
           <FaCertificate /> <span>Cam kết 100% chính hãng</span>
@@ -143,6 +151,7 @@ const FoodDetail = () => {
           <FaUndo /> <span>Đổi trả trong 7 ngày</span>
         </div>
       </div>
+
       <Review foodId={food.id} userId={userId} />
     </div>
   );

@@ -195,3 +195,56 @@
   color: #ff6f00; /* Màu cam đồng bộ */
   margin-right: 10px;
 }
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .food-detail {
+    width: 95%;
+    font-size: 16px;
+  }
+
+  .food-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .food-image img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .food-info {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .add-to-cart,
+  .buy-now {
+    width: 100%;
+    padding: 12px 0;
+  }
+
+  .quantity {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .share {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .product-benefits {
+    flex-direction: column;
+    gap: 15px;
+  }
+}

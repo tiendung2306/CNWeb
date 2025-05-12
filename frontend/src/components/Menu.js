@@ -1,45 +1,57 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import "./Menu.css";
 import { CartContext } from "../context/CartContext";
 
-function Menu() {
-  const [foods, setFoods] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState("Tất cả");
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-  const categories = ["Tất cả", "Đồ uống", "Cơm", "Phở", "Đồ ăn nhanh"];
+function Menu() {
+  const [categories, setCategories] = useState([]); // Danh sách danh mục
+  const [selectedCategory, setSelectedCategory] = useState(null); // Danh mục được chọn
+  const [foods, setFoods] = useState([]); // Danh sách món ăn
+  const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
+  const [error, setError] = useState(null); // Trạng thái lỗi
+
   const { addToCart } = useContext(CartContext);
 
+  // Fetch tất cả danh mục
   useEffect(() => {
-    const fetchMenuItems = async () => {
+    const fetchCategories = async () => {
       try {
-        const response = await fetch("http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/pub/menuitems");
-        if (!response.ok) throw new Error("Không thể tải danh sách món ăn");
+        const response = await axios.get(`${BASE_URL}/pub/categories`);
+        const result = response.data;
 
-        const result = await response.json();
-        if (result.success && Array.isArray(result.data)) {
-          setFoods(result.data);
+        if (result.success && Array.isArray(result.data.categories)) {
+          setCategories(result.data.categories);
         } else {
-          setError("Không có dữ liệu món ăn.");
+          setError("Không có dữ liệu danh mục.");
         }
       } catch (err) {
-        setError(err.message);
+        console.error("Lỗi khi gọi API danh mục:", err);
+        setError("Không thể tải danh sách danh mục.");
       } finally {
-        setLoading(false);
+        setLoading(false); // Đảm bảo loading là false sau khi fetch xong
       }
     };
 
-    fetchMenuItems();
+    fetchCategories();
   }, []);
 
-  const filteredFoods =
-    selectedCategory === "Tất cả"
-      ? foods
-      : foods.filter((food) => food.category === selectedCategory);
+  // Fetch món ăn theo danh mục đã chọn
+  useEffect(() => {
+    if (selectedCategory !== null) {
+      const category = categories.find((cat) => cat.id === selectedCategory);
 
-  const highRatedFoods = foods.filter((food) => parseFloat(food.rating) >= 4.5);
+      if (category) {
+        setFoods(category.menuItems); // Lấy món ăn từ danh mục đã chọn
+      }
+    } else {
+      // Khi không chọn danh mục, lấy tất cả món ăn
+      const allMenuItems = categories.flatMap((category) => category.menuItems);
+      setFoods(allMenuItems);
+    }
+  }, [selectedCategory, categories]);
 
   if (loading) return <p>Đang tải thực đơn...</p>;
   if (error) return <p>{error}</p>;
@@ -48,55 +60,40 @@ function Menu() {
     <div className="menu-container">
       <h2 className="menu-title">Thực Đơn</h2>
 
-      {highRatedFoods.length > 0 && (
-        <div className="menu-high-line">
-          <h3 className="menu-high-title">Món Ăn Được Yêu Thích</h3>
-          <div className="menu-high-list">
-            {highRatedFoods.map((food) => (
-              <div className="menu-high-item" key={food.id}>
-                <img
-                  src={food.imageUrl || food.image}
-                  alt={food.name}
-                  className="menu-high-image"
-                />
-                <p className="menu-high-name">{food.name}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
+      {/* Lọc danh mục */}
       <div className="menu-selection">
+        <button
+          className={`menu-selection-button ${selectedCategory === null ? "active" : ""}`}
+          onClick={() => setSelectedCategory(null)}
+        >
+          Tất cả
+        </button>
         {categories.map((category) => (
           <button
-            key={category}
-            className={`menu-selection-button ${
-              selectedCategory === category ? "active" : ""
-            }`}
-            onClick={() => setSelectedCategory(category)}
+            key={category.id}
+            className={`menu-selection-button ${selectedCategory === category.id ? "active" : ""}`}
+            onClick={() => setSelectedCategory(category.id)}
           >
-            {category}
+            {category.name}
           </button>
         ))}
       </div>
 
+      {/* Danh sách món ăn */}
       <div className="menu-list">
-        {filteredFoods.length > 0 ? (
-          filteredFoods.map((food) => (
+        {foods.length > 0 ? (
+          foods.map((food) => (
             <div className="menu-item" key={food.id}>
               <div className="menu-content">
                 <img
-                  src={food.imageUrl || food.image}
+                  src={food.imageUrl || food.image || "default-image.jpg"}
                   alt={food.name}
                   className="menu-image"
                 />
                 <div className="menu-info">
                   <h3 className="menu-name">{food.name}</h3>
-                  <p className="menu-description">{food.description}</p>
-                  <button
-                    className="menu-add-to-cart"
-                    onClick={() => addToCart(food)}
-                  >
+                  <p className="menu-description">{food.description || "Không có mô tả"}</p>
+                  <button className="menu-add-to-cart" onClick={() => addToCart(food)}>
                     THÊM VÀO GIỎ
                   </button>
                   <Link to={`/food/${food.id}`} className="menu-link">
@@ -104,15 +101,13 @@ function Menu() {
                   </Link>
                 </div>
                 <div className="menu-price">
-                  {parseInt(food.price).toLocaleString()}₫
+                  {parseFloat(food.price).toLocaleString()}₫
                 </div>
               </div>
             </div>
           ))
         ) : (
-          <p className="menu-no-item">
-            Không có món ăn nào trong danh mục này.
-          </p>
+          <p className="menu-no-item">Không có món ăn nào trong danh mục này.</p>
         )}
       </div>
     </div>

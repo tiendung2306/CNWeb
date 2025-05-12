@@ -1,38 +1,44 @@
+import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    // Kiểm tra localStorage để lấy user nếu có
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   const [token, setToken] = useState(localStorage.getItem("token") || null);
 
-  // Hàm fetch user từ API nếu có token
+  // Lấy thông tin người dùng từ API
   const fetchUser = async (authToken = token) => {
     if (!authToken) return;
     try {
-      const response = await fetch("ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/me", {
-        method: "GET",
-        headers: { "x-token": authToken },
+
+      const response = await axios.get(`${BASE_URL}/api/me`, {
+        headers: {
+          "x-token": authToken,
+        },
+
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        const userData = data.data.user || data.data; // Đảm bảo tương thích 2 định dạng
-        console.log("Fetched user data: ", userData);
-        setUser(userData);
-        setIsLoggedIn(true);
-        localStorage.setItem("user", JSON.stringify(userData));
-      } else {
-        logout();
-      }
+      const data = response.data;
+      const userData = data.data?.user || data.data;
+
+      console.log("Fetched user data: ", userData);
+      setUser(userData);
+      setIsLoggedIn(true);
+      localStorage.setItem("user", JSON.stringify(userData));
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu user:", error);
       logout();
     }
   };
 
-  // Kiểm tra token khi mở trang
+  // Lần đầu tiên khi app khởi chạy và khi token thay đổi
   useEffect(() => {
     if (token) {
       fetchUser(token);

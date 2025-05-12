@@ -4,7 +4,8 @@ const chalk = require('chalk');
 const dotenv = require('dotenv');
 const cluster = require('cluster');
 const numCores = require('os').cpus().length;
-const app = require('./app');
+const { app } = require('./app');
+const { http } = require('./app');
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (uncaughtExc) => {
@@ -57,10 +58,10 @@ const setupWorkerProcesses = () => {
 // Setup an express server and define port to listen all incoming requests for this application
 const setUpExpress = () => {
   dotenv.config({ path: '.env' });
-  
+
   const port = process.env.APP_PORT || 3000;
 
-  const server = app.listen(port, () => {
+  const server = http.listen(port, () => {
     console.log(`App running on port ${chalk.greenBright(port)}...`);
   });
 

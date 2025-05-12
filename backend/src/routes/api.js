@@ -22,6 +22,8 @@ router.post(
   validate(userValidator.changePassword),
   userController.changePassword,
 );
+router.patch('/user/:userId', validate(userValidator.updateUserById), userController.updateUserById);
+
 router.route('/order')
   .post(validate(orderValidator.createOrder), orderController.createOrder);
 
@@ -60,6 +62,10 @@ router.post("/reviews", reviewController.createReview);
 router.get("/reviews/menuitem/:menuItemId", reviewController.getReviewsByMenuItem); 
 router.put("/reviews/:id", reviewController.updateReview);               
 router.delete("/reviews/:id", reviewController.deleteReview);   
+
+// Lấy món ăn ngẫu nhiên
+router.get('/menuitems/random', menuItemController.getRandomMenuItems);
+
 
 // Route gửi hóa đơn
 router.post("/orders/:orderId/invoice", sendInvoice);
