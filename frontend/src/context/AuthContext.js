@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   const fetchUser = async (authToken = token) => {
     if (!authToken) return;
     try {
-      const response = await fetch("http://localhost:3000/api/me", {
+      const response = await fetch("ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/me", {
         method: "GET",
         headers: { "x-token": authToken },
       });
