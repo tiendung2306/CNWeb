@@ -12,7 +12,6 @@ export default function Layout() {
     logout();
     navigate("/login");
   };
-
   return (
     <div className="layout-container">
       {/* Nút toggle cho sidebar trên màn hình nhỏ */}
