@@ -40,7 +40,7 @@
 }
 
 /* ---------- Add Button ---------- */
-.btn-add-product {
+.btn-add-product, .btn-add-category {
   background-color: #3182ce;
   color: #ffffff;
   border: none;
@@ -243,6 +243,7 @@ button {
 }
 
 /* Input khi chỉnh sửa */
+
 .category-list input[type="text"] {
   padding: 6px 10px;
   border: 1px solid #ccc;
@@ -292,4 +293,24 @@ button {
 }
 .btn-cancel:hover {
   background-color: #5a6268;
+}
+ select {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+  max-width: 250px;
+  background-color: #fff;
+  color: #333;
+}
+input {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+  max-width: 250px;
+  background-color: #fff;
+  color: #000;
 }

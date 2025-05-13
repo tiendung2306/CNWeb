@@ -255,6 +255,10 @@ const handleUpdate = async (id) => {
         </button>
       </div>
 <ul className="category-list">
+  <div class="add-category-form">
+    <input type="text" placeholder="Tên danh mục" value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)} />
+    <button className="btn-add-category" onClick={handleAddCategory}>Thêm danh mục</button>
+  </div>
   {Categories.map((cat) => (
     <li key={cat.id}>
       {editCategoryId === cat.id ? (
