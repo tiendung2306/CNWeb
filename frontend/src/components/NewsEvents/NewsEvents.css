@@ -1,78 +1,87 @@
 .news-events-container {
-    font-family: sans-serif;
-    color: #333;
-    padding: 20px;
+    padding: 16px;
+}
+
+.news-events-title {
     text-align: center;
+    margin-bottom: 24px;
 }
 
 .news-events-title h1 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    color: #222;
 }
 
 .news-events-title p {
-    font-size: 1.2em;
-    color: #666;
-    margin-bottom: 30px;
+    font-size: 1rem;
+    color: #777;
 }
 
+/* Danh sách bài viết */
 .news-events-items {
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .news-event-item {
-    width: 300px;
-    margin: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
+    background-color: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: left;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
 }
 
 .news-event-date {
-    padding: 10px;
-    background-color: #e0e0e0;
-    font-size: 0.9em;
-    color: #666;
-}
-
-.news-event-image {
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 8px;
 }
 
 .news-event-image img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 12px;
 }
 
 .news-event-item h3 {
-    font-size: 1.3em;
-    margin: 10px;
+    font-size: 1.1rem;
+    margin: 0 0 8px;
+    color: #333;
 }
 
 .news-event-item p {
-    padding: 0 10px 10px;
-    line-height: 1.6;
+    font-size: 0.95rem;
     color: #666;
+    margin-bottom: 12px;
 }
 
 .read-more-link {
-    display: block;
-    padding: 10px;
-    text-align: right;
-    color: #007bff;
+    color: #ff6600;
+    font-weight: 500;
     text-decoration: none;
 }
 
-/* Responsive design (điều chỉnh khi cần thiết) */
-@media (max-width: 768px) {
-    .news-event-item {
-        width: 90%;
+.read-more-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Grid cho tablet trở lên */
+@media (min-width: 768px) {
+    .news-events-items {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+}
+
+/* Desktop - 3 cột */
+@media (min-width: 1024px) {
+    .news-events-items {
+        grid-template-columns: repeat(3, 1fr);
     }
 }

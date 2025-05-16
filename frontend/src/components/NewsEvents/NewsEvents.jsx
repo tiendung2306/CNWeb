@@ -12,7 +12,7 @@ const NewsEvents = () => {
                 <div className="news-event-item">
                     <div className="news-event-date">22 Tháng 05, 2024</div>
                     <div className="news-event-image">
-                        <img src="path/to/spain-food.jpg" alt="12 món ăn nổi tiếng ở Tây Ban Nha" />
+                        <img src="/news1.jpg" alt="12 món ăn nổi tiếng ở Tây Ban Nha" />
                     </div>
                     <h3>12 món ăn nổi tiếng ở Tây Ban Nha nhất định phải ăn cho đã đời</h3>
                     <p>Người Tây Ban Nha lấy thực phẩm chủ yếu từ đất đai và biển cả, nền ẩm thực của họ...</p>
@@ -21,7 +21,7 @@ const NewsEvents = () => {
                 <div className="news-event-item">
                     <div className="news-event-date">22 Tháng 05, 2024</div>
                     <div className="news-event-image">
-                        <img src="path/to/saigon-food.jpg" alt="Top 5 món ngon Sài Gòn" />
+                        <img src="/news2.jpg" alt="Top 5 món ngon Sài Gòn" />
                     </div>
                     <h3>Top 5 món ngon không thể bỏ qua khi đến Sài Gòn</h3>
                     <p>Những món đặc sản nổi tiếng như cơm tấm, hủ tiếu, bánh xèo, lẩu cá kèo... là những món ngon...</p>
@@ -30,7 +30,7 @@ const NewsEvents = () => {
                 <div className="news-event-item">
                     <div className="news-event-date">22 Tháng 05, 2024</div>
                     <div className="news-event-image">
-                        <img src="path/to/italian-food.jpg" alt="Sự tinh tế ẩm thực Italia" />
+                        <img src="/news3.jpg" alt="Sự tinh tế ẩm thực Italia" />
                     </div>
                     <h3>Sự tinh tế và lãng mạn của nét ẩm thực Italia</h3>
                     <p>Ngoài những hàng thời trang nổi tiếng bậc nhất thế giới, đất nước Italia còn được coi là cái nôi...</p>

@@ -102,7 +102,7 @@ const ListUserOrder = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await axios.get("http://localhost:3001/api/order/user/2", {
+                const response = await axios.get("ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/order/user/2", {
                     headers: {
                         "x-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJJZCI6MywiZW1haWwiOiJhZG1pbjFAZ21haWwuY29tIiwiY3JlYXRlZEF0IjoiMjAyNS0wMy0zMFQwMDoyMjoyNS4zNjBaIn0sImlhdCI6MTc0MzI5NDE0NX0.djSJ8j3Rrfvkm9w16bsjpoJFlvG7tKR9wrXxrkrByO0"
                     }
@@ -115,7 +115,7 @@ const ListUserOrder = () => {
                         let orderItemsWithDetails = [];
                         if (Array.isArray(response.data.data[i].orderItems)) {
                             for (let j = 0; j < response.data.data[i].orderItems.length; j++) {
-                                const orderItem = await axios.get(`http://localhost:3001/api/menuitems/${response.data.data[i].orderItems[j].menuItemId}`, {
+                                const orderItem = await axios.get(`ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000/api/menuitems/${response.data.data[i].orderItems[j].menuItemId}`, {
                                     headers: {
                                         "x-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJJZCI6MywiZW1haWwiOiJhZG1pbjFAZ21haWwuY29tIiwiY3JlYXRlZEF0IjoiMjAyNS0wMy0zMFQwMDoyMjoyNS4zNjBaIn0sImlhdCI6MTc0MzI5NDE0NX0.djSJ8j3Rrfvkm9w16bsjpoJFlvG7tKR9wrXxrkrByO0"
                                     }

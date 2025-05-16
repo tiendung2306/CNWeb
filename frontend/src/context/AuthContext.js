@@ -17,10 +17,12 @@ export const AuthProvider = ({ children }) => {
   const fetchUser = async (authToken = token) => {
     if (!authToken) return;
     try {
+
       const response = await axios.get(`${BASE_URL}/api/me`, {
         headers: {
           "x-token": authToken,
         },
+
       });
 
       const data = response.data;

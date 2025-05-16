@@ -15,7 +15,7 @@ const Home = () => {
             <Banner />
             <SecondBanner />
             <Recommend />
-            <Menu />
+            {/* <Menu /> */}
             <Features />
             <NewsEvents />
             <Reviews />

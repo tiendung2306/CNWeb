@@ -18,51 +18,7 @@ const Menu = () => {
                         <p>50,000₫</p>
                     </div>
                 </div>
-                <div className="menu-item">
-                    <div className="menu-item-content">
-                        <h3>Gà xiên que</h3>
-                        <p>Gà xiên que bao gồm thịt gà được cắt miếng ướp cùng với tỏi, bột cà ri, muối tiêu, khi...</p>
-                    </div>
-                    <div className="menu-item-price">
-                        <p>35,000₫</p>
-                    </div>
-                </div>
-                <div className="menu-item">
-                    <div className="menu-item-content">
-                        <h3>Garlic Prime Rib</h3>
-                        <p>Bít tết sẽ là lựa chọn tuyệt vời cho những bữa tiệc sang chảnh tại nhà với hương vị thơm...</p>
-                    </div>
-                    <div className="menu-item-price">
-                        <p>320,000₫</p>
-                    </div>
-                </div>
-                <div className="menu-item">
-                    <div className="menu-item-content">
-                        <h3>Green Chicken Salad</h3>
-                        <p>Salad là món gỏi trộn thanh đạm và thường xuất hiện trong thực đơn món Âu, nhưng bạn đã thực sự...</p>
-                    </div>
-                    <div className="menu-item-price">
-                        <p>125,000₫</p>
-                    </div>
-                </div>
-                <div className="menu-item">
-                    <div className="menu-item-content">
-                        <h3>Hamburger Trứng, Thịt Bò & Xúc Xích</h3>
-                        <p>Bạn là tín đồ của thịt bò? Bạn muốn biến tấu những miếng thịt bò thành một món ăn khác...</p>
-                    </div>
-                    <div className="menu-item-price">
-                        <p>52,000₫</p>
-                    </div>
-                </div>
-                <div className="menu-item">
-                    <div className="menu-item-content">
-                        <h3>KHOAI TÂY PHÔ MAI</h3>
-                        <p>...</p>
-                    </div>
-                    <div className="menu-item-price">
-                        <p>29,000₫</p>
-                    </div>
-                </div>
+
             </div>
         </div>
     );

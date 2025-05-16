@@ -1,99 +1,116 @@
 .reviews-container {
-    font-family: sans-serif;
-    color: #fff;
-    background-color: #222;
-    padding: 50px 20px;
+    padding: 20px;
+    background-color: #fefefe;
+}
+
+.reviews-title {
     text-align: center;
+    margin-bottom: 24px;
 }
 
 .reviews-title h1 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
+    font-size: 1.5rem;
+    color: #222;
+    margin-bottom: 8px;
 }
 
 .reviews-title p {
-    font-size: 1.2em;
-    color: #aaa;
-    margin-bottom: 30px;
+    font-size: 1rem;
+    color: #777;
 }
 
+/* Danh sách review */
 .reviews-items {
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .review-item {
-    width: 400px;
-    margin: 20px;
-    background-color: #333;
-    border-radius: 8px;
-    padding: 30px;
-    text-align: left;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     position: relative;
+    overflow: hidden;
 }
 
 .review-item p {
-    line-height: 1.6;
-    margin-bottom: 20px;
-    color: #ddd;
+    font-size: 0.95rem;
+    color: #444;
+    margin-bottom: 16px;
+    line-height: 1.5;
 }
 
+/* Phần tác giả */
 .review-author {
     display: flex;
     align-items: center;
+    gap: 12px;
 }
 
 .review-author img {
-    width: 60px;
-    height: 60px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    margin-right: 15px;
     object-fit: cover;
 }
 
 .review-author h3 {
-    font-size: 1.2em;
-    margin-bottom: 5px;
+    margin: 0;
+    font-size: 1rem;
+    color: #222;
 }
 
 .review-author p {
-    font-size: 0.9em;
-    color: #aaa;
+    margin: 0;
+    font-size: 0.85rem;
+    color: #888;
 }
 
+/* Icon dấu ngoặc kép */
 .quote-icon {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
-    width: 40px;
+    bottom: 12px;
+    right: 12px;
+    opacity: 0.1;
+    width: 48px;
+    height: 48px;
 }
 
 .quote-icon img {
     width: 100%;
+    height: 100%;
 }
 
+/* Chấm chuyển review */
 .reviews-dots {
-    margin-top: 30px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
 }
 
 .dot {
     width: 10px;
     height: 10px;
+    background-color: #ccc;
     border-radius: 50%;
-    background-color: #aaa;
-    margin: 0 5px;
-    display: inline-block;
-    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .dot.active {
-    background-color: #fff;
+    background-color: #ff6600;
 }
 
-/* Responsive design (điều chỉnh khi cần thiết) */
-@media (max-width: 768px) {
+/* Responsive cho tablet trở lên */
+@media (min-width: 768px) {
+    .reviews-items {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
     .review-item {
-        width: 90%;
+        width: 48%;
     }
 }
