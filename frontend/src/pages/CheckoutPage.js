@@ -4,16 +4,36 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import "./Checkout.css";
 
-const suggestedProducts = [
-  { id: 101, name: "Bánh Mì Thịt", price: 25000, image: "/images/banhmi.jpg" },
-  { id: 102, name: "Nước Ép Cam", price: 30000, image: "/images/nuocep.jpg" },
-  { id: 103, name: "Trà Sữa Trân Châu", price: 40000, image: "/images/trasua.jpg" },
-];
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const CheckoutPage = () => {
   const { cart, addToCart, clearCart } = useContext(CartContext);
   const location = useLocation();
   const navigate = useNavigate();
+  const [suggestedProducts, setSuggestedProducts] = useState([]);
+
+  // Hàm lấy ngẫu nhiên n phần tử từ mảng
+  const getRandomItems = (data, count) => {
+    const shuffled = [...data].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  };
+
+  // Fetch danh sách món ăn và chọn ngẫu nhiên vài món gợi ý
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/pub/menuitems/random`);
+        const data = await res.json();
+        if (data.success && Array.isArray(data.data)) {
+          const randomSuggestions = getRandomItems(data.data, 5); 
+          setSuggestedProducts(randomSuggestions);
+        }
+      } catch (err) {
+        console.error("Lỗi khi fetch gợi ý:", err);
+      }
+    };
+    fetchSuggestions();
+  }, []);
 
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [formData, setFormData] = useState({
@@ -29,7 +49,6 @@ const CheckoutPage = () => {
   const [error, setError] = useState("");
 
   const token = localStorage.getItem("token");
-  const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
     if (location.state?.product) {
@@ -88,14 +107,18 @@ const CheckoutPage = () => {
       if (formData.paymentMethod === "Cash") {
         // ✅ COD: Tạo đơn hàng rồi thanh toán
 
-        await axios.post(`${BASE_URL}/api/payment`, {
-          orderId,
-          amount: totalAmount,
-          paymentMethod: "Cash",
-          paymentStatus: "Completed",
-        }, {
-          headers: { "x-token": token },
-        });
+        await axios.post(
+          `${BASE_URL}/api/payment`,
+          {
+            orderId,
+            amount: totalAmount,
+            paymentMethod: "Cash",
+            paymentStatus: "Completed",
+          },
+          {
+            headers: { "x-token": token },
+          }
+        );
 
         // Gửi hóa đơn
         try {
@@ -103,7 +126,10 @@ const CheckoutPage = () => {
             headers: { "x-token": token },
           });
         } catch (err) {
-          console.error("❌ Gửi hóa đơn thất bại:", err.response?.data || err.message);
+          console.error(
+            "❌ Gửi hóa đơn thất bại:",
+            err.response?.data || err.message
+          );
         }
 
         clearCart();
@@ -115,7 +141,7 @@ const CheckoutPage = () => {
           {
             amount: totalAmount,
             orderType: "Other",
-            orderDescription: `Thanh toan don hang ${orderId}`
+            orderDescription: `Thanh toan don hang ${orderId}`,
           },
           {
             headers: { "x-token": token },
@@ -123,13 +149,16 @@ const CheckoutPage = () => {
         );
 
         const paymentUrl = vnpayRes.data.vnpUrl;
-        if (!paymentUrl || typeof paymentUrl !== 'string' || !paymentUrl.startsWith("https"))
+        if (
+          !paymentUrl ||
+          typeof paymentUrl !== "string" ||
+          !paymentUrl.startsWith("https")
+        )
           throw new Error("Không tạo được URL thanh toán.");
 
         // 👉 redirect sang trang thanh toán
         window.location.href = paymentUrl;
       }
-
     } catch (err) {
       console.error("Lỗi khi đặt hàng:", err.response?.data || err.message);
       setError("❌ Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.");
@@ -139,12 +168,13 @@ const CheckoutPage = () => {
     }
   };
 
-
   return (
     <div className="checkout-container">
       <h2>Trang thanh toán</h2>
 
-      {successMessage && <div className="success-message">{successMessage}</div>}
+      {successMessage && (
+        <div className="success-message">{successMessage}</div>
+      )}
       {error && <div className="error-message">{error}</div>}
 
       {productsToBuy.length > 0 ? (
@@ -154,10 +184,16 @@ const CheckoutPage = () => {
             <h3>Thông tin đơn hàng</h3>
             {productsToBuy.map((item) => (
               <div key={item.id} className="checkout-item">
-                <img src={item.image || item.imageUrl} alt={item.name} className="checkout-image" />
+                <img
+                  src={item.image || item.imageUrl}
+                  alt={item.name}
+                  className="checkout-image"
+                />
                 <div>
                   <h4>{item.name}</h4>
-                  <p>{item.price.toLocaleString()}₫ x {item.quantity}</p>
+                  <p>
+                    {item.price.toLocaleString()}₫ x {item.quantity}
+                  </p>
                 </div>
               </div>
             ))}
@@ -167,18 +203,48 @@ const CheckoutPage = () => {
           {/* Form giao hàng */}
           <div className="checkout-form">
             <h3>Thông tin giao hàng</h3>
-            <input type="text" name="fullName" placeholder="Họ và tên" value={formData.fullName} onChange={handleChange} />
-            <input type="text" name="phone" placeholder="Số điện thoại" value={formData.phone} onChange={handleChange} />
-            <input type="text" name="address" placeholder="Địa chỉ giao hàng" value={formData.address} onChange={handleChange} />
-            <select name="deliveryMethod" value={formData.deliveryMethod} onChange={handleChange}>
+            <input
+              type="text"
+              name="fullName"
+              placeholder="Họ và tên"
+              value={formData.fullName}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="phone"
+              placeholder="Số điện thoại"
+              value={formData.phone}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="address"
+              placeholder="Địa chỉ giao hàng"
+              value={formData.address}
+              onChange={handleChange}
+            />
+            <select
+              name="deliveryMethod"
+              value={formData.deliveryMethod}
+              onChange={handleChange}
+            >
               <option>Giao hàng tiêu chuẩn</option>
               <option>Giao hàng ngay - Miễn phí nếu trên 1 triệu</option>
             </select>
-            <select name="paymentMethod" value={formData.paymentMethod} onChange={handleChange}>
+            <select
+              name="paymentMethod"
+              value={formData.paymentMethod}
+              onChange={handleChange}
+            >
               <option value="Cash">Thanh toán khi nhận hàng (COD)</option>
               <option value="Momo">Thanh toán qua Momo</option>
             </select>
-            <button className="order-button" onClick={handleOrder} disabled={loading}>
+            <button
+              className="order-button"
+              onClick={handleOrder}
+              disabled={loading}
+            >
               {loading ? "Đang xử lý..." : "Đặt hàng ngay"}
             </button>
           </div>
@@ -190,17 +256,19 @@ const CheckoutPage = () => {
       {/* Gợi ý sản phẩm */}
       {cart.length > 0 && (
         <div className="suggested-products">
-          <h3>Sản phẩm bạn có thể quan tâm</h3>
-          <div className="suggested-items">
-            {suggestedProducts.map((product) => (
-              <div key={product.id} className="suggested-item">
-                <img src={product.image} alt={product.name} className="suggested-image" />
-                <p>{product.name}</p>
-                <p className="price">{product.price.toLocaleString()}₫</p>
-                <button onClick={() => addToCart(product)}>Thêm vào giỏ</button>
-              </div>
-            ))}
-          </div>
+          <h3>Sản phẩm có thể bạn thích</h3>
+          {suggestedProducts.map((product) => (
+            <div key={product.id} className="suggested-item">
+              <img
+                src={`${BASE_URL}${product.image}`}
+                alt={product.name}
+                className="suggested-image"
+              />
+              <p>{product.name}</p>
+              <p>{parseFloat(product.price).toLocaleString()}₫</p>
+              <button onClick={() => addToCart(product)}>Thêm vào giỏ</button>
+            </div>
+          ))}
         </div>
       )}
     </div>
