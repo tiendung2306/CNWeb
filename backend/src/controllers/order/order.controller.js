@@ -163,17 +163,18 @@ export const sendInvoice = async (req, res) => {
 
     // Cấu hình Nodemailer để gửi email
     const transporter = nodemailer.createTransport({
-      service: 'gmail', // Sử dụng Gmail, có thể thay đổi nếu dùng dịch vụ khác
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
       auth: {
-        user: 'mahndugn3@gmail.com', // Thay bằng email của bạn
-        pass: 'manhdung-123'    // Thay bằng mật khẩu email của bạn
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
       }
     });
 
     // Cấu hình email
     const mailOptions = {
-      from: 'mahndugn3@gmail.com', // Email gửi đi
-      to: user.email,               // Email người nhận
+      from: process.env.SMTP_SENDER,
+      to: user.email,
       subject: `Hóa đơn mua hàng - Đơn hàng #${order.id}`,
       html: invoiceHtml
     };
