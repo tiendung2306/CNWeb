@@ -38,7 +38,7 @@ export default function Login() {
 
         localStorage.setItem("token", token);
         login(user,token); // gọi hàm login từ context
-
+console.log(token);
         alert("Đăng nhập thành công!");
         navigate("/"); // chuyển trang
       } else {

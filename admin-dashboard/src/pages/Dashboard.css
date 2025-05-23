@@ -88,7 +88,7 @@
   border-radius: 4px;
   outline: none;
   transition: border-color 0.2s ease-in-out;
-  background-color: #464444;
+  background-color: #ffffff;
 }
 
 .time-period-selector select:focus {

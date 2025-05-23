@@ -259,33 +259,26 @@
 }
 /* phân trang */
 .pagination {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
+  text-align: center;
   margin-top: 20px;
 }
 
 .pagination button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #d4af37;
-  color: white;
+  background-color: #f0f0f0;
   border: none;
-  border-radius: 5px;
+  margin: 0 10px;
+  padding: 8px 16px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.pagination button:hover {
+  background-color: #ccc;
 }
 
 .pagination button:disabled {
-  background-color: #ccc;
+  opacity: 0.5;
   cursor: not-allowed;
-}
-
-.pagination button:hover:not(:disabled) {
-  background-color: #c1a033;
-}
-
-.pagination span {
-  font-size: 16px;
-  align-self: center;
 }

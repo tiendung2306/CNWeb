@@ -12,7 +12,6 @@ export default function Layout() {
     logout();
     navigate("/login");
   };
-
   return (
     <div className="layout-container">
       {/* Nút toggle cho sidebar trên màn hình nhỏ */}
@@ -35,6 +34,7 @@ export default function Layout() {
         <nav className="sidebar-nav">
           <Link to="/" className="sidebar-link" onClick={() => setSidebarOpen(false)}>Thống kê</Link>
           <Link to="/products" className="sidebar-link" onClick={() => setSidebarOpen(false)}>Sản phẩm</Link>
+          <Link to="/categories" className="sidebar-link" onClick={() => setSidebarOpen(false)}>Danh mục</Link>
           <Link to="/orders" className="sidebar-link" onClick={() => setSidebarOpen(false)}>Đơn hàng</Link>
           <Link to="/users" className="sidebar-link" onClick={() => setSidebarOpen(false)}>Tài khoản</Link>
           <Link to="/payments" className="sidebar-link" onClick={() => setSidebarOpen(false)}>Thanh toán</Link>

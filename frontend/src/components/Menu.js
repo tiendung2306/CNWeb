@@ -7,106 +7,82 @@ import { CartContext } from "../context/CartContext";
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 function Menu() {
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("Tất cả");
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(6);
-
-  const [categories, setCategories] = useState([]); // [{ id, name }]
-  const [selectedCategory, setSelectedCategory] = useState("Tất cả");
-  const [categoryDetail, setCategoryDetail] = useState(null);
+  const itemsPerPage = 6;
 
   const { addToCart } = useContext(CartContext);
 
-  // Fetch menu items
+  // Lấy danh sách categories từ API
   useEffect(() => {
-    const fetchMenuItems = async () => {
+    const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/pub/menuitems`);
+        const response = await axios.get(`${BASE_URL}/pub/categories`);
         const result = response.data;
 
-        if (result.success && Array.isArray(result.data)) {
-          const foodsWithFallback = result.data.map((food) => ({
-            ...food,
-            category: food.category || "Khác",
-            price: parseInt(food.price),
-            rating: parseFloat(food.rating) || 0,
-          }));
-          setFoods(foodsWithFallback);
+        if (result.success && Array.isArray(result.data.categories)) {
+          setCategories(result.data.categories);
+        } else {
+          setError("Không có dữ liệu danh mục.");
+        }
+      } catch (err) {
+        console.error("Lỗi khi gọi API danh mục:", err);
+        setError("Không thể tải danh sách danh mục.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Lấy danh sách món ăn khi thay đổi danh mục
+  
+// Lấy món ăn cho danh mục đã chọn
+  useEffect(() => {
+    const fetchMenuItems = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`${BASE_URL}/pub/categories`);
+        const result = response.data;
+
+        if (result.success && Array.isArray(result.data.categories)) {
+          let filteredFoods = [];
+
+          // Tìm món ăn theo danh mục đã chọn
+          result.data.categories.forEach((category) => {
+            if (category.name === selectedCategory || selectedCategory === "Tất cả") {
+              filteredFoods = [
+                ...filteredFoods,
+                ...category.menuItems,
+              ];
+            }
+          });
+
+          setFoods(filteredFoods);
         } else {
           setError("Không có dữ liệu món ăn.");
         }
       } catch (err) {
-        console.error("Lỗi khi gọi API:", err);
+        console.error("Lỗi khi gọi API món ăn:", err);
         setError("Không thể tải danh sách món ăn.");
       } finally {
         setLoading(false);
       }
     };
 
-    // const fetchCategories = async () => {
-    //   try {
-    //     const response = await axios.get(`${BASE_URL}/pub/categories`);
-    //     const result = response.data;
-
-    //     if (result.success && Array.isArray(result.data)) {
-    //       setCategories([{ id: null, name: "Tất cả" }, ...result.data]);
-    //     } else {
-    //       setError("Không có dữ liệu danh mục.");
-    //     }
-    //   } catch (err) {
-    //     console.error("Lỗi khi gọi API danh mục:", err);
-    //     setError("Không thể tải danh sách danh mục.");
-    //   }
-    // };
-
     fetchMenuItems();
-    // fetchCategories();
-    
-  }, []);
+  }, [selectedCategory]);
 
-  // Fetch chi tiết danh mục khi selectedCategory thay đổi
-  useEffect(() => {
-    const fetchCategoryDetail = async () => {
-      if (selectedCategory === "Tất cả") {
-        setCategoryDetail(null);
-        return;
-      }
-
-      const categoryObj = categories.find((cat) => cat.name === selectedCategory);
-      if (!categoryObj || !categoryObj.id) {
-        setCategoryDetail(null);
-        return;
-      }
-
-      try {
-        const response = await axios.get(`${BASE_URL}/pub/categories/${categoryObj.id}`);
-        const result = response.data;
-        if (result.success && result.data) {
-          setCategoryDetail(result.data);
-        } else {
-          setCategoryDetail(null);
-        }
-      } catch (err) {
-        console.error("Lỗi khi gọi API chi tiết danh mục:", err);
-        setCategoryDetail(null);
-      }
-    };
-
-    fetchCategoryDetail();
-  }, [selectedCategory, categories]);
-
-  const filteredFoods =
-    selectedCategory === "Tất cả"
-      ? foods
-      : foods.filter((food) => food.category === selectedCategory);
-
+  // Phân trang
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentFoods = filteredFoods.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredFoods.length / itemsPerPage);
+  const currentFoods = foods.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(foods.length / itemsPerPage);
 
   if (loading) return <p>Đang tải thực đơn...</p>;
   if (error) return <p>{error}</p>;
@@ -116,16 +92,17 @@ function Menu() {
       <h2 className="menu-title">Thực Đơn</h2>
 
       {/* Món ăn được yêu thích */}
-      {filteredFoods.filter((food) => food.rating >= 4.5).length > 0 && (
+      {foods.filter((food) => food.rating >= 4.5).length > 0 && (
         <div className="menu-high-line">
           <h3 className="menu-high-title">Món Ăn Được Yêu Thích</h3>
           <div className="menu-high-list">
-            {filteredFoods
+            {foods
               .filter((food) => food.rating >= 4.5)
+              .slice(0, 10) // Giới hạn hiển thị
               .map((food) => (
                 <div className="menu-high-item" key={food.id}>
                   <img
-                    src={food.imageUrl || food.image}
+                    src={food.imageUrl || food.image || "default-image.jpg"}
                     alt={food.name}
                     className="menu-high-image"
                   />
@@ -136,38 +113,30 @@ function Menu() {
         </div>
       )}
 
-      {/* Lọc danh mục */}
+      {/* Bộ lọc danh mục */}
       <div className="menu-selection">
+        <button
+          className={`menu-selection-button ${selectedCategory === "Tất cả" ? "active" : ""}`}
+          onClick={() => {
+            setSelectedCategory("Tất cả");
+            setCurrentPage(1); // Đặt lại trang khi chọn "Tất cả"
+          }}
+        >
+          Tất cả
+        </button>
         {categories.map((category) => (
           <button
-            key={category.name}
-            className={`menu-selection-button ${
-              selectedCategory === category.name ? "active" : ""
-            }`}
+            key={category.id}
+            className={`menu-selection-button ${selectedCategory === category.name ? "active" : ""}`}
             onClick={() => {
               setSelectedCategory(category.name);
-              setCurrentPage(1); // reset lại trang về 1
+              setCurrentPage(1); // Đặt lại trang khi thay đổi danh mục
             }}
           >
             {category.name}
           </button>
         ))}
       </div>
-
-      {/* Hiển thị chi tiết danh mục */}
-      {categoryDetail && (
-        <div className="category-detail">
-          <h3>{categoryDetail.name}</h3>
-          {categoryDetail.description && <p>{categoryDetail.description}</p>}
-          {categoryDetail.image && (
-            <img
-              src={categoryDetail.image}
-              alt={categoryDetail.name}
-              style={{ maxWidth: "200px", marginTop: "10px" }}
-            />
-          )}
-        </div>
-      )}
 
       {/* Danh sách món ăn */}
       <div className="menu-list">
@@ -176,17 +145,14 @@ function Menu() {
             <div className="menu-item" key={food.id}>
               <div className="menu-content">
                 <img
-                  src={food.imageUrl || food.image}
+                  src={food.imageUrl || food.image || "default-image.jpg"}
                   alt={food.name}
                   className="menu-image"
                 />
                 <div className="menu-info">
                   <h3 className="menu-name">{food.name}</h3>
-                  <p className="menu-description">{food.description}</p>
-                  <button
-                    className="menu-add-to-cart"
-                    onClick={() => addToCart(food)}
-                  >
+                  <p className="menu-description">{food.description || "Không có mô tả"}</p>
+                  <button className="menu-add-to-cart" onClick={() => addToCart(food)}>
                     THÊM VÀO GIỎ
                   </button>
                   <Link to={`/food/${food.id}`} className="menu-link">
@@ -194,7 +160,7 @@ function Menu() {
                   </Link>
                 </div>
                 <div className="menu-price">
-                  {food.price.toLocaleString()}₫
+                  {parseFloat(food.price).toLocaleString()}₫
                 </div>
               </div>
             </div>
@@ -205,23 +171,22 @@ function Menu() {
       </div>
 
       {/* Phân trang */}
-      <div className="pagination">
-        <button
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Trang Trước
-        </button>
-        <span>
-          Trang {currentPage} / {totalPages}
-        </span>
-        <button
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          Trang Sau
-        </button>
-      </div>
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button onClick={() => setCurrentPage((p) => p - 1)} disabled={currentPage === 1}>
+            Trang Trước
+          </button>
+          <span>
+            Trang {currentPage} / {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage((p) => p + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Trang Sau
+          </button>
+        </div>
+      )}
     </div>
   );
 }
