@@ -1,0 +1,247 @@
+/* ---------- Layout Container ---------- */
+.categories-container {
+  padding: 24px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #2d3748;
+  box-sizing: border-box;
+  width: 50vw;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto; /* Căn giữa container */
+}
+
+/* ---------- Title ---------- */
+.categories-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1a202c;
+  width: 100%;
+}
+
+/* ---------- Add Category Form ---------- */
+.add-category-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.add-category-form input {
+  flex: 1;
+  min-width: 180px;
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #ffffff;
+  transition: border-color 0.2s;
+  color: #2d3748;
+}
+
+.add-category-form input:focus {
+  border-color: #3182ce;
+  outline: none;
+}
+
+/* ---------- Add Button ---------- */
+.btn-add-category {
+  background-color: #3182ce;
+  color: #ffffff;
+  border: none;
+  padding: 10px 16px;
+  font-size: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-add-category:hover {
+  background-color: #2b6cb0;
+}
+
+/* ---------- Category List ---------- */
+.category-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 20px 0 30px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.category-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  transition: 0.2s;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.category-list li:hover {
+  background-color: #f1faff;
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.1);
+}
+
+/* Trái: thông tin ID + tên hoặc input */
+.left-content {
+  flex: 1;
+  font-size: 16px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+/* Nhóm nút */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+/* Input khi chỉnh sửa */
+.category-list input[type="text"] {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  width: 100%;
+  max-width: 300px;
+  box-sizing: border-box;
+}
+
+/* Buttons */
+button {
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  margin: 2px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-edit {
+  background-color: #f6ad55;
+  color: #fff;
+}
+
+.btn-edit:hover {
+  background-color: #dd6b20;
+}
+
+.btn-delete-category {
+  background-color: #e53e3e;
+  color: #fff;
+}
+
+.btn-delete-category:hover {
+  background-color: #c53030;
+}
+
+.btn-save {
+  background-color: #38a169;
+  color: #fff;
+}
+
+.btn-save:hover {
+  background-color: #2f855a;
+}
+
+.btn-cancel {
+  background-color: #a0aec0;
+  color: #fff;
+}
+
+.btn-cancel:hover {
+  background-color: #718096;
+}
+
+/* ---------- Responsive ---------- */
+/* Màn hình trung bình */
+@media (max-width: 1200px) {
+  .categories-container {
+    width: 65%;
+  }
+}
+
+/* Màn hình tablet */
+@media (max-width: 992px) {
+  .categories-container {
+    width: 75%;
+  }
+}
+
+/* Màn hình tablet nhỏ */
+@media (max-width: 768px) {
+  .categories-container {
+    width: 85%;
+    padding: 16px;
+  }
+  
+  .add-category-form {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .add-category-form input,
+  .btn-add-category {
+    width: 100%;
+  }
+  
+  .categories-title {
+    font-size: 22px;
+  }
+}
+
+/* Màn hình điện thoại */
+@media (max-width: 576px) {
+  .categories-container {
+    width: 80vw;
+    padding: 12px;
+  }
+  
+  .category-list li {
+    padding: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .left-content {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  .action-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .category-list input[type="text"] {
+    max-width: none;
+    width: 100%;
+  }
+  
+  button {
+    padding: 8px 12px; /* Buttons lớn hơn trên điện thoại để dễ bấm */
+  }
+}
+
+/* Đảm bảo tất cả các phần tử không bị tràn */
+* {
+  box-sizing: border-box;
+}

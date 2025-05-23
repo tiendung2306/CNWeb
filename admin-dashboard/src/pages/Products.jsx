@@ -16,17 +16,15 @@ export default function Products() {
   const [editId, setEditId] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [Categories, setCategories] = useState([]);
-  const [newCategoryName, setNewCategoryName] = useState("");
-  const [editCategoryId, setEditCategoryId] = useState(null);
-  const [editCategoryName, setEditCategoryName] = useState("");
 
   const token = localStorage.getItem("token");
 
   useEffect(() => {
     fetchProducts();
-    fetchCatagorys();
+    fetchCategories();
   }, []);
-  const fetchCatagorys = async () => {
+  
+  const fetchCategories = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/pub/categories`);
       if (res.data.success) {
@@ -36,6 +34,7 @@ export default function Products() {
       console.error("Lỗi tải danh sách danh mục:", err);
     }
   };
+  
   const fetchProducts = async () => {
     try {
       const res = await axios.get(API_PUBLIC);
@@ -78,81 +77,6 @@ export default function Products() {
     setNewImageFile(e.target.files[0]); // Xử lý khi người dùng chọn file
   };
 
-
-  const handleAddCategory = async () => {
-    if (!newCategoryName) {
-      alert("Vui lòng nhập tên danh mục");
-      return;
-    }
-    try {
-      const res = await axios.post(
-        `${BASE_URL}/api/admin/categories`,
-        {
-          name: newCategoryName,
-        },
-        {
-          headers: {
-            "x-token": token,
-          },
-        }
-      );
-      if (res.data.success) {
-        setCategories([...Categories, res.data.data]);
-        setNewCategoryName("");
-      }
-    } catch (err) {
-      alert("Không thể thêm danh mục");
-    }
-  };
-
-  const handleDeleteCategory = async (id) => {
-    if (!window.confirm("Bạn có chắc muốn xoá danh mục này?")) return;
-
-    try {
-      const res = await axios.delete(`${BASE_URL}/api/admin/categories/${id}`, {
-        headers: {
-          "x-token": token,
-        },
-      });
-      if (res.data.success) {
-        setCategories(Categories.filter((cat) => cat.id !== id));
-      }
-    } catch (err) {
-      alert("Không thể xoá danh mục");
-      console.error(err);
-    }
-  };
-
-  const startEditCategory = (cat) => {
-    setEditCategoryId(cat.id);
-    setEditCategoryName(cat.name);
-  };
-
-  const handleUpdateCategory = async () => {
-    try {
-      const res = await axios.patch(
-        `${BASE_URL}/api/admin/categories/${editCategoryId}`,
-        { name: editCategoryName },
-        {
-          headers: {
-            "x-token": token,
-          },
-        }
-      );
-      if (res.data.success) {
-        setCategories(
-          Categories.map((cat) =>
-            cat.id === editCategoryId ? res.data.data : cat
-          )
-        );
-        setEditCategoryId(null);
-        setEditCategoryName("");
-      }
-    } catch (err) {
-      alert("Không thể cập nhật danh mục");
-      console.error(err);
-    }
-  };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Bạn có chắc muốn xoá sản phẩm này?")) return;
@@ -260,66 +184,6 @@ const handleUpdate = async (id) => {
           Thêm sản phẩm
         </button>
       </div>
-      <ul className="category-list">
-        <div class="add-category-form">
-          <input
-            type="text"
-            placeholder="Tên danh mục"
-            value={newCategoryName}
-            onChange={(e) => setNewCategoryName(e.target.value)}
-          />
-          <button className="btn-add-category" onClick={handleAddCategory}>
-            Thêm danh mục
-          </button>
-        </div>
-        {Categories.map((cat) => (
-          <li key={cat.id}>
-            {editCategoryId === cat.id ? (
-              <>
-                <div className="left-content">
-                  <input
-                    type="text"
-                    value={editCategoryName}
-                    onChange={(e) => setEditCategoryName(e.target.value)}
-                  />
-                </div>
-                <div className="action-buttons">
-                  <button className="btn-save" onClick={handleUpdateCategory}>
-                    Lưu
-                  </button>
-                  <button
-                    className="btn-cancel"
-                    onClick={() => setEditCategoryId(null)}
-                  >
-                    Hủy
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="left-content">
-                  <strong>ID:</strong> {cat.id} &nbsp; <strong>Tên:</strong>{" "}
-                  {cat.name}
-                </div>
-                <div className="action-buttons">
-                  <button
-                    className="btn-edit"
-                    onClick={() => startEditCategory(cat)}
-                  >
-                    Sửa
-                  </button>
-                  <button
-                    className="btn-delete-category"
-                    onClick={() => handleDeleteCategory(cat.id)}
-                  >
-                    Xoá
-                  </button>
-                </div>
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
 
       <table className="products-table">
         <thead>

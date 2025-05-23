@@ -8,6 +8,7 @@ import Users from "./pages/Users";
 import Layout from "./components/Layout";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Payments from "./pages/Payments";
+import Categories from "./pages/Categories";
 // PrivateRoute bảo vệ các route yêu cầu đăng nhập
 function PrivateRoute({ children }) {
   const { user } = useAuth();
@@ -33,6 +34,7 @@ export default function App() {
           >
             <Route index element={<Dashboard />} />
             <Route path="products" element={<Products />} />
+            <Route path="categories" element={<Categories />} />
             <Route path="orders" element={<Orders />} />
             <Route path="users" element={<Users />} />
             <Route path="payments" element={<Payments />} />
