@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Header.css";
 import LoginModal from "./LoginModal.js";
@@ -12,7 +12,23 @@ function Header() {
   const { isLoggedIn, user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const profileRef = useRef(null); // 👈 ref vùng dropdown
+
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setProfileMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="header-wrap">
@@ -22,7 +38,7 @@ function Header() {
             <i className="fa-solid fa-store"> Bistro West</i>
           </Link>
         </div>
-        
+
         <div className="header-menu">
           <ul className="header-menu-list">
             <li className="header-menu-item"><Link to="/" className="header-menu__link"><i className="fa-solid fa-house"></i> Trang chủ</Link></li>
@@ -42,7 +58,7 @@ function Header() {
             </div>
 
             {/* Nếu đã đăng nhập thì hiển thị Profile, nếu chưa thì hiển thị Login */}
-            <div className="header-action-item header-action_account">
+            <div className="header-action-item header-action_account" ref={profileRef}>
               {isLoggedIn ? (
                 <div className="profile-dropdown">
                   <button
@@ -59,7 +75,7 @@ function Header() {
                         <button
                           onClick={() => {
                             logout();
-                            navigate("/"); // Chuyển hướng về trang chủ
+                            navigate("/");
                           }}
                         >
                           Đăng xuất
@@ -88,10 +104,8 @@ function Header() {
         </div>
       </div>
 
-      {/* Hiển thị thông báo thêm vào giỏ hàng */}
       {notification && <div className="cart-notification">{notification}</div>}
 
-      {/* Modal đăng nhập */}
       {isLoginFormVisible && !isLoggedIn && (
         <div className="login-form-overlay active" onClick={() => setLoginFormVisible(false)}>
           <div className="login-form-wrapper" onClick={(e) => e.stopPropagation()}>
