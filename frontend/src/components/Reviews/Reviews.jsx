@@ -12,28 +12,24 @@ const Reviews = () => {
                 <div className="review-item">
                     <p>Món ăn ngon và tươi, nhà hàng sạch sẽ, phục vụ chu đáo. Đã đưa gia đình đến ăn nhiều lần, sẽ tiếp tục ủng hộ. Mong Bistro West mở thêm nhiều chi nhánh để tiện lợi hơn.</p>
                     <div className="review-author">
-                        <img src="path/to/nguyen-van-a.jpg" alt="Nguyen Van A" />
+                        <img src="/customer1.jpg" alt="" />
                         <div>
-                            <h3>Nguyen Van A</h3>
+                            <h3>Dang Tien Hoang</h3>
                             <p>Quản lý kinh doanh ABC</p>
                         </div>
                     </div>
-                    <div className="quote-icon">
-                        <img src="path/to/quote-icon.png" alt="Quote Icon" />
-                    </div>
+
                 </div>
                 <div className="review-item">
                     <p>Món ăn ngon và tươi, nhà hàng sạch sẽ, phục vụ chu đáo. Đã đưa gia đình đến ăn nhiều lần, sẽ tiếp tục ủng hộ. Mong Bistro West mở thêm nhiều chi nhánh để tiện lợi hơn.</p>
                     <div className="review-author">
-                        <img src="path/to/nguyen-van-b.jpg" alt="Nguyen Van B" />
+                        <img src="/customer2.jpg" alt="" />
                         <div>
-                            <h3>Nguyen Van B</h3>
+                            <h3>Trinh Tran Phuong Tuan</h3>
                             <p>Trưởng phòng CDF</p>
                         </div>
                     </div>
-                    <div className="quote-icon">
-                        <img src="path/to/quote-icon.png" alt="Quote Icon" />
-                    </div>
+
                 </div>
             </div>
             <div className="reviews-dots">

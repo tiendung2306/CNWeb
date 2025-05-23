@@ -1,67 +1,90 @@
+/* Mobile-first styles */
+
 .menu-container {
-    font-family: sans-serif;
-    color: #333;
-    padding: 20px;
-    text-align: center;
+    padding: 0 16px;
+
+    background-color: #fff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.menu-title h1 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
-}
-
-.menu-title p {
-    font-size: 1.2em;
-    color: #666;
-    margin-bottom: 30px;
-}
-
-.menu-items {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    justify-content: space-around;
-}
-
-.menu-item {
-    width: 60%;
-    max-width: 600px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+.menu-title {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
     align-items: center;
-    padding: 8px 30px;
-    text-align: left;
-}
-
-
-
-.menu-item-content h3 {
-    font-size: 1.5em;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
     padding: 0px;
 }
 
-.menu-item-content p {
-    line-height: 1.2;
+.menu-title h1 {
+    font-size: 20px;
+    color: #d32f2f;
+    margin-bottom: 0px;
+}
+
+.menu-title p {
+    font-size: 14px;
     color: #666;
-    font-size: 13px;
 }
 
-.menu-item-price p {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #007bff;
+.menu-items {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-/* Responsive design (điều chỉnh khi cần thiết) */
-@media (max-width: 768px) {
+.menu-item {
+    background-color: #f9f9f9;
+    width: fit-content;
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0;
+}
+
+
+/* Tablet and up */
+@media (min-width: 768px) {
+    .menu-items {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
     .menu-item {
-        width: 95%;
+        width: 48%;
+    }
+}
+
+/* Desktop and up */
+@media (min-width: 1024px) {
+    .menu-container {
+        padding: 40px 80px;
+    }
+
+    .menu-title h1 {
+        font-size: 28px;
+    }
+
+    .menu-title p {
+        font-size: 16px;
+    }
+
+    .menu-item {
+        width: 30%;
+    }
+
+    .menu-item-content h3 {
+        font-size: 18px;
+    }
+
+    .menu-item-content p {
+        font-size: 14px;
+    }
+
+    .menu-item-price p {
+        font-size: 16px;
     }
 }
