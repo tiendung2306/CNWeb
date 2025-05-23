@@ -62,6 +62,8 @@ const Profile = () => {
       setTimeout(() => setSuccessMessage(""), 3000); // Clear message after 3 seconds
     } catch (error) {
       console.error("Error updating user:", error)
+      setErrorMessage("Cập nhật tài khoản thất bại! Vui lòng thử lại."); // Set error message
+      setTimeout(() => setErrorMessage(""), 3000); // Clear message after 3 seconds
     }
   }
 
