@@ -57,5 +57,10 @@ export const getUserAndMenuStats = async () => {
   const totalUsers = await db.User.count();
   // Số món ăn
   const totalMenuItems = await db.MenuItem.count();
-  return { totalUsers, totalMenuItems };
+  // Tổng số đơn hàng
+  const totalOrders = await Order.count();
+  // Tổng doanh thu
+  const totalRevenueRaw = await Order.sum('totalAmount');
+  const totalRevenue = totalRevenueRaw ? parseFloat(totalRevenueRaw.toFixed(2)) : 0;
+  return { totalUsers, totalMenuItems, totalOrders, totalRevenue };
 };

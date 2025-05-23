@@ -52,7 +52,6 @@ router.route('/payment/user/:id')
   router.post("/", menuItemController.createMenuItem);
 
 //api menu-item
-router.post("/menuitems", menuItemController.createMenuItem);   
 router.get("/menuitems", menuItemController.getAllMenuItems);   
 router.get("/menuitems/:id", menuItemController.getMenuItemById); 
  
