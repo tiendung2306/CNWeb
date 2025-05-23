@@ -52,7 +52,7 @@ export default function Products() {
       formData.append("description", newDescription);
       formData.append("price", newPrice);
       formData.append("image", newImageFile); // Thêm file hình ảnh vào formData
-      formData.append("categoryIds", [parseInt(newCategory)]);
+      formData.append("categoryIds", "[" + parseInt(newCategory) +"]");
       formData.append("status", newStatus); // Add status to formData
 
       const res = await axios.post(API_ADMIN, formData, {
@@ -117,7 +117,7 @@ const handleUpdate = async (id) => {
     formData.append("name", editForm.name);
     formData.append("description", editForm.description);
     formData.append("price", editForm.price);
-    formData.append("categoryIds", editForm.categoryId); // Dạng string hoặc số đều được
+    formData.append("categoryIds", "[" + editForm.categoryId + "]"); // Dạng string hoặc số đều được
     formData.append("status", editForm.status); // Add status to update
 
     // Nếu người dùng chọn ảnh mới (File), thì thêm vào FormData
