@@ -144,6 +144,9 @@ function Menu() {
           currentFoods.map((food) => (
             <div className="menu-item" key={food.id}>
               <div className="menu-content">
+                {food.status === "unavailable" && (
+                  <div className="out-of-stock">Hết Hàng</div>
+                )}
                 <img
                   src={food.imageUrl || food.image || "default-image.jpg"}
                   alt={food.name}
@@ -152,7 +155,11 @@ function Menu() {
                 <div className="menu-info">
                   <h3 className="menu-name">{food.name}</h3>
                   <p className="menu-description">{food.description || "Không có mô tả"}</p>
-                  <button className="menu-add-to-cart" onClick={() => addToCart(food)}>
+                  <button 
+                    className={`menu-add-to-cart ${food.status === "unavailable" ? "disabled" : ""}`} 
+                    onClick={() => addToCart(food)}
+                    disabled={food.status === "unavailable"}
+                  >
                     THÊM VÀO GIỎ
                   </button>
                   <Link to={`/food/${food.id}`} className="menu-link">
