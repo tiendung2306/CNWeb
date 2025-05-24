@@ -96,7 +96,7 @@ const FoodDetail = () => {
         <div className="food-info">
           <h2>{food.name}</h2>
           <p className="status">
-            Tình trạng: <span className="in-stock">Còn hàng</span>
+            Tình trạng: <span className="in-stock">{food.status == 'available' ? "Còn hàng" : "Hết hàng"}</span>
           </p>
           <p className="description">{food.description}</p>
           <p className="price">Giá: {food.price.toLocaleString()}đ</p>
@@ -106,10 +106,26 @@ const FoodDetail = () => {
           </div>
 
           <div className="buttons">
-            <button className="add-to-cart" onClick={() => addToCart(food)}>
+            <button 
+              className="add-to-cart" 
+              onClick={() => addToCart(food)} 
+              disabled={food.status !== 'available'}
+              style={{ 
+                opacity: food.status !== 'available' ? 0.6 : 1,
+                cursor: food.status !== 'available' ? 'not-allowed' : 'pointer'
+              }}
+            >
               THÊM VÀO GIỎ
             </button>
-            <button className="buy-now" onClick={handleBuyNow}>
+            <button 
+              className="buy-now" 
+              onClick={handleBuyNow}
+              disabled={food.status !== 'available'}
+              style={{ 
+                opacity: food.status !== 'available' ? 0.6 : 1,
+                cursor: food.status !== 'available' ? 'not-allowed' : 'pointer'
+              }}
+            >
               Mua ngay
             </button>
           </div>
