@@ -20,26 +20,65 @@ export const createMenuItem = async (req, res) => {
   try {
     const { name, price, description, categoryIds, status } = req.body;
 
-    // 1) Upload ảnh nếu có file
+    // 1) Kiểm tra các trường bắt buộc
+    if (!name || !price) {
+      return res.status(400).json({ success: false, message: 'Name and price are required' });
+    }
+
+    // 2) Upload ảnh nếu có file
     let imageUrl = req.body.imageUrl || null;
     if (req.file?.buffer) {
       const result = await uploadToCloudinary(req.file.buffer);
       imageUrl = result.secure_url;
     }
 
-    // 2) Tạo món ăn
+    // 3) Parse categoryIds nếu là chuỗi JSON
+    let parsedCategoryIds = [];
+    if (categoryIds) {
+      try {
+        parsedCategoryIds = typeof categoryIds === 'string' ? JSON.parse(categoryIds) : categoryIds;
+        if (!Array.isArray(parsedCategoryIds)) {
+          return res.status(400).json({ success: false, message: 'categoryIds must be an array' });
+        }
+      } catch (error) {
+        return res.status(400).json({ success: false, message: 'Invalid categoryIds format' });
+      }
+    }
+
+    // 4) Kiểm tra tính hợp lệ của categoryIds
+    if (parsedCategoryIds.length > 0) {
+      const validCategories = await Category.findAll({
+        where: { id: parsedCategoryIds },
+        attributes: ['id'],
+      });
+      const validCategoryIds = validCategories.map(cat => cat.id);
+      const invalidIds = parsedCategoryIds.filter(id => !validCategoryIds.includes(id));
+      if (invalidIds.length > 0) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid category IDs: ${invalidIds.join(', ')}`,
+        });
+      }
+    }
+
+    // 5) Tạo món ăn
     const newItem = await MenuItem.create({ name, price, description, imageUrl, status });
 
-    // 3) Gán category nếu có
-    if (Array.isArray(categoryIds) && categoryIds.length) {
-      const mappings = categoryIds.map(catId => ({
+    // 6) Gán category nếu có
+    if (parsedCategoryIds.length > 0) {
+      const mappings = parsedCategoryIds.map(catId => ({
         menuItemId: newItem.id,
         categoryId: catId,
       }));
       await MenuItemsCategory.bulkCreate(mappings);
     }
 
-    return res.status(201).json({ success: true, data: newItem });
+    // 7) Lấy lại món ăn với categories để trả về
+    const result = await MenuItem.findByPk(newItem.id, {
+      include: [{ model: Category, through: { attributes: [] }, as: 'categories' }],
+    });
+
+    return res.status(201).json({ success: true, data: result });
   } catch (error) {
     console.error('Error creating menu item:', error);
     return res.status(500).json({ success: false, message: error.message });
@@ -85,6 +124,7 @@ export const updateMenuItem = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, price, description, categoryIds, status } = req.body;
+
     const item = await MenuItem.findByPk(id);
     if (!item) {
       return res.status(404).json({ success: false, message: 'Menu item not found' });
@@ -97,32 +137,72 @@ export const updateMenuItem = async (req, res) => {
     }
 
     // 2) Cập nhật các trường thông tin
-    if (name !== undefined)        item.name        = name;
-    if (price !== undefined)       item.price       = price;
+    if (name !== undefined) item.name = name;
+    if (price !== undefined) item.price = price;
     if (description !== undefined) item.description = description;
-    if (status !== undefined)      item.status = status;
-    
+    if (status !== undefined) item.status = status;
     await item.save();
 
-    // 3) Cập nhật danh mục nếu client gửi categoryIds
-    if (Array.isArray(categoryIds)) {
+    // 3) Parse categoryIds nếu là chuỗi JSON
+    let parsedCategoryIds = [];
+    if (categoryIds !== undefined) {
+      try {
+        parsedCategoryIds = typeof categoryIds === 'string' ? JSON.parse(categoryIds) : categoryIds;
+        if (!Array.isArray(parsedCategoryIds)) {
+          return res.status(400).json({ success: false, message: 'categoryIds must be an array' });
+        }
+      } catch (error) {
+        return res.status(400).json({ success: false, message: 'Invalid categoryIds format' });
+      }
+    }
+
+    // 4) Kiểm tra tính hợp lệ của categoryIds
+    if (parsedCategoryIds.length > 0) {
+      const validCategories = await Category.findAll({
+        where: { id: parsedCategoryIds },
+        attributes: ['id'],
+      });
+      const validCategoryIds = validCategories.map(cat => cat.id);
+      const invalidIds = parsedCategoryIds.filter(id => !validCategoryIds.includes(id));
+      if (invalidIds.length > 0) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid category IDs: ${invalidIds.join(', ')}`,
+        });
+      }
+    }
+
+    // 5) Cập nhật danh mục nếu categoryIds được gửi
+    if (categoryIds !== undefined) {
       // Lấy các mapping hiện tại
       const existing = await MenuItemsCategory.findAll({ where: { menuItemId: id } });
       const existIds = existing.map(e => e.categoryId);
+
       // Xác định thêm/xóa
-      const toAdd    = categoryIds.filter(cid => !existIds.includes(cid));
-      const toRemove = existIds.filter(cid => !categoryIds.includes(cid));
+      const toAdd = parsedCategoryIds.filter(cid => !existIds.includes(cid));
+      const toRemove = existIds.filter(cid => !parsedCategoryIds.includes(cid));
+
       // Thêm mapping mới
-      await Promise.all(
-        toAdd.map(cid => MenuItemsCategory.create({ menuItemId: id, categoryId: cid }))
-      );
+      if (toAdd.length > 0) {
+        const mappings = toAdd.map(cid => ({
+          menuItemId: id,
+          categoryId: cid,
+        }));
+        await MenuItemsCategory.bulkCreate(mappings);
+      }
+
       // Xóa mapping lỗi thời
-      if (toRemove.length) {
+      if (toRemove.length > 0) {
         await MenuItemsCategory.destroy({ where: { menuItemId: id, categoryId: toRemove } });
       }
     }
 
-    return res.status(200).json({ success: true, data: item });
+    // 6) Lấy lại món ăn với categories để trả về
+    const result = await MenuItem.findByPk(id, {
+      include: [{ model: Category, through: { attributes: [] }, as: 'categories' }],
+    });
+
+    return res.status(200).json({ success: true, data: result });
   } catch (error) {
     console.error('Error updating menu item:', error);
     return res.status(500).json({ success: false, message: error.message });

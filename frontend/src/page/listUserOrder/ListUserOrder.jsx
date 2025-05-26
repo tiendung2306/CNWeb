@@ -4,107 +4,27 @@ import { useState, useEffect } from "react"
 import { Check, Clock, CookingPot, MoreHorizontal, Package, Search, Truck } from "lucide-react"
 import axios from "axios"
 import "./ListUserOrder.css"
-// Sample order data
-// const orders = [
-//     {
-//         id: "ORD-5532",
-//         date: "2023-05-15T10:30:00",
-//         customer: {
-//             name: "John Smith",
-//             address: "123 Main St, Anytown, CA",
-//             phone: "(555) 123-4567",
-//         },
-//         items: [
-//             { name: "Margherita Pizza", quantity: 2, price: 12.99, image: "https://product.hstatic.net/200000879247/product/4fa9_1ce4db0ba0c848709846b69ca6950144_464635a5446943e8bb9530efd84df17e_49182c82bdd2480fb52912fbcf2fe7d6_master.png" },
-//             { name: "Garlic Bread", quantity: 1, price: 4.99, image: "/placeholder.svg?height=50&width=50" },
-//             { name: "Coca Cola", quantity: 2, price: 2.49, image: "/placeholder.svg?height=50&width=50" },
-//         ],
-//         status: "delivered",
-//         total: 35.95,
-//     },
-//     {
-//         id: "ORD-5531",
-//         date: "2023-05-15T10:15:00",
-//         customer: {
-//             name: "Emily Johnson",
-//             address: "456 Oak Ave, Somewhere, NY",
-//             phone: "(555) 987-6543",
-//         },
-//         items: [
-//             { name: "Chicken Burger", quantity: 1, price: 9.99, image: "/placeholder.svg?height=50&width=50" },
-//             { name: "French Fries", quantity: 1, price: 3.99, image: "/placeholder.svg?height=50&width=50" },
-//             { name: "Milkshake", quantity: 1, price: 4.99, image: "/placeholder.svg?height=50&width=50" },
-//         ],
-//         status: "ready",
-//         total: 18.97,
-//     },
-//     {
-//         id: "ORD-5530",
-//         date: "2023-05-15T09:45:00",
-//         customer: {
-//             name: "Michael Brown",
-//             address: "789 Pine St, Elsewhere, TX",
-//             phone: "(555) 456-7890",
-//         },
-//         items: [
-//             { name: "Vegetable Salad", quantity: 1, price: 8.99, image: "/placeholder.svg?height=50&width=50" },
-//             { name: "Grilled Chicken", quantity: 1, price: 11.99, image: "/placeholder.svg?height=50&width=50" },
-//             { name: "Iced Tea", quantity: 1, price: 2.99, image: "/placeholder.svg?height=50&width=50" },
-//         ],
-//         status: "preparing",
-//         total: 23.97,
-//     },
-//     {
-//         id: "ORD-5529",
-//         date: "2023-05-15T09:30:00",
-//         customer: {
-//             name: "Sarah Wilson",
-//             address: "321 Elm St, Nowhere, FL",
-//             phone: "(555) 789-0123",
-//         },
-//         items: [
-//             { name: "Sushi Platter", quantity: 1, price: 24.99, image: "/placeholder.svg?height=50&width=50" },
-//             { name: "Miso Soup", quantity: 2, price: 3.99, image: "/placeholder.svg?height=50&width=50" },
-//             { name: "Green Tea", quantity: 2, price: 2.49, image: "/placeholder.svg?height=50&width=50" },
-//         ],
-//         status: "pending",
-//         total: 37.95,
-//     },
-// ]
-
-// Status badge component
-// const StatusBadge = ({ status }) => {
-//     const statusConfig = {
-//         pending: { icon: Clock, label: "Pending", variant: "badge-outline" },
-//         preparing: { icon: CookingPot, label: "Preparing", variant: "badge-secondary" },
-//         ready: { icon: Package, label: "Ready", variant: "badge-default" },
-//         delivered: { icon: Check, label: "Delivered", variant: "badge-success" },
-//     }
-
-//     const config = statusConfig[status]
-//     const Icon = config.icon
-
-//     return (
-//         <span className={`badge ${config.variant}`}>
-//             <Icon className="icon-small" />
-//             <span>{config.label}</span>
-//         </span>
-//     )
-// }
-
+import { useAuth } from "../../context/AuthContext.js"
+import { useNavigate } from "react-router-dom"
 const ListUserOrder = () => {
+    const navigate = useNavigate();
+    const BASE_URL = process.env.REACT_APP_API_BASE_URL;
     const [orders, setOrders] = useState([])
     const [items, setItems] = useState([])
     const [filter, setFilter] = useState("all")
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [selectOrder, setSelectOrder] = useState({})
     const [searchQuery, setSearchQuery] = useState("")
-
-
+    const { user } = useAuth()
+    const token = localStorage.getItem("token");
+    const [showDetail, setShowDetail] = useState(false)
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await axios.get("http://localhost:3001/api/order/user/2", {
+                const response = await axios.get(`${BASE_URL}/api/order/user/${user.id}`, {
                     headers: {
-                        "x-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJJZCI6MywiZW1haWwiOiJhZG1pbjFAZ21haWwuY29tIiwiY3JlYXRlZEF0IjoiMjAyNS0wMy0zMFQwMDoyMjoyNS4zNjBaIn0sImlhdCI6MTc0MzI5NDE0NX0.djSJ8j3Rrfvkm9w16bsjpoJFlvG7tKR9wrXxrkrByO0"
+                        "x-token": token
                     }
                 })
                 if (response.data && response.data.data && Array.isArray(response.data.data)) {
@@ -115,9 +35,9 @@ const ListUserOrder = () => {
                         let orderItemsWithDetails = [];
                         if (Array.isArray(response.data.data[i].orderItems)) {
                             for (let j = 0; j < response.data.data[i].orderItems.length; j++) {
-                                const orderItem = await axios.get(`http://localhost:3001/api/menuitems/${response.data.data[i].orderItems[j].menuItemId}`, {
+                                const orderItem = await axios.get(`${BASE_URL}/api/menuitems/${response.data.data[i].orderItems[j].menuItemId}`, {
                                     headers: {
-                                        "x-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJJZCI6MywiZW1haWwiOiJhZG1pbjFAZ21haWwuY29tIiwiY3JlYXRlZEF0IjoiMjAyNS0wMy0zMFQwMDoyMjoyNS4zNjBaIn0sImlhdCI6MTc0MzI5NDE0NX0.djSJ8j3Rrfvkm9w16bsjpoJFlvG7tKR9wrXxrkrByO0"
+                                        "x-token": token
                                     }
                                 })
                                 if (orderItem.data && orderItem.data.data) {
@@ -145,12 +65,32 @@ const ListUserOrder = () => {
         fetchOrders()
     }, [])
     // Filter orders based on status and search query
-    const filteredOrders = orders.filter((order) => {
-        const matchesStatus = filter === "all" || order.status === filter
-        const matchesSearch = order.id
-        return matchesStatus && matchesSearch
-    })
+    const filterOrders = orders.filter(order => {
+        const orderStatus = filter === "all" ? true : order.status === filter
+        const orderDate = new Date(order.orderDate)
+        const orderDateStr = orderDate.toISOString().split("T")[0]
 
+        const start = startDate || null
+        const end = endDate || null
+
+        const matchesDate = (!start || orderDateStr >= start) && (!end || orderDateStr <= end)
+
+        return matchesDate && orderStatus
+
+    }
+    )
+
+    const newOrder = () => {
+        navigate('/menu')
+    }
+    const openPopup = (order) => {
+        setShowDetail(true)
+        setSelectOrder(order)
+    }
+    const closePopup = () => {
+        setShowDetail(false)
+        setSelectOrder({})
+    }
     // Format date to readable string
     const formatDate = (dateString) => {
         const date = new Date(dateString)
@@ -171,11 +111,8 @@ const ListUserOrder = () => {
                     <p className="subtitle">Quản lý và theo dõi đơn hàng</p>
                 </div>
                 <div className="header-right">
-                    <button className="btn btn-outline">
-                        <Truck className="icon" />
-                        Theo dõi di chuyển
-                    </button>
-                    <button className="btn btn-primary">
+
+                    <button onClick={newOrder} className="btn btn-primary">
                         <Package className="icon" />
                         Đơn hàng mới
                     </button>
@@ -183,28 +120,72 @@ const ListUserOrder = () => {
             </div>
 
             <div className="filters">
-                <div className="search-container">
-                    <Search className="search-icon" />
-                    <input
-                        type="search"
-                        placeholder="Tìm kiếm"
-                        className="search-input"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
+                <div className="filterDate">
+                    <div className="filterDateItem">
+                        <div>
+                            <label>Từ ngày :</label>
+                            <input
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                className=""
+                            />
+                        </div>
+                    </div>
+                    <div className="filterDateItem">
+                        <div>
+                            <label>Đến ngày :</label>
+                            <input
+                                type="date"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                className=""
+                            />
+                        </div>
+                    </div>
                 </div>
+
+
                 <select className="status-filter" value={filter} onChange={(e) => setFilter(e.target.value)}>
                     <option value="all">Toàn bộ đơn hàng</option>
-                    <option value="pending">Chờ xác nhận</option>
-                    <option value="preparing">Đang chuẩn bị</option>
-                    <option value="ready">Sẵn sàng</option>
-                    <option value="delivered">Đang vận chuyển</option>
+                    <option value="Pending">Chờ xác nhận</option>
+                    <option value="Preparing">Đang chuẩn bị</option>
+                    <option value="Completed">Sẵn sàng</option>
+                    <option value="Delivering">Đang vận chuyển</option>
                 </select>
             </div>
+            {
+                showDetail && (
+                    <div className="popup-overlay" onClick={closePopup}>
+                        <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+                            <h2>Chi tiết đơn hàng</h2>
+                            <p><strong>Mã đơn:</strong> {selectOrder.id}</p>
+                            <p><strong>Địa chỉ:</strong> {selectOrder.deliveryAddress}</p>
+                            <p><strong>Ngày đặt:</strong> {formatDate(selectOrder.orderDate)}</p>
+                            <p><strong>Trạng thái:</strong> {selectOrder.status}</p>
 
+                            <div className="popup-items">
+                                <h3>Món đã đặt</h3>
+                                {items[orders.findIndex(order => order.id === selectOrder.id)]?.map((item, key) => (
+                                    <div key={key} className="popup-item">
+                                        <img src={item.imageUrl || "/placeholder.svg"} alt={item.name} className="popup-item-img" />
+                                        <div className="popup-item-info">
+                                            <p>{item.name}</p>
+                                            <p>Số lượng: {item.quantity}</p>
+                                            <p>Giá: ${(item.quantity * item.price).toFixed(2)}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <button className="popup-close" onClick={closePopup}>Đóng</button>
+                        </div>
+                    </div>
+                )
+            }
             <div className="orders-container">
-                {orders.length > 0 ? (
-                    orders.map((order, index) => (
+                {filterOrders.length > 0 ? (
+                    filterOrders.map((order, index) => (
                         <div key={index} className="order-card">
                             <div className="order-header">
                                 <div className="order-header-left">
@@ -215,18 +196,8 @@ const ListUserOrder = () => {
                                     <p className="order-date">Được đặt vào {formatDate(order.orderDate)}</p>
                                 </div>
                                 <div className="order-actions">
-                                    <button className="btn btn-outline">Chi tiết</button>
-                                    <div className="dropdown">
-                                        <button className="btn btn-icon">
-                                            <MoreHorizontal className="icon" />
-                                            <span className="sr-only">Thêm</span>
-                                        </button>
-                                        <div className="dropdown-menu">
-                                            <div className="dropdown-item">Cập nhật trạng thái</div>
-                                            <div className="dropdown-item">Liên hệ</div>
-                                            <div className="dropdown-item">In hóa đơn</div>
-                                        </div>
-                                    </div>
+                                    <button onClick={(e) => openPopup(order)} className="btn btn-outline">Chi tiết</button>
+
                                 </div>
                             </div>
                             <div className="order-content">

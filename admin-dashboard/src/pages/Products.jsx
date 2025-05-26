@@ -13,6 +13,7 @@ export default function Products() {
   const [newDescription, setNewDescription] = useState("");
   const [newImageFile, setNewImageFile] = useState("");
   const [newCategory, setNewCategory] = useState("");
+  const [newStatus, setNewStatus] = useState("available"); // Default status
   const [editId, setEditId] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [Categories, setCategories] = useState([]);
@@ -51,7 +52,8 @@ export default function Products() {
       formData.append("description", newDescription);
       formData.append("price", newPrice);
       formData.append("image", newImageFile); // Thêm file hình ảnh vào formData
-      formData.append("categoryIds", [parseInt(newCategory)]);
+      formData.append("categoryIds", "[" + parseInt(newCategory) +"]");
+      formData.append("status", newStatus); // Add status to formData
 
       const res = await axios.post(API_ADMIN, formData, {
         headers: {
@@ -67,6 +69,7 @@ export default function Products() {
         setNewDescription("");
         setNewImageFile(null); // Reset file sau khi thêm thành công
         setNewCategory("");
+        setNewStatus("available"); // Reset status
       }
     } catch (err) {
       alert("Không thể thêm sản phẩm");
@@ -100,6 +103,7 @@ export default function Products() {
     price: product.price,
     image: product.imageUrl, // Giữ đường dẫn cũ
     categoryId: product.categories[0]?.id || "", // Giữ ID đúng
+    status: product.status || "available", // Add status with default
   });
 };
 
@@ -113,7 +117,8 @@ const handleUpdate = async (id) => {
     formData.append("name", editForm.name);
     formData.append("description", editForm.description);
     formData.append("price", editForm.price);
-    formData.append("categoryIds", editForm.categoryId); // Dạng string hoặc số đều được
+    formData.append("categoryIds", "[" + editForm.categoryId + "]"); // Dạng string hoặc số đều được
+    formData.append("status", editForm.status); // Add status to update
 
     // Nếu người dùng chọn ảnh mới (File), thì thêm vào FormData
     if (editForm.image instanceof File) {
@@ -180,6 +185,15 @@ const handleUpdate = async (id) => {
             ))}
         </select>
 
+        {/* Add status dropdown */}
+        <select
+          value={newStatus}
+          onChange={(e) => setNewStatus(e.target.value)}
+        >
+          <option value="available">Có sẵn</option>
+          <option value="unavailable">Không có sẵn</option>
+        </select>
+
         <button className="btn-add-product" onClick={handleAddProduct}>
           Thêm sản phẩm
         </button>
@@ -193,6 +207,7 @@ const handleUpdate = async (id) => {
             <th>Mô tả</th>
             <th>Giá</th>
             <th>Danh mục</th>
+            <th>Trạng thái</th> {/* Add status column header */}
             <th>Thao tác</th>
           </tr>
         </thead>
@@ -268,6 +283,18 @@ const handleUpdate = async (id) => {
                       ))}
                     </select>
                   </td>
+                  <td>
+                    {/* Add status dropdown in edit mode */}
+                    <select
+                      value={editForm.status}
+                      onChange={(e) =>
+                        handleEditChange("status", e.target.value)
+                      }
+                    >
+                      <option value="available">Có sẵn</option>
+                      <option value="unavailable">Không có sẵn</option>
+                    </select>
+                  </td>
 
                   <td>
                     <button
@@ -293,6 +320,12 @@ const handleUpdate = async (id) => {
                     {product.categories && product.categories.length > 0
                       ? product.categories.map((c) => c.name).join(", ")
                       : "Chưa xác định"}
+                  </td>
+                  <td>
+                    {/* Display status in view mode */}
+                    <span className={`status-${product.status || 'available'}`}>
+                      {product.status === "unavailable" ? "Không có sẵn" : "Có sẵn"}
+                    </span>
                   </td>
 
                   <td>

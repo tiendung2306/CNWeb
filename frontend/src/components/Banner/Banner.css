@@ -27,6 +27,10 @@
 
 }
 
+.img1 {
+    width: fit-content;
+}
+
 .text-overlay {
     position: absolute;
     top: 50%;
