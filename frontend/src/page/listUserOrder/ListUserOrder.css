@@ -85,6 +85,7 @@
 
 .filters {
     display: flex;
+    justify-content: space-between;
     flex-direction: column;
     gap: 1rem;
     margin-bottom: 1.5rem;
@@ -377,4 +378,78 @@
     .order-grid {
         grid-template-columns: 1fr 1fr;
     }
+}
+
+.filterDate {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.filterDateItem {
+    font-family: monospace;
+    font-size: 14px;
+}
+
+.filterDateItem input {
+    border: gray 1px solid;
+    border-radius: 8px;
+    padding: 2px 4px;
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.popup-content {
+    background: #fff;
+    padding: 2rem;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 10px;
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.popup-close {
+    background-color: #f44336;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.popup-items {
+    margin-top: 1rem;
+}
+
+.popup-item {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.popup-item-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.popup-item-info p {
+    margin: 2px 0;
 }
