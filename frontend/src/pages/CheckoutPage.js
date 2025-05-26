@@ -25,7 +25,7 @@ const CheckoutPage = () => {
         const res = await fetch(`${BASE_URL}/pub/menuitems/random`);
         const data = await res.json();
         if (data.success && Array.isArray(data.data)) {
-          const randomSuggestions = getRandomItems(data.data, 5); 
+          const randomSuggestions = getRandomItems(data.data, 5);
           setSuggestedProducts(randomSuggestions);
         }
       } catch (err) {
@@ -167,7 +167,13 @@ const CheckoutPage = () => {
       setLoading(false);
     }
   };
-
+  const getImageUrl = (url) => {
+    if (!url || typeof url !== "string") return null;
+    if (url.startsWith("http")) return url;
+    // Nếu url là số (kiểu "2", "11") hoặc không chứa dấu ".", thì bỏ qua
+    if (!url.includes(".")) return null;
+    return `${BASE_URL}/${url}`;
+  };
   return (
     <div className="checkout-container">
       <h2>Trang thanh toán</h2>
@@ -259,14 +265,28 @@ const CheckoutPage = () => {
           <h3>Sản phẩm có thể bạn thích</h3>
           {suggestedProducts.map((product) => (
             <div key={product.id} className="suggested-item">
-              <img
-                src={`${BASE_URL}${product.image}`}
-                alt={product.name}
-                className="suggested-image"
-              />
+              {getImageUrl(product.imageUrl) ? (
+                <img
+                  src={getImageUrl(product.imageUrl)}
+                  alt={product.name}
+                  className="suggested-image"
+                />
+              ) : (
+                <div className="suggested-placeholder">Không có ảnh</div>
+              )}
+
               <p>{product.name}</p>
               <p>{parseFloat(product.price).toLocaleString()}₫</p>
-              <button onClick={() => addToCart(product)}>Thêm vào giỏ</button>
+              <button
+                onClick={() =>
+                  addToCart({
+                    ...product,
+                    image: product.image || product.imageUrl || "", // Chuẩn hóa tên trường
+                  })
+                }
+              >
+                Thêm vào giỏ
+              </button>
             </div>
           ))}
         </div>
