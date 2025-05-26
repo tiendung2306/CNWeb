@@ -5,14 +5,20 @@ import { Check, Clock, CookingPot, MoreHorizontal, Package, Search, Truck } from
 import axios from "axios"
 import "./ListUserOrder.css"
 import { useAuth } from "../../context/AuthContext.js"
+import { useNavigate } from "react-router-dom"
 const ListUserOrder = () => {
+    const navigate = useNavigate();
     const BASE_URL = process.env.REACT_APP_API_BASE_URL;
     const [orders, setOrders] = useState([])
     const [items, setItems] = useState([])
     const [filter, setFilter] = useState("all")
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [selectOrder, setSelectOrder] = useState({})
     const [searchQuery, setSearchQuery] = useState("")
     const { user } = useAuth()
     const token = localStorage.getItem("token");
+    const [showDetail, setShowDetail] = useState(false)
     useEffect(() => {
         const fetchOrders = async () => {
             try {
@@ -59,12 +65,32 @@ const ListUserOrder = () => {
         fetchOrders()
     }, [])
     // Filter orders based on status and search query
-    const filteredOrders = orders.filter((order) => {
-        const matchesStatus = filter === "all" || order.status === filter
-        const matchesSearch = order.id
-        return matchesStatus && matchesSearch
-    })
+    const filterOrders = orders.filter(order => {
+        const orderStatus = filter === "all" ? true : order.status === filter
+        const orderDate = new Date(order.orderDate)
+        const orderDateStr = orderDate.toISOString().split("T")[0]
 
+        const start = startDate || null
+        const end = endDate || null
+
+        const matchesDate = (!start || orderDateStr >= start) && (!end || orderDateStr <= end)
+
+        return matchesDate && orderStatus
+
+    }
+    )
+
+    const newOrder = () => {
+        navigate('/menu')
+    }
+    const openPopup = (order) => {
+        setShowDetail(true)
+        setSelectOrder(order)
+    }
+    const closePopup = () => {
+        setShowDetail(false)
+        setSelectOrder({})
+    }
     // Format date to readable string
     const formatDate = (dateString) => {
         const date = new Date(dateString)
@@ -85,11 +111,8 @@ const ListUserOrder = () => {
                     <p className="subtitle">Quản lý và theo dõi đơn hàng</p>
                 </div>
                 <div className="header-right">
-                    <button className="btn btn-outline">
-                        <Truck className="icon" />
-                        Theo dõi di chuyển
-                    </button>
-                    <button className="btn btn-primary">
+
+                    <button onClick={newOrder} className="btn btn-primary">
                         <Package className="icon" />
                         Đơn hàng mới
                     </button>
@@ -97,28 +120,72 @@ const ListUserOrder = () => {
             </div>
 
             <div className="filters">
-                <div className="search-container">
-                    <Search className="search-icon" />
-                    <input
-                        type="search"
-                        placeholder="Tìm kiếm"
-                        className="search-input"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
+                <div className="filterDate">
+                    <div className="filterDateItem">
+                        <div>
+                            <label>Từ ngày :</label>
+                            <input
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                className=""
+                            />
+                        </div>
+                    </div>
+                    <div className="filterDateItem">
+                        <div>
+                            <label>Đến ngày :</label>
+                            <input
+                                type="date"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                className=""
+                            />
+                        </div>
+                    </div>
                 </div>
+
+
                 <select className="status-filter" value={filter} onChange={(e) => setFilter(e.target.value)}>
                     <option value="all">Toàn bộ đơn hàng</option>
-                    <option value="pending">Chờ xác nhận</option>
-                    <option value="preparing">Đang chuẩn bị</option>
-                    <option value="ready">Sẵn sàng</option>
-                    <option value="delivered">Đang vận chuyển</option>
+                    <option value="Pending">Chờ xác nhận</option>
+                    <option value="Preparing">Đang chuẩn bị</option>
+                    <option value="Completed">Sẵn sàng</option>
+                    <option value="Delivering">Đang vận chuyển</option>
                 </select>
             </div>
+            {
+                showDetail && (
+                    <div className="popup-overlay" onClick={closePopup}>
+                        <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+                            <h2>Chi tiết đơn hàng</h2>
+                            <p><strong>Mã đơn:</strong> {selectOrder.id}</p>
+                            <p><strong>Địa chỉ:</strong> {selectOrder.deliveryAddress}</p>
+                            <p><strong>Ngày đặt:</strong> {formatDate(selectOrder.orderDate)}</p>
+                            <p><strong>Trạng thái:</strong> {selectOrder.status}</p>
 
+                            <div className="popup-items">
+                                <h3>Món đã đặt</h3>
+                                {items[orders.findIndex(order => order.id === selectOrder.id)]?.map((item, key) => (
+                                    <div key={key} className="popup-item">
+                                        <img src={item.imageUrl || "/placeholder.svg"} alt={item.name} className="popup-item-img" />
+                                        <div className="popup-item-info">
+                                            <p>{item.name}</p>
+                                            <p>Số lượng: {item.quantity}</p>
+                                            <p>Giá: ${(item.quantity * item.price).toFixed(2)}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <button className="popup-close" onClick={closePopup}>Đóng</button>
+                        </div>
+                    </div>
+                )
+            }
             <div className="orders-container">
-                {orders.length > 0 ? (
-                    orders.map((order, index) => (
+                {filterOrders.length > 0 ? (
+                    filterOrders.map((order, index) => (
                         <div key={index} className="order-card">
                             <div className="order-header">
                                 <div className="order-header-left">
@@ -129,18 +196,8 @@ const ListUserOrder = () => {
                                     <p className="order-date">Được đặt vào {formatDate(order.orderDate)}</p>
                                 </div>
                                 <div className="order-actions">
-                                    <button className="btn btn-outline">Chi tiết</button>
-                                    <div className="dropdown">
-                                        <button className="btn btn-icon">
-                                            <MoreHorizontal className="icon" />
-                                            <span className="sr-only">Thêm</span>
-                                        </button>
-                                        <div className="dropdown-menu">
-                                            <div className="dropdown-item">Cập nhật trạng thái</div>
-                                            <div className="dropdown-item">Liên hệ</div>
-                                            <div className="dropdown-item">In hóa đơn</div>
-                                        </div>
-                                    </div>
+                                    <button onClick={(e) => openPopup(order)} className="btn btn-outline">Chi tiết</button>
+
                                 </div>
                             </div>
                             <div className="order-content">
