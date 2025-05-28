@@ -159,6 +159,7 @@ function Menu() {
                     {food.description || "Không có mô tả"}
                   </p>
                   <button
+                    className="menu-add-to-cart"
                     onClick={() =>
                       addToCart({
                         ...food,
