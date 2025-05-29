@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Footer.css';
-
+import { CiFacebook, CiTwitter, CiInstagram } from "react-icons/ci";
+import { FaGoogle, FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
 const Footer = () => {
     return (
         <div className="footer">
@@ -21,10 +22,10 @@ const Footer = () => {
                             <div className="newsletter-block">
                                 <h3 className="newsletter-title d-none d-md-block">Kết nối với chúng tôi</h3>
                                 <ul className="footerNav-social d-flex">
-                                    <li><a href="#" aria-label="Facebook"><i className="fa fa-facebook"></i></a></li>
-                                    <li><a href="#" aria-label="Twitter"><i className="fa fa-twitter"></i></a></li>
-                                    <li><a href="#" aria-label="Instagram"><i className="fa fa-instagram"></i></a></li>
-                                    <li><a href="#" aria-label="Youtube"><i className="fa fa-youtube-play"></i></a></li>
+                                    <li className='icons'><FaFacebookF /></li>
+                                    <li className='icons'><FaTwitter /></li>
+                                    <li className='icons'><FaInstagram /></li>
+                                    <li className='icons'><FaGoogle /></li>
                                 </ul>
                             </div>
                         </div>

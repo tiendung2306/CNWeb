@@ -16,7 +16,11 @@ import Cart from "./pages/Cart.js"; // Trang giỏ hàng
 import CheckoutPage from "./pages/CheckoutPage.js";
 import Profile from "./pages/Profile.js";
 import OrderStatus from "./status/OrderStatus.js";
+
+import ContactPage from "./page/ContactPage.jsx";
+
 import PrivateRoute from "./components/route/PrivateRoute.jsx";
+
 function App() {
   return (
     <>
@@ -31,6 +35,10 @@ function App() {
               <Route path="/food/:id" element={<FoodDetail />} />
               <Route path="/review/:id" element={<Review />} />
               <Route path="/cart" element={<Cart />} />
+
+           
+              <Route path="/contact" element={<ContactPage />} />
+
               <Route
                 path="/checkout"
                 element={
@@ -64,6 +72,7 @@ function App() {
                 }
               />{" "}
               {/* Trang trạng thái đơn hàng thành công */}
+
             </Routes>
             <Footer />
           </Router>
