@@ -23,24 +23,33 @@ app.use(
   }),
 );
 
-const corsOptions = {
+app.use(cors({
   origin: [
-    'http://localhost:8080',
-    'http://localhost:5173', 
-    'https://cn-web-mu.vercel.app', // Domain Vercel của bạn
-    'https://cn-web-gugj.vercel.app' // Nếu có custom domain
+    'https://cn-web-mu.vercel.app',
+    'https://cn-web-gugj.vercel.app',
+    'http://localhost:3000', // Cho development
+    'http://localhost:5173'
   ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
-
-app.use(cors(corsOptions));
+  methods: '*',
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-token'],
+  credentials: true
+}));
 
 app.use(bodyParser.json());
 
 const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+  cors: {
+    origin: [
+      'https://cn-web-mu.vercel.app',
+      'https://cn-web-gugj.vercel.app',
+      'http://localhost:3000',
+      'http://localhost:5173'
+    ],
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 app.use(express.static('public'));
 
 io.on('connection', (socket) => {
