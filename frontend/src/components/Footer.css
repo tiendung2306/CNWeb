@@ -1,11 +1,12 @@
 .footer {
-    background-color: #222;
+    background-color: #eef6ff;
     color: #fff;
     padding: 40px 0;
     font-size: 14px;
     display: flex;
     flex-direction: column;
     align-items: center;
+
 }
 
 .footer a {
@@ -20,9 +21,11 @@
 
 /* Phần newsletter */
 .footer-newsletter {
-    background: #333;
+    background: #fefefe;
     width: 100%;
     padding: 20px 0;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
 }
 
 .wrapbox-newsletter {
@@ -53,6 +56,8 @@
     margin-right: 10px;
 }
 
+
+
 .newsletter-btn {
     background-color: #f8b400;
     color: #222;
@@ -61,6 +66,7 @@
     cursor: pointer;
     border-radius: 4px;
     transition: 0.3s;
+
 }
 
 .newsletter-btn:hover {
@@ -96,7 +102,7 @@
     font-size: 1.5em;
     font-weight: bold;
     margin-bottom: 15px;
-    color: #f8b400;
+    color: #000;
 }
 
 .widget-footer {
@@ -122,7 +128,7 @@
 }
 
 .footerNav-link li a {
-    color: #ddd;
+    color: #fff;
     text-decoration: none;
     transition: color 0.3s ease;
 }
@@ -132,7 +138,7 @@
 }
 
 .footer-copyright {
-    background-color: #111;
+    background-color: #fff;
     color: #888;
     padding: 15px 0;
     font-size: 0.85em;
@@ -154,24 +160,50 @@
     .footer-container {
         text-align: center;
     }
+
     .widget-footer {
         margin-bottom: 30px;
     }
+
     .footer-copyright {
         font-size: 0.75em;
     }
 }
+
 .row {
     display: flex;
-    flex-wrap: wrap; /* Allows wrapping to the next line if necessary */
-    justify-content: space-between; /* Adjusts spacing between columns */
-    align-items: flex-start; /* Aligns items at the top */
-    margin: 0 -15px; /* Adjusts column gaps */
+    flex-wrap: wrap;
+    /* Allows wrapping to the next line if necessary */
+    justify-content: space-between;
+    /* Adjusts spacing between columns */
+    align-items: flex-start;
+    /* Aligns items at the top */
+    margin: 0 -15px;
+    /* Adjusts column gaps */
 }
 
-.col-lg-4, .col-lg-3, .col-lg-2 {
-    flex: 1; /* Makes all columns grow equally */
-    max-width: calc(100% / 12 * 4); /* Adjust for a 12-column grid */
-    padding: 0 15px; /* Adds padding between columns */
-    box-sizing: border-box; /* Ensures padding doesn't affect column width */
+.col-lg-4,
+.col-lg-3,
+.col-lg-2 {
+    flex: 1;
+    /* Makes all columns grow equally */
+    max-width: calc(100% / 12 * 4);
+    /* Adjust for a 12-column grid */
+    padding: 0 15px;
+    /* Adds padding between columns */
+    box-sizing: border-box;
+    /* Ensures padding doesn't affect column width */
+}
+
+.icons {
+    color: #000;
+    font-size: 20px;
+    border: #000 1px solid;
+    border-radius: 100px;
+    padding: 4px;
+}
+
+.icons:hover {
+    background-color: #d89c00;
+    color: #fff;
 }

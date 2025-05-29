@@ -43,7 +43,7 @@ function Header() {
           <ul className="header-menu-list">
             <li className="header-menu-item"><Link to="/" className="header-menu__link"><i className="fa-solid fa-house"></i> Trang chủ</Link></li>
             <li className="header-menu-item"><Link to="/menu" className="header-menu__link"><i className="fa-solid fa-utensils"></i> Thực đơn</Link></li>
-            <li className="header-menu-item"><Link to="/services" className="header-menu__link"><i className="fa-solid fa-concierge-bell"></i> Dịch vụ</Link></li>
+            {/* <li className="header-menu-item"><Link to="/services" className="header-menu__link"><i className="fa-solid fa-concierge-bell"></i> Dịch vụ</Link></li> */}
             <li className="header-menu-item"><Link to="/contact" className="header-menu__link"><i className="fa-solid fa-envelope"></i> Liên hệ</Link></li>
           </ul>
         </div>

@@ -16,6 +16,7 @@ import Cart from "./pages/Cart.js"; // Trang giỏ hàng
 import CheckoutPage from "./pages/CheckoutPage.js";
 import Profile from "./pages/Profile.js";
 import OrderStatus from "./status/OrderStatus.js";
+import ContactPage from "./page/ContactPage.jsx";
 function App() {
   return (
     <>
@@ -34,6 +35,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/history" element={<ListUserOrder />} />
               <Route path="/order-status" element={<OrderStatus />} /> {/* Trang trạng thái đơn hàng thành công */}
+              <Route path="/contact" element={<ContactPage />} />
             </Routes>
             <Footer />
           </Router>
