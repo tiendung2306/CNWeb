@@ -23,11 +23,33 @@ app.use(
   }),
 );
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://cn-web-mu.vercel.app',
+    'https://cn-web-gugj.vercel.app',
+    'http://localhost:3000', // Cho development
+    'http://localhost:5173'
+  ],
+  methods: '*',
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-token'],
+  credentials: true
+}));
+
 app.use(bodyParser.json());
 
 const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+  cors: {
+    origin: [
+      'https://cn-web-mu.vercel.app',
+      'https://cn-web-gugj.vercel.app',
+      'http://localhost:3000',
+      'http://localhost:5173'
+    ],
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 app.use(express.static('public'));
 
 io.on('connection', (socket) => {
