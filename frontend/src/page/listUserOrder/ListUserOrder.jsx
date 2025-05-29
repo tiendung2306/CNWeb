@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Check, Clock, CookingPot, MoreHorizontal, Package, Search, Truck } from "lucide-react"
+import { Package } from "lucide-react"
 import axios from "axios"
 import "./ListUserOrder.css"
 import { useAuth } from "../../context/AuthContext.js"
@@ -15,7 +15,7 @@ const ListUserOrder = () => {
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [selectOrder, setSelectOrder] = useState({})
-    const [searchQuery, setSearchQuery] = useState("")
+    // const [searchQuery, setSearchQuery] = useState("")
     const { user } = useAuth()
     const token = localStorage.getItem("token");
     const [showDetail, setShowDetail] = useState(false)
@@ -222,7 +222,7 @@ const ListUserOrder = () => {
                                                             {item.quantity} × ${item.price.toFixed(2)}
                                                         </p> */}
                                                     </div>
-                                                    <div className="item-price">${(item.quantity * item.price).toFixed(2)}</div>
+                                                    <div className="item-price">{(item.quantity * item.price).toFixed(2)} VNĐ</div>
                                                 </div>
                                             ))}
                                         </div>
