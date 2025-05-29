@@ -23,7 +23,20 @@ app.use(
   }),
 );
 
-app.use(cors());
+const corsOptions = {
+  origin: [
+    'http://localhost:8080',
+    'http://localhost:5173', 
+    'https://cn-web-mu.vercel.app', // Domain Vercel của bạn
+    'https://cn-web-gugj.vercel.app' // Nếu có custom domain
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
 
 const http = require('http').createServer(app);
