@@ -49,7 +49,6 @@ router.route('/payment/:id')
 router.route('/payment/user/:id')
   .get(validate(paymentValidator.getPaymentByUserId), paymentController.getPaymentByUserId);
 
-  router.post("/", menuItemController.createMenuItem);
 
 //api menu-item
 router.get("/menuitems", menuItemController.getAllMenuItems);   

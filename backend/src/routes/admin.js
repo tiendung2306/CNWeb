@@ -9,6 +9,7 @@ import * as categoryController from '../controllers/category/category.controller
 import * as categoryValidator from '../validation/category.validator';
 import * as reviewController from '../controllers/review/review.controller';
 import uploadImage from '../middleware/uploadImage.js';
+import { uploadImage as uploadImageController } from '../controllers/upload/upload.controller.js';
 import * as statisticController from '../controllers/statistic/statistic.controller.js';
 
 
@@ -50,5 +51,8 @@ router.get('/menuitems/random', menuItemController.getRandomMenuItems);
 router.post("/categories", validate(categoryValidator.createCategory), categoryController.createCategory);
 router.patch("/categories/:id", validate(categoryValidator.updateCategory), categoryController.updateCategory);
 router.delete("/categories/:id", categoryController.deleteCategory);
+
+//upload ảnh
+router.post('/upload', uploadImage, uploadImageController);
 
 module.exports = router;
