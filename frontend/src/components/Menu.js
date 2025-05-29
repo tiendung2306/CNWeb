@@ -148,6 +148,9 @@ function Menu() {
           currentFoods.map((food) => (
             <div className="menu-item" key={food.id}>
               <div className="menu-content">
+                {food.status === "unavailable" && (
+                  <div className="out-of-stock">Hết Hàng</div>
+                )}
                 <img
                   src={food.imageUrl || food.image || "default-image.jpg"}
                   alt={food.name}
@@ -166,6 +169,7 @@ function Menu() {
                         image: food.image || food.imageUrl || "", // Chuẩn hóa tên trường
                       })
                     }
+                    disabled={food.status === "unavailable"}
                   >
                     Thêm vào giỏ
                   </button>
