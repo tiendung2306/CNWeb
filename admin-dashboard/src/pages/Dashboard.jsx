@@ -166,8 +166,8 @@ if (period === "dayly") {
         callbacks: {
           label: function (tooltipItem) {
             return tooltipItem.datasetIndex === 0
-              ? tooltipItem.raw + " đơn"
-              : tooltipItem.raw.toLocaleString() + "₫";
+              ? tooltipItem.raw + " đ"
+              : tooltipItem.raw.toLocaleString() + " ₫ơn hàng";
           },
         },
       },
@@ -176,7 +176,7 @@ if (period === "dayly") {
   x: {
     title: {
       display: true,
-      text: "Tổng quan",
+      text: "Tổng quan giữa doanh thu và đơn hàng",
     },
   },
   y: {

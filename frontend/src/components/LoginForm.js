@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./LoginForm.css";
 const BASE_URL = process.env.REACT_APP_API_BASE_URL; // Đường dẫn đến API của bạn
-function LoginForm({ onSwitch }) {
+function LoginForm({ onSwitch, onSuccess }) {
   const { login } = useAuth(); // login: (user, token)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,12 +16,10 @@ function LoginForm({ onSwitch }) {
     setError("");
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${BASE_URL}/pub/login`,{
-          email,
-          password,
-        }
-      );
+      const response = await axios.post(`${BASE_URL}/pub/login`, {
+        email,
+        password,
+      });
 
       if (response.data.success) {
         const { user, token } = response.data.data;
@@ -31,8 +29,9 @@ function LoginForm({ onSwitch }) {
 
         // Lưu token vào localStorage
         localStorage.setItem("token", token);
-
         alert("Đăng nhập thành công!");
+        onSuccess && onSuccess(); // Đóng modal
+
         navigate("/");
       } else {
         setError(response.data.errorMessage || "Đăng nhập thất bại");
