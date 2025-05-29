@@ -44,6 +44,12 @@ const CheckoutPage = () => {
     paymentMethod: "Cash",
   });
 
+  const [formErrors, setFormErrors] = useState({
+    fullName: false,
+    phone: false,
+    address: false,
+  });
+
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
@@ -68,9 +74,33 @@ const CheckoutPage = () => {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+
+    // Clear error for field when user types in it
+    if (formErrors[e.target.name]) {
+      setFormErrors((prev) => ({
+        ...prev,
+        [e.target.name]: false,
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const errors = {
+      fullName: !formData.fullName.trim(),
+      phone: !formData.phone.trim(),
+      address: !formData.address.trim(),
+    };
+
+    setFormErrors(errors);
+    return !Object.values(errors).some((error) => error);
   };
 
   const handleOrder = async () => {
+    if (!validateForm()) {
+      setError("Vui lòng điền đầy đủ thông tin giao hàng");
+      return;
+    }
+
     setLoading(true);
     setError("");
     setSuccessMessage("");
@@ -215,21 +245,36 @@ const CheckoutPage = () => {
               placeholder="Họ và tên"
               value={formData.fullName}
               onChange={handleChange}
+              className={formErrors.fullName ? "error-input" : ""}
             />
+            {formErrors.fullName && (
+              <p className="error-text">Vui lòng nhập họ và tên</p>
+            )}
+
             <input
               type="text"
               name="phone"
               placeholder="Số điện thoại"
               value={formData.phone}
               onChange={handleChange}
+              className={formErrors.phone ? "error-input" : ""}
             />
+            {formErrors.phone && (
+              <p className="error-text">Vui lòng nhập số điện thoại</p>
+            )}
+
             <input
               type="text"
               name="address"
               placeholder="Địa chỉ giao hàng"
               value={formData.address}
               onChange={handleChange}
+              className={formErrors.address ? "error-input" : ""}
             />
+            {formErrors.address && (
+              <p className="error-text">Vui lòng nhập địa chỉ giao hàng</p>
+            )}
+
             <select
               name="deliveryMethod"
               value={formData.deliveryMethod}
@@ -244,7 +289,7 @@ const CheckoutPage = () => {
               onChange={handleChange}
             >
               <option value="Cash">Thanh toán khi nhận hàng (COD)</option>
-              <option value="Momo">Thanh toán qua Momo</option>
+              <option value="Momo">Thanh toán qua VNPAY</option>
             </select>
             <button
               className="order-button"

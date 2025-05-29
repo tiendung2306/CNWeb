@@ -231,3 +231,14 @@
     padding: 6px 8px;
   }
 }
+
+.error-input {
+  border: 1px solid #ff3b30;
+  background-color: #fff0f0;
+}
+
+.error-text {
+  color: #ff3b30;
+  font-size: 12px;
+  margin: 2px 0 8px;
+}
