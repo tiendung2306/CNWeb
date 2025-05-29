@@ -1,0 +1,347 @@
+/* ========== TOÀN BỘ MENU ========== */
+.menu-container {
+  max-width: 100%;
+  margin: 30px auto;
+  font-family: "Segoe UI", Arial, sans-serif;
+  padding: 0 20px;
+}
+
+/* Tiêu đề */
+.menu-title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+
+/* ===== Lọc theo danh mục ===== */
+.menu-selection {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.menu-selection-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 18px;
+  color: #444;
+  background-color: #f1f1f1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.menu-selection-button:hover {
+  background-color: #ffcc66;
+}
+
+.menu-selection-button.active {
+  background-color: #ff9900;
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(255, 153, 0, 0.4);
+}
+
+/* ===== Không có món ===== */
+.menu-no-item {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: gray;
+}
+
+/* ===== Danh sách món ===== */
+.menu-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px 50px; /* 40px dọc, 30px ngang */
+  max-width: 1280px; /* hoặc 1000px nếu bạn muốn nhỏ hơn */
+  margin: 0 auto; /* căn giữa cả block */
+  box-sizing: border-box;
+}
+
+.menu-item {
+  flex: 0 0 calc(50% - 10px); /* Chiếm đúng 50% - nửa gap */
+  max-width: calc(50% - 10px);
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border: 3px solid #f5f5f5;
+  transition: transform 0.2s ease-in-out;
+  position: relative;
+}
+
+.menu-item:hover {
+  transform: scale(1.05);
+  border-color: #d4af37;
+}
+
+.menu-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  padding-right: 60px; /* Thêm padding để né vùng giá */
+}
+
+.menu-image {
+  width: 130px;
+  height: 130px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.menu-info {
+  flex-grow: 1;
+  max-width: 365px;
+  margin-right: 60px; /* Né vùng bị giá đè */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.menu-name {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  word-wrap: break-word;
+}
+
+.menu-description {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 8px;
+  word-wrap: break-word;
+}
+
+.menu-price {
+  background: #d4af37;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 8px;
+  position: absolute;
+  right: -45px;
+  top: 50%;
+  width: 120px;
+  text-align: center;
+  transform: rotate(-90deg) translateY(-50%);
+  transform-origin: center;
+  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.4);
+}
+
+/* ===== Nút thêm vào giỏ ===== */
+.menu-add-to-cart {
+  background: #d3c288;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.menu-add-to-cart:hover {
+  background: #8c5a39;
+  transform: scale(1.05);
+}
+
+.menu-add-to-cart.disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* ===== Link xem chi tiết ===== */
+.menu-link {
+  color: #d4af37;
+  font-weight: bold;
+  font-size: 16px;
+  margin-left: 20px;
+  text-decoration: none;
+}
+
+.menu-link:hover {
+  text-decoration: underline;
+}
+
+/* ========== MÓN NỔI BẬT ========== */
+.menu-high-line {
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #ffefc1;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.menu-high-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #d35400;
+  margin-bottom: 10px;
+}
+
+.menu-high-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.menu-high-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s ease-in-out;
+}
+
+.menu-high-item:hover {
+  transform: scale(1.05);
+}
+
+.menu-high-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.menu-high-name {
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .menu-item {
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+
+  .menu-content {
+    flex-direction: column;
+    padding-right: 0;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+  }
+
+  .menu-image {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    border-radius: 8px;
+  }
+
+  .menu-info {
+    width: 100%;
+    margin-right: 0;
+    align-items: center;
+    text-align: center;
+  }
+
+  .menu-price {
+    position: static;
+    transform: none;
+    margin: 10px auto;
+    width: auto;
+    display: block;
+    right: auto;
+  }
+
+  .menu-add-to-cart {
+    width: 100%;
+    margin: 10px 0;
+    padding: 12px 0;
+    font-size: 16px;
+  }
+
+  .menu-link {
+    margin: 5px 0 10px 0;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  .out-of-stock {
+    top: 10px;
+    right: 10px;
+    font-size: 14px;
+  }
+
+  /* Adjust selection buttons for mobile */
+  .menu-selection {
+    gap: 8px;
+  }
+
+  .menu-selection-button {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  /* Adjust high-line items for mobile */
+  .menu-high-image {
+    width: 60px;
+    height: 60px;
+  }
+
+  .menu-high-name {
+    font-size: 12px;
+  }
+}
+
+/* phân trang */
+.pagination {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #f0f0f0;
+  border: none;
+  margin: 0 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.pagination button:hover {
+  background-color: #ccc;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Add these styles to your existing CSS file */
+.out-of-stock {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  z-index: 1;
+}

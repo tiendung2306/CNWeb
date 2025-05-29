@@ -1,0 +1,250 @@
+/* ========== Food Detail ========== */
+.food-detail {
+  width: 80%;
+  margin: 20px auto;
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #333;
+}
+/* back-button */
+.back-button {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  background: none;
+  border: none;
+  color: #ff9900;
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.back-button:hover {
+  color: #cc7700;
+}
+/* ========== Food Container ========== */
+.food-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 40px;
+  gap: 50px;
+}
+
+.food-image img {
+  width: 450px;
+  height: 450px;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* ========== Food Info ========== */
+.food-info {
+  flex: 1;
+  border-radius: 12px;
+  padding: 25px;
+  margin: 0;
+  background: #fff;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.status {
+  font-size: 16px;
+  color: #777;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-size: 32px;
+  color: #ff6f00; /* Màu cam đồng bộ */
+  font-weight: bold;
+  margin: 20px 0;
+}
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 20px;
+  color: #ffcc00;
+  margin: 10px 0;
+}
+
+.star {
+  font-size: 22px;
+}
+
+.rating-score {
+  font-size: 18px;
+  color: #333;
+  margin-left: 5px;
+}
+
+/* ========== Quantity Controls ========== */
+.quantity {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 16px;
+  margin: 20px 0;
+
+}
+
+.quantity button {
+  padding: 10px 15px;
+  font-size: 18px;
+  background-color: #d7c0ad; /* Màu cam đồng bộ */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.quantity button:hover {
+  background-color: #8c5a39; /* Màu cam đậm hơn khi hover */
+}
+
+.quantity input {
+  width: 60px;
+  text-align: center;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  max-width: 50px;
+}
+
+/* ========== Buttons ========== */
+.buttons {
+  display: flex;
+  gap: 25px;
+  margin: 20px 0;
+}
+
+.add-to-cart,
+.buy-now {
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.add-to-cart {
+  background-color: #978373; /* Màu cam đồng bộ */
+}
+
+.add-to-cart:hover {
+  background-color: #e65c00;
+  transform: translateY(-2px);
+}
+
+.buy-now {
+  background-color: #978373; /* Màu cam đồng bộ */
+}
+
+.buy-now:hover {
+  background-color: #e65c00;
+  transform: translateY(-2px);
+}
+
+.discount-btn {
+  font-size: 16px;
+  padding: 12px;
+  background: #ffe0b2; /* Màu nền cam nhạt */
+  color: #ff6f00; /* Màu chữ cam */
+  border: 1px solid #ff6f00;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.discount-btn:hover {
+  background-color: #ffcc80; /* Cam nhạt đậm hơn khi hover */
+}
+
+/* ========== Share Section ========== */
+.share i {
+  font-size: 28px;
+  color: #42403f; /* Màu cam đồng bộ */
+  margin-right: 10px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.share i:hover {
+  color: #e65c00;
+}
+
+/* ========== Product Benefits ========== */
+.product-benefits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+.benefit-item svg {
+  font-size: 24px;
+  color: #ff6f00; /* Màu cam đồng bộ */
+  margin-right: 10px;
+}
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .food-detail {
+    width: 95%;
+    font-size: 16px;
+  }
+
+  .food-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .food-image img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .food-info {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .add-to-cart,
+  .buy-now {
+    width: 100%;
+    padding: 12px 0;
+  }
+
+  .quantity {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .share {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .product-benefits {
+    flex-direction: column;
+    gap: 15px;
+  }
+}

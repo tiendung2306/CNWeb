@@ -3,13 +3,14 @@ import crypto from 'crypto';
 import axios from 'axios';
 import { User } from '../../models';
 import { successResponse, errorResponse, uniqueId } from '../../helpers';
+const userService = require('../../services/user/user.service');
 
 export const allUsers = async (req, res) => {
   try {
     const page = req.params.page || 1;
-    const limit = 2;
+    const limit = req.params.limit || 10;
     const users = await User.findAndCountAll({
-      order: [['createdAt', 'DESC'], ['firstName', 'ASC']],
+      order: [['createdAt', 'DESC'], ['username', 'ASC']],
       offset: (page - 1) * limit,
       limit,
     });
@@ -19,10 +20,29 @@ export const allUsers = async (req, res) => {
   }
 };
 
+export const updateUserById = async (req, res) => {
+  try {
+    const user = await userService.updateUserById(req, res);
+    return successResponse(req, res, { user });
+  } 
+  catch (error) {
+    return errorResponse(req, res, error.message);
+  }
+}
+
+export const deleteUserById = async (req, res) => {
+  try {
+    const user = await userService.deleteUserById(req, res);
+    return successResponse(req, res, { user });
+  }
+  catch (error) {
+    return errorResponse(req, res, error.message);
+  }
+}
 export const register = async (req, res) => {
   try {
     const {
-      email, password, firstName, lastName,
+      email, password, username,
     } = req.body;
     if (process.env.IS_GOOGLE_AUTH_ENABLE === 'true') {
       if (!req.body.code) {
@@ -58,8 +78,7 @@ export const register = async (req, res) => {
       .digest('hex');
     const payload = {
       email,
-      firstName,
-      lastName,
+      username,
       password: reqPass,
       isVerified: false,
       verifyToken: uniqueId(),

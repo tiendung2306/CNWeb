@@ -1,0 +1,122 @@
+/* Banner Container Layout */
+.stacked-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+    overflow: hidden;
+}
+
+.top-section {
+    position: relative;
+    width: 100%;
+    height: 500px;
+}
+
+/* Swiper Styling */
+.mySwiper {
+    width: 100%;
+    height: 100%;
+}
+
+.swiperSlide {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.swiperSlide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Text Overlay Styling */
+.text-overlay {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    transform: translateY(-50%);
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    z-index: 2;
+}
+
+.text-overlay h2 {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.text-overlay h1 {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+}
+
+.text-overlay p {
+    color: white;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+/* Optional Bottom Section (Food Cards) */
+.bottom-section {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.food-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    max-width: 300px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.food-card:hover {
+    transform: translateY(-5px);
+}
+
+.food-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.text-foodcard {
+    padding: 1rem;
+}
+
+.text-foodcard h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.text-foodcard p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.text-foodcard button {
+    padding: 0.5rem 1rem;
+    background-color: #ff5a5f;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.text-foodcard button:hover {
+    background-color: #e14b4f;
+}

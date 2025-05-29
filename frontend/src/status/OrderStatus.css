@@ -1,0 +1,117 @@
+.order-status {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 20px; /* Increased padding for better spacing */
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #f5f7fa, #e4e9f0); /* Updated background */
+  transition: all 0.3s ease; /* Added smooth transitions */
+}
+
+.order-status.success {
+  background: linear-gradient(135deg, #e0f7e9, #b2dfdb); /* Modern gradient */
+  color: #2e7d32;
+}
+
+.order-status.fail {
+  background: linear-gradient(135deg, #ffebee, #ffcdd2); /* Modern gradient */
+  color: #c62828;
+}
+
+.order-status .icon {
+  font-size: 60px; /* Increased icon size */
+  margin: 20px 20px 40px -30px; /* Added margin for spacing */
+  color: inherit; /* Inherit color from parent */
+  transition: transform 0.3s ease; /* Added smooth transitions */
+}
+.order-status h1 {
+  font-size: 30px; /* Slightly larger font size */
+  margin: 20px 0 12px; /* Added top margin to separate from icon */
+  font-weight: bold;
+}
+
+.order-status p {
+  font-size: 18px; /* Slightly larger font size */
+  margin-bottom: 25px;
+  color: #555; /* Softer text color */
+}
+
+.order-status .btn {
+  padding: 12px 25px;
+  font-size: 16px;
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 25px; /* Rounded button */
+  background-color: inherit;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Added smooth transitions */
+}
+
+.order-status.success .btn {
+  background-color: #4caf50;
+}
+
+.order-status.success .btn:hover {
+  background-color: #388e3c;
+  transform: translateY(-2px); /* Added hover effect */
+}
+
+.order-status.fail .btn {
+  background-color: #f44336;
+}
+
+.order-status.fail .btn:hover {
+  background-color: #d32f2f;
+  transform: translateY(-2px); /* Added hover effect */
+}
+
+/* Media Queries for responsiveness */
+@media screen and (max-width: 768px) {
+  .order-status .icon {
+    font-size: 50px;
+  }
+
+  .order-status h1 {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .order-status p {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  .order-status .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .order-status {
+    padding: 20px 15px;
+  }
+
+  .order-status .icon {
+    font-size: 40px;
+  }
+
+  .order-status h1 {
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+
+  .order-status p {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  .order-status .btn {
+    padding: 8px 18px;
+    font-size: 12px;
+  }
+}
