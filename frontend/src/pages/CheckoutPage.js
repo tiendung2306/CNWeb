@@ -25,7 +25,7 @@ const CheckoutPage = () => {
         const res = await fetch(`${BASE_URL}/pub/menuitems/random`);
         const data = await res.json();
         if (data.success && Array.isArray(data.data)) {
-          const randomSuggestions = getRandomItems(data.data, 5); 
+          const randomSuggestions = getRandomItems(data.data, 5);
           setSuggestedProducts(randomSuggestions);
         }
       } catch (err) {
@@ -42,6 +42,12 @@ const CheckoutPage = () => {
     address: "",
     deliveryMethod: "Giao hàng tiêu chuẩn",
     paymentMethod: "Cash",
+  });
+
+  const [formErrors, setFormErrors] = useState({
+    fullName: false,
+    phone: false,
+    address: false,
   });
 
   const [loading, setLoading] = useState(false);
@@ -68,9 +74,33 @@ const CheckoutPage = () => {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+
+    // Clear error for field when user types in it
+    if (formErrors[e.target.name]) {
+      setFormErrors((prev) => ({
+        ...prev,
+        [e.target.name]: false,
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const errors = {
+      fullName: !formData.fullName.trim(),
+      phone: !formData.phone.trim(),
+      address: !formData.address.trim(),
+    };
+
+    setFormErrors(errors);
+    return !Object.values(errors).some((error) => error);
   };
 
   const handleOrder = async () => {
+    if (!validateForm()) {
+      setError("Vui lòng điền đầy đủ thông tin giao hàng");
+      return;
+    }
+
     setLoading(true);
     setError("");
     setSuccessMessage("");
@@ -167,7 +197,13 @@ const CheckoutPage = () => {
       setLoading(false);
     }
   };
-
+  const getImageUrl = (url) => {
+    if (!url || typeof url !== "string") return null;
+    if (url.startsWith("http")) return url;
+    // Nếu url là số (kiểu "2", "11") hoặc không chứa dấu ".", thì bỏ qua
+    if (!url.includes(".")) return null;
+    return `${BASE_URL}/${url}`;
+  };
   return (
     <div className="checkout-container">
       <h2>Trang thanh toán</h2>
@@ -209,21 +245,36 @@ const CheckoutPage = () => {
               placeholder="Họ và tên"
               value={formData.fullName}
               onChange={handleChange}
+              className={formErrors.fullName ? "error-input" : ""}
             />
+            {formErrors.fullName && (
+              <p className="error-text">Vui lòng nhập họ và tên</p>
+            )}
+
             <input
               type="text"
               name="phone"
               placeholder="Số điện thoại"
               value={formData.phone}
               onChange={handleChange}
+              className={formErrors.phone ? "error-input" : ""}
             />
+            {formErrors.phone && (
+              <p className="error-text">Vui lòng nhập số điện thoại</p>
+            )}
+
             <input
               type="text"
               name="address"
               placeholder="Địa chỉ giao hàng"
               value={formData.address}
               onChange={handleChange}
+              className={formErrors.address ? "error-input" : ""}
             />
+            {formErrors.address && (
+              <p className="error-text">Vui lòng nhập địa chỉ giao hàng</p>
+            )}
+
             <select
               name="deliveryMethod"
               value={formData.deliveryMethod}
@@ -238,7 +289,7 @@ const CheckoutPage = () => {
               onChange={handleChange}
             >
               <option value="Cash">Thanh toán khi nhận hàng (COD)</option>
-              <option value="Momo">Thanh toán qua Momo</option>
+              <option value="Momo">Thanh toán qua VNPAY</option>
             </select>
             <button
               className="order-button"
@@ -259,14 +310,28 @@ const CheckoutPage = () => {
           <h3>Sản phẩm có thể bạn thích</h3>
           {suggestedProducts.map((product) => (
             <div key={product.id} className="suggested-item">
-              <img
-                src={`${BASE_URL}${product.image}`}
-                alt={product.name}
-                className="suggested-image"
-              />
+              {getImageUrl(product.imageUrl) ? (
+                <img
+                  src={getImageUrl(product.imageUrl)}
+                  alt={product.name}
+                  className="suggested-image"
+                />
+              ) : (
+                <div className="suggested-placeholder">Không có ảnh</div>
+              )}
+
               <p>{product.name}</p>
               <p>{parseFloat(product.price).toLocaleString()}₫</p>
-              <button onClick={() => addToCart(product)}>Thêm vào giỏ</button>
+              <button
+                onClick={() =>
+                  addToCart({
+                    ...product,
+                    image: product.image || product.imageUrl || "", // Chuẩn hóa tên trường
+                  })
+                }
+              >
+                Thêm vào giỏ
+              </button>
             </div>
           ))}
         </div>

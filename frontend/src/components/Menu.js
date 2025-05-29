@@ -41,8 +41,8 @@ function Menu() {
   }, []);
 
   // Lấy danh sách món ăn khi thay đổi danh mục
-  
-// Lấy món ăn cho danh mục đã chọn
+
+  // Lấy món ăn cho danh mục đã chọn
   useEffect(() => {
     const fetchMenuItems = async () => {
       setLoading(true);
@@ -55,11 +55,11 @@ function Menu() {
 
           // Tìm món ăn theo danh mục đã chọn
           result.data.categories.forEach((category) => {
-            if (category.name === selectedCategory || selectedCategory === "Tất cả") {
-              filteredFoods = [
-                ...filteredFoods,
-                ...category.menuItems,
-              ];
+            if (
+              category.name === selectedCategory ||
+              selectedCategory === "Tất cả"
+            ) {
+              filteredFoods = [...filteredFoods, ...category.menuItems];
             }
           });
 
@@ -116,7 +116,9 @@ function Menu() {
       {/* Bộ lọc danh mục */}
       <div className="menu-selection">
         <button
-          className={`menu-selection-button ${selectedCategory === "Tất cả" ? "active" : ""}`}
+          className={`menu-selection-button ${
+            selectedCategory === "Tất cả" ? "active" : ""
+          }`}
           onClick={() => {
             setSelectedCategory("Tất cả");
             setCurrentPage(1); // Đặt lại trang khi chọn "Tất cả"
@@ -127,7 +129,9 @@ function Menu() {
         {categories.map((category) => (
           <button
             key={category.id}
-            className={`menu-selection-button ${selectedCategory === category.name ? "active" : ""}`}
+            className={`menu-selection-button ${
+              selectedCategory === category.name ? "active" : ""
+            }`}
             onClick={() => {
               setSelectedCategory(category.name);
               setCurrentPage(1); // Đặt lại trang khi thay đổi danh mục
@@ -144,6 +148,9 @@ function Menu() {
           currentFoods.map((food) => (
             <div className="menu-item" key={food.id}>
               <div className="menu-content">
+                {food.status === "unavailable" && (
+                  <div className="out-of-stock">Hết Hàng</div>
+                )}
                 <img
                   src={food.imageUrl || food.image || "default-image.jpg"}
                   alt={food.name}
@@ -151,10 +158,22 @@ function Menu() {
                 />
                 <div className="menu-info">
                   <h3 className="menu-name">{food.name}</h3>
-                  <p className="menu-description">{food.description || "Không có mô tả"}</p>
-                  <button className="menu-add-to-cart" onClick={() => addToCart(food)}>
-                    THÊM VÀO GIỎ
+                  <p className="menu-description">
+                    {food.description || "Không có mô tả"}
+                  </p>
+                  <button
+                    className="menu-add-to-cart"
+                    onClick={() =>
+                      addToCart({
+                        ...food,
+                        image: food.image || food.imageUrl || "", // Chuẩn hóa tên trường
+                      })
+                    }
+                    disabled={food.status === "unavailable"}
+                  >
+                    Thêm vào giỏ
                   </button>
+
                   <Link to={`/food/${food.id}`} className="menu-link">
                     Xem chi tiết
                   </Link>
@@ -166,14 +185,19 @@ function Menu() {
             </div>
           ))
         ) : (
-          <p className="menu-no-item">Không có món ăn nào trong danh mục này.</p>
+          <p className="menu-no-item">
+            Không có món ăn nào trong danh mục này.
+          </p>
         )}
       </div>
 
       {/* Phân trang */}
       {totalPages > 1 && (
         <div className="pagination">
-          <button onClick={() => setCurrentPage((p) => p - 1)} disabled={currentPage === 1}>
+          <button
+            onClick={() => setCurrentPage((p) => p - 1)}
+            disabled={currentPage === 1}
+          >
             Trang Trước
           </button>
           <span>

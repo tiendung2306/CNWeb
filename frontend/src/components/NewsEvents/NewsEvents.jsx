@@ -12,29 +12,30 @@ const NewsEvents = () => {
                 <div className="news-event-item">
                     <div className="news-event-date">22 Tháng 05, 2024</div>
                     <div className="news-event-image">
-                        <img src="path/to/spain-food.jpg" alt="12 món ăn nổi tiếng ở Tây Ban Nha" />
+                        <img src="news1.jpg" alt="Nhà hàng Vịt 34 với menu 50 món ăn từ vịt" />
                     </div>
-                    <h3>12 món ăn nổi tiếng ở Tây Ban Nha nhất định phải ăn cho đã đời</h3>
-                    <p>Người Tây Ban Nha lấy thực phẩm chủ yếu từ đất đai và biển cả, nền ẩm thực của họ...</p>
-                    <a href="#" className="read-more-link">Xem thêm </a>
+                    <h3>Nhà hàng Vịt 34 với menu 50 món ăn từ vịt</h3>
+                    <p>Nhà hàng Vịt 34 phục vụ hơn 50 món ăn, từ món truyền thống như vịt om sấu, vịt rang muối, đến các sáng tạo mới lạ như vịt thiết bản gang, lưỡi vịt chiên xù.</p>
+                    <a href="https://vnexpress.net/nha-hang-vit-34-voi-menu-50-mon-an-tu-vit-4888364.html" className="read-more-link">Xem thêm </a>
                 </div>
                 <div className="news-event-item">
                     <div className="news-event-date">22 Tháng 05, 2024</div>
                     <div className="news-event-image">
-                        <img src="path/to/saigon-food.jpg" alt="Top 5 món ngon Sài Gòn" />
+                        <img src="news2.jpg" alt="Ăn phở vắt nửa quả chanh, bún riêu cua có hột vịt lộn" />
                     </div>
-                    <h3>Top 5 món ngon không thể bỏ qua khi đến Sài Gòn</h3>
-                    <p>Những món đặc sản nổi tiếng như cơm tấm, hủ tiếu, bánh xèo, lẩu cá kèo... là những món ngon...</p>
-                    <a href="#" className="read-more-link">Xem thêm </a>
+                    <h3>Ăn phở vắt nửa quả chanh, bún riêu cua có hột vịt lộn</h3>
+                    <p>Không cần nếm trước để thử vị, vắt chanh, thêm tương là quán tính của nhiều người đi ăn phở, hủ tiếu, bún riêu.</p>
+                    <a href="https://vnexpress.net/quan-pho-gan-day-am-thuc-viet-dang-lon-xon-4885831.html" className="read-more-link">Xem thêm </a>
                 </div>
                 <div className="news-event-item">
                     <div className="news-event-date">22 Tháng 05, 2024</div>
                     <div className="news-event-image">
-                        <img src="path/to/italian-food.jpg" alt="Sự tinh tế ẩm thực Italia" />
+                        <img src="news3.jpg" alt="Nghề muối cà hơn 300 năm tuổi của ngôi làng Hà Nội" />
                     </div>
-                    <h3>Sự tinh tế và lãng mạn của nét ẩm thực Italia</h3>
-                    <p>Ngoài những hàng thời trang nổi tiếng bậc nhất thế giới, đất nước Italia còn được coi là cái nôi...</p>
-                    <a href="#" className="read-more-link">Xem thêm </a>
+                    <h3>Nghề muối cà hơn 300 năm tuổi của ngôi làng Hà Nội</h3>
+                    <p>
+                        Từ gần 300 năm nay, người dân làng Khương Hạ sống nhờ nghề muối cà bát, món ăn dân dã quen thuộc của người dân Hà Nội.	</p>
+                    <a href="https://vnexpress.net/nghe-muoi-ca-hon-300-nam-tuoi-cua-ngoi-lang-ha-noi-4884625.html" className="read-more-link">Xem thêm </a>
                 </div>
             </div>
         </div>

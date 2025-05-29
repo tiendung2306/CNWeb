@@ -42,7 +42,6 @@
 }
 
 .read-more-link {
-    direction: ltr;
     display: flex;
     justify-content: center;
     align-items: center;

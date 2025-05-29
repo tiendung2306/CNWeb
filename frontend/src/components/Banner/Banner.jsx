@@ -28,7 +28,7 @@ const Banner = () => {
                     className="mySwiper"
                 >
                     <SwiperSlide className='swiperSlide'>
-                        <img src={"https://theme.hstatic.net/200000915839/1001276949/14/home_banner_3_img.jpg?v=1518"} alt="" />
+                        <img className='img1' src="fastfood1.jpg" alt="" />
                         <div className='text-overlay'>
                             <h2>Khuyến mãi khai trương</h2>
                             <h1>Tất cả sản phẩm tại<br /> quán & Online </h1>
@@ -45,29 +45,15 @@ const Banner = () => {
                         </div>
                     </SwiperSlide>
                     <SwiperSlide className='swiperSlide'>
-                        <img src={banner3} alt="" />
+                        <img className='img1' src="fastfood4.jpg" alt="" />
                         <div className='text-overlay'>
                             <h2>Khuyến mãi khai trương</h2>
                             <h1>Tất cả sản phẩm tại<br /> quán & Online </h1>
                             <p>Liên hệ đặt bàn để chúng tôi phục vụ bạn tốt nhất</p>
                         </div>
                     </SwiperSlide>
-                    <SwiperSlide className='swiperSlide'>
-                        <img src={banner4} alt="" />
-                        <div className='text-overlay'>
-                            <h2>Khuyến mãi khai trương</h2>
-                            <h1>Tất cả sản phẩm tại<br /> quán & Online </h1>
-                            <p>Liên hệ đặt bàn để chúng tôi phục vụ bạn tốt nhất</p>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide className='swiperSlide'>
-                        <img src={banner5} alt="" />
-                        <div className='text-overlay'>
-                            <h2>Khuyến mãi khai trương</h2>
-                            <h1>Tất cả sản phẩm tại<br /> quán & Online </h1>
-                            <p>Liên hệ đặt bàn để chúng tôi phục vụ bạn tốt nhất</p>
-                        </div>
-                    </SwiperSlide>
+
+
                 </Swiper>
 
             </div>

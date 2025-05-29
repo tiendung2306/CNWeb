@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import "./Cart.css";
 
-const BASE_URL =
-  "http://ec2-3-0-101-188.ap-southeast-1.compute.amazonaws.com:3000";
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity, addToCart } =
@@ -39,6 +38,13 @@ const Cart = () => {
     };
     fetchSuggestions();
   }, []);
+  const getImageUrl = (url) => {
+    if (!url || typeof url !== "string") return null;
+    if (url.startsWith("http")) return url;
+    if (!url.includes(".")) return null;
+    return `${BASE_URL}/${url.replace(/^\/+/, "")}`; // Xóa dấu "/" đầu nếu có
+  };
+  console.log("Cart:", cart);
 
   return (
     <div className="cart-container">
@@ -52,11 +58,16 @@ const Cart = () => {
             <div className="cart-items">
               {cart.map((item) => (
                 <div key={item.id} className="cart-item">
-                  <img
-                    src={`${BASE_URL}${item.image}`}
-                    alt={item.name}
-                    className="cart-image"
-                  />
+                  {getImageUrl(item.image) ? (
+                    <img
+                      src={getImageUrl(item.image)}
+                      alt={item.name}
+                      className="cart-image"
+                    />
+                  ) : (
+                    <div className="cart-placeholder">Không có ảnh</div>
+                  )}
+
                   <div className="cart-info">
                     <h3>{item.name}</h3>
                     <p>{item.price.toLocaleString()}₫</p>
@@ -95,14 +106,26 @@ const Cart = () => {
               <h3>Sản phẩm có thể bạn thích</h3>
               {suggestedProducts.map((product) => (
                 <div key={product.id} className="suggested-item">
-                  <img
-                    src={`${BASE_URL}${product.image}`}
-                    alt={product.name}
-                    className="suggested-image"
-                  />
+                  {getImageUrl(product.imageUrl) ? (
+                    <img
+                      src={getImageUrl(product.imageUrl)}
+                      alt={product.name}
+                      className="suggested-image"
+                    />
+                  ) : (
+                    <div className="suggested-placeholder">Không có ảnh</div>
+                  )}
+
                   <p>{product.name}</p>
                   <p>{parseFloat(product.price).toLocaleString()}₫</p>
-                  <button onClick={() => addToCart(product)}>
+                  <button
+                    onClick={() =>
+                      addToCart({
+                        ...product,
+                        image: product.image || product.imageUrl || "", // Chuẩn hóa tên trường
+                      })
+                    }
+                  >
                     Thêm vào giỏ
                   </button>
                 </div>

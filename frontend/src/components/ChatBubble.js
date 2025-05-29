@@ -307,7 +307,13 @@ const GroupChatBox = () => {
                           </div>
                           <div className="text-xs text-gray-400 mt-1 flex items-center">
                             {isCurrentUser && <span className="mr-1">✓</span>}
-                            {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                            {new Date(message.timestamp).toLocaleString([], { 
+                              year: 'numeric', 
+                              month: 'short', 
+                              day: 'numeric', 
+                              hour: "2-digit", 
+                              minute: "2-digit" 
+                            })}
                           </div>
                         </div>
                       </div>

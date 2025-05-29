@@ -1,9 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Reviews.css'; // Import file CSS
-
+import axios from 'axios'
 const Reviews = () => {
+    const [reviews, getReviews] = useState([])
+    const [error, setError] = useState('')
+    const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+    const token = localStorage.getItem("token");
+    useEffect(() => {
+        const getReviews = async () => {
+            const response = await axios.get(`${BASE_URL}/api/reviews/menuitem/1`, {
+                headers: {
+                    "x-token": token
+                }
+            })
+            if (response.status == 200) {
+                console.log(response.data)
+            }
+            else {
+                return setError("Có lỗi xảy ra !!")
+            }
+        }
+        getReviews();
+    }, [])
     return (
         <div className="reviews-container">
+
             <div className="reviews-title">
                 <h1>KHÁCH HÀNG NÓI VỀ BISTRO WEST</h1>
                 <p>Best food for you and family</p>

@@ -26,6 +26,7 @@ router.post(
 );
 
 router.get("/menuitems", menuItemController.getAllMenuItems);
+router.get("/menuitems/:id", menuItemController.getMenuItemById); 
                    
 router.get("/reviews/menuitem/:menuItemId", reviewController.getReviewsByMenuItem);
 
