@@ -1,13 +1,14 @@
 .menu-container {
-    font-family: sans-serif;
+
     color: #333;
-    padding: 20px;
+    padding: 4px 100px;
     text-align: center;
 }
 
 .menu-title h1 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin-bottom: 2px;
 }
 
 .menu-title p {
@@ -16,27 +17,7 @@
     margin-bottom: 30px;
 }
 
-.menu-items {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    justify-content: space-around;
-}
 
-.menu-item {
-    width: 60%;
-    max-width: 600px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 30px;
-    text-align: left;
-}
 
 
 
@@ -63,5 +44,78 @@
 @media (max-width: 768px) {
     .menu-item {
         width: 95%;
+    }
+}
+
+.suggested-products {
+    padding: 20px;
+
+}
+
+.error-message {
+    color: #d32f2f;
+    text-align: center;
+    font-weight: 600;
+    padding: 16px;
+    background-color: #fff0f0;
+    border-radius: 8px;
+}
+
+.product-grid-2-cols {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 cột */
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.product-card {
+    display: flex;
+    gap: 16px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 16px;
+    align-items: flex-start;
+    transition: all 0.2s ease-in-out;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+}
+
+.product-image {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.product-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 4px;
+}
+
+.product-decription {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 8px;
+    line-height: 1.4;
+}
+
+.product-price {
+    font-size: 15px;
+    font-weight: 700;
+    color: #007b5f;
+    margin-top: auto;
+}
+
+@media (max-width: 600px) {
+    .product-grid-2-cols {
+        grid-template-columns: 1fr;
     }
 }
