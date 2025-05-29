@@ -5,26 +5,26 @@ const ContactPage = () => {
     const listMember = [
         {
             hoten: "Lê Tiến Dũng",
-            mssv: "0000000",
-            email: "dung@gmail.com",
+            mssv: "20224837",
+            email: "dung.lt224837@sis.hust.edu.vn",
             github: "dung.github.com",
         },
         {
             hoten: "Đinh Mạnh Dũng",
-            mssv: "0000000",
-            email: "dung@gmail.com",
+            mssv: "20224959",
+            email: "dinhmanhdung@gmail.com",
             github: "dung.github.com",
         },
         {
             hoten: "Hoàng Dũng",
-            mssv: "0000000",
-            email: "dung@gmail.com",
+            mssv: "20215540",
+            email: "hoangdung@gmail.com",
             github: "dung.github.com",
         },
         {
             hoten: "Nguyễn Dũng",
-            mssv: "0000000",
-            email: "dung@gmail.com",
+            mssv: "20210227",
+            email: "nguyendung@gmail.com",
             github: "dung.github.com",
         }
     ];
@@ -38,7 +38,6 @@ const ContactPage = () => {
                         <p><strong>Họ và tên:</strong> {member.hoten}</p>
                         <p><strong>MSSV:</strong> {member.mssv}</p>
                         <p><strong>Email:</strong> {member.email}</p>
-                        <p><strong>Github:</strong> <a href={`https://${member.github}`} target="_blank" rel="noopener noreferrer">{member.github}</a></p>
                     </div>
                 ))}
             </div>
