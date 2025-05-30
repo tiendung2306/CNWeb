@@ -16,7 +16,7 @@ const Review = ({ foodId }) => {
   // Lấy danh sách review khi foodId thay đổi
   const fetchReviews = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/reviews/menuitem/${foodId}`, {
+      const response = await axios.get(`${BASE_URL}/pub/reviews/menuitem/${foodId}`, {
         headers: { "x-token": token },
       });
       setReviews(response.data); // Lưu đánh giá vào state

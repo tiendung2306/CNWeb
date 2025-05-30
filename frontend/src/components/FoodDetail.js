@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./FoodDetail.css";
+import { useContext, useEffect, useState } from "react";
 import {
-  FaCertificate,
-  FaTruck,
-  FaShieldAlt,
   FaBoxOpen,
+  FaCertificate,
   FaHeadset,
-  FaUndo,
+  FaRegStar,
+  FaShieldAlt,
   FaStar,
   FaStarHalfAlt,
-  FaRegStar,
+  FaTruck,
+  FaUndo,
 } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
 import Review from "../components/Review";
 import { CartContext } from "../context/CartContext";
+import "./FoodDetail.css";
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -31,23 +31,23 @@ const FoodDetail = () => {
   const token = localStorage.getItem("token");
   console.log("BASE_URL:", BASE_URL);
   console.log("id:", id);
-  
+
   useEffect(() => {
     const fetchFood = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/api/menuitems/${id}`, {
+        const res = await axios.get(`${BASE_URL}/pub/menuitems/${id}`, {
           headers: { "x-token": token },
         });
-    
+
         const item = res.data.data;
         console.log("Món ăn đã lấy:", item);
-    
+
         setFood({
           ...item,
           price: parseInt(item.price) || 0,
           rating: parseFloat(item.rating) || 0,
         });
-    
+
         setAverageRating(parseFloat(item.rating) || 0);
       } catch (err) {
         console.error("Lỗi khi lấy món ăn:", err);
@@ -56,7 +56,7 @@ const FoodDetail = () => {
         setLoading(false);
       }
     };
-    
+
     fetchFood();
   }, [id]);
 
@@ -106,22 +106,22 @@ const FoodDetail = () => {
           </div>
 
           <div className="buttons">
-            <button 
-              className="add-to-cart" 
-              onClick={() => addToCart(food)} 
+            <button
+              className="add-to-cart"
+              onClick={() => addToCart(food)}
               disabled={food.status !== 'available'}
-              style={{ 
+              style={{
                 opacity: food.status !== 'available' ? 0.6 : 1,
                 cursor: food.status !== 'available' ? 'not-allowed' : 'pointer'
               }}
             >
               THÊM VÀO GIỎ
             </button>
-            <button 
-              className="buy-now" 
+            <button
+              className="buy-now"
               onClick={handleBuyNow}
               disabled={food.status !== 'available'}
-              style={{ 
+              style={{
                 opacity: food.status !== 'available' ? 0.6 : 1,
                 cursor: food.status !== 'available' ? 'not-allowed' : 'pointer'
               }}
