@@ -1,11 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Package } from "lucide-react"
 import axios from "axios"
-import "./ListUserOrder.css"
-import { useAuth } from "../../context/AuthContext.js"
+import { Package } from "lucide-react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "../../context/AuthContext.js"
+import "./ListUserOrder.css"
 const ListUserOrder = () => {
     const navigate = useNavigate();
     const BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -35,7 +35,7 @@ const ListUserOrder = () => {
                         let orderItemsWithDetails = [];
                         if (Array.isArray(response.data.data[i].orderItems)) {
                             for (let j = 0; j < response.data.data[i].orderItems.length; j++) {
-                                const orderItem = await axios.get(`${BASE_URL}/api/menuitems/${response.data.data[i].orderItems[j].menuItemId}`, {
+                                const orderItem = await axios.get(`${BASE_URL}/pub/menuitems/${response.data.data[i].orderItems[j].menuItemId}`, {
                                     headers: {
                                         "x-token": token
                                     }

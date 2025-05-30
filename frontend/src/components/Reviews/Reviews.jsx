@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import './Reviews.css'; // Import file CSS
-import axios from 'axios'
 const Reviews = () => {
     const [reviews, getReviews] = useState([])
     const [error, setError] = useState('')
@@ -8,7 +8,7 @@ const Reviews = () => {
     const token = localStorage.getItem("token");
     useEffect(() => {
         const getReviews = async () => {
-            const response = await axios.get(`${BASE_URL}/api/reviews/menuitem/1`, {
+            const response = await axios.get(`${BASE_URL}/pub/reviews/menuitem/1`, {
                 headers: {
                     "x-token": token
                 }
