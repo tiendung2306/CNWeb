@@ -1,7 +1,9 @@
 import { useState } from "react";
 import "./RegisterForm.css";
 import axios from "axios";
-const BASE_URL = process.env.REACT_APP_API_BASE_URL; // Đường dẫn đến API của bạn
+
+const BASE_URL = process.env.REACT_APP_API_BASE_URL; // Đường dẫn đến API
+
 function RegisterForm({ onSwitch }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -15,14 +17,15 @@ function RegisterForm({ onSwitch }) {
       return;
     }
 
-try {
+    try {
       const response = await axios.post(`${BASE_URL}/pub/register`, {
         username,
         email,
         password,
       });
 
-      const data = await response.json();
+      const data = response.data;
+
       if (!data.success) {
         setError(data.errorMessage || "Đăng ký thất bại");
       } else {
@@ -30,7 +33,11 @@ try {
         onSwitch();
       }
     } catch (err) {
-      setError("Lỗi kết nối đến server!");
+      if (err.response && err.response.data?.errorMessage) {
+        setError(err.response.data.errorMessage);
+      } else {
+        setError("Lỗi kết nối đến server!");
+      }
     }
   };
 
