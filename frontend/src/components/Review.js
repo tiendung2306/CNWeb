@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import "./Review.css";
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
-const API_REVIEWS = `${BASE_URL}/api/reviews/menuitem/`;
+const API_REVIEWS = `${BASE_URL}/api/reviews`;
 
 const Review = ({ menuItemId }) => {
   const [reviews, setReviews] = useState([]);
@@ -16,7 +16,7 @@ const Review = ({ menuItemId }) => {
 
   const fetchReviews = async () => {
     try {
-      const response = await axios.get(`${API_REVIEWS}${menuItemId}`, {
+      const response = await axios.get(`${API_REVIEWS}/menuitem/${menuItemId}`, {
         headers: { "x-token": token },
       });
       setReviews(response.data);
@@ -46,12 +46,12 @@ const Review = ({ menuItemId }) => {
 
     try {
       if (editingId) {
-        await axios.put(`${BASE_URL}/api/reviews/${editingId}`, newReview, {
+        await axios.put(`${API_REVIEWS}/${editingId}`, newReview, {
           headers: { "x-token": token },
         });
         alert("Cập nhật đánh giá thành công!");
       } else {
-        await axios.post(`${BASE_URL}/api/reviews`, newReview, {
+        await axios.post(`${API_REVIEWS}`, newReview, {
           headers: { "x-token": token },
         });
         alert("Thêm đánh giá thành công!");
@@ -69,7 +69,7 @@ const Review = ({ menuItemId }) => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${BASE_URL}/api/reviews/${id}`, {
+      await axios.delete(`${API_REVIEWS}/${id}`, {
         headers: { "x-token": token },
       });
       setReviews((prev) => prev.filter((review) => review.id !== id));

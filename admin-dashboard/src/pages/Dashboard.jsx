@@ -29,7 +29,7 @@ export default function Dashboard() {
     totalUsers: 0,
     totalRevenue: 0,
   });
-
+  const [timePeriod, setTimePeriod] = useState("weekly");
   // Gọi API tổng quan để lấy dữ liệu cho các thẻ
   const fetchOverview = async () => {
     try {
@@ -55,6 +55,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchOverview();
+    const { startDate, endDate } = calculateDateRange(timePeriod);
+    fetchStatistics(startDate, endDate);
   }, []);
 
   const [chartData, setChartData] = useState({
@@ -64,16 +66,22 @@ export default function Dashboard() {
 
   // Gọi API thống kê để lấy dữ liệu cho biểu đồ
   const fetchStatistics = async (startDate, endDate) => {
-    console.log("⏳ Đang gọi API với startDate:", startDate, "endDate:", endDate); // Thêm log tại đây
+    console.log(
+      "⏳ Đang gọi API với startDate:",
+      startDate,
+      "endDate:",
+      endDate
+    ); // Thêm log tại đây
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/api/admin/statistics`,
         {
-        params: { startDate, endDate },
-        headers: {
-          "x-token": localStorage.getItem("token"),
-        },
-      });
+          params: { startDate, endDate },
+          headers: {
+            "x-token": localStorage.getItem("token"),
+          },
+        }
+      );
 
       console.log("✅ Dữ liệu nhận từ API:", response.data); // Log dữ liệu trả về từ API
       if (response.data.success) {
@@ -81,48 +89,47 @@ export default function Dashboard() {
         console.log("✅ Dữ liệu thống kê nhận từ API:", data); // Log khi dữ liệu đã được xử lý
 
         // Lấy tên món ăn và số lượng đơn hàng
- const totalOrders = data.totalOrders;
-      const totalRevenue = data.totalRevenue;
+        const totalOrders = data.totalOrders;
+        const totalRevenue = data.totalRevenue;
 
-      setChartData({
-        labels: ["Tổng quan"], // Dữ liệu chỉ có một label cho "Tổng quan"
-datasets: [
-  {
-    label: "Doanh thu",
-    data: [totalRevenue],
-    backgroundColor: "rgba(255, 99, 132, 0.2)",
-    borderColor: "rgba(255, 99, 132, 1)",
-    borderWidth: 1,
-    yAxisID: "y", // trục trái
-  },
-  {
-    label: "Số đơn hàng",
-    data: [totalOrders],
-    backgroundColor: "rgba(75, 192, 192, 0.2)",
-    borderColor: "rgba(75, 192, 192, 1)",
-    borderWidth: 1,
-    yAxisID: "y1", // trục phải
-  },
-],
-
-      });
+        setChartData({
+          labels: ["Tổng quan"], // Dữ liệu chỉ có một label cho "Tổng quan"
+          datasets: [
+            {
+              label: "Doanh thu",
+              data: [totalRevenue],
+              backgroundColor: "rgba(255, 99, 132, 0.2)",
+              borderColor: "rgba(255, 99, 132, 1)",
+              borderWidth: 1,
+              yAxisID: "y", // trục trái
+            },
+            {
+              label: "Số đơn hàng",
+              data: [totalOrders],
+              backgroundColor: "rgba(75, 192, 192, 0.2)",
+              borderColor: "rgba(75, 192, 192, 1)",
+              borderWidth: 1,
+              yAxisID: "y1", // trục phải
+            },
+          ],
+        });
       }
     } catch (error) {
-      console.error("❌ Lỗi khi gọi API thống kê:", error.response?.data || error.message);
+      console.error(
+        "❌ Lỗi khi gọi API thống kê:",
+        error.response?.data || error.message
+      );
     }
   };
-
-  const [timePeriod, setTimePeriod] = useState("weekly");
   const [customStartDate, setCustomStartDate] = useState("");
   const [customEndDate, setCustomEndDate] = useState("");
 
   const calculateDateRange = (period) => {
     const end = new Date();
     let start = new Date();
-if (period === "dayly") {
+    if (period === "daily") {
       start.setDate(end.getDate() - 1); // 1 ngày gần nhất
-}
-    else if (period === "weekly") {
+    } else if (period === "weekly") {
       start.setDate(end.getDate() - 7); // 7 ngày gần nhất
     } else if (period === "monthly") {
       start.setMonth(end.getMonth() - 1); // 1 tháng gần nhất
@@ -147,8 +154,6 @@ if (period === "dayly") {
     fetchStatistics(startDate, endDate);
   };
 
-
-
   useEffect(() => {
     if (timePeriod === "custom" && customStartDate && customEndDate) {
       fetchStatistics(customStartDate, customEndDate);
@@ -160,7 +165,17 @@ if (period === "dayly") {
     plugins: {
       title: {
         display: true,
-        text: `Số đơn hàng và Doanh thu theo ${timePeriod === "dayly" ? "Ngày" :timePeriod === "weekly" ? "Tuần" : timePeriod === "monthly" ? "Tháng" : timePeriod === "yearly" ? "Năm" : "Tùy chọn"}`,
+        text: `Số đơn hàng và Doanh thu theo ${
+          timePeriod === "daily"
+            ? "Ngày"
+            : timePeriod === "weekly"
+            ? "Tuần"
+            : timePeriod === "monthly"
+            ? "Tháng"
+            : timePeriod === "yearly"
+            ? "Năm"
+            : "Tùy chọn"
+        }`,
       },
       tooltip: {
         callbacks: {
@@ -172,37 +187,36 @@ if (period === "dayly") {
         },
       },
     },
-   scales: {
-  x: {
-    title: {
-      display: true,
-      text: "Tổng quan giữa doanh thu và đơn hàng",
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Tổng quan giữa doanh thu và đơn hàng",
+        },
+      },
+      y: {
+        type: "linear",
+        position: "left",
+        title: {
+          display: true,
+          text: "Doanh thu (VND)",
+        },
+        ticks: {
+          callback: (value) => value.toLocaleString() + "₫",
+        },
+      },
+      y1: {
+        type: "linear",
+        position: "right",
+        title: {
+          display: true,
+          text: "Số đơn hàng",
+        },
+        grid: {
+          drawOnChartArea: false, // tránh vẽ grid bên phải
+        },
+      },
     },
-  },
-  y: {
-    type: "linear",
-    position: "left",
-    title: {
-      display: true,
-      text: "Doanh thu (VND)",
-    },
-    ticks: {
-      callback: (value) => value.toLocaleString() + "₫",
-    },
-  },
-  y1: {
-    type: "linear",
-    position: "right",
-    title: {
-      display: true,
-      text: "Số đơn hàng",
-    },
-    grid: {
-      drawOnChartArea: false, // tránh vẽ grid bên phải
-    },
-  },
-},
-
   };
 
   return (
@@ -224,7 +238,9 @@ if (period === "dayly") {
         <div className="card">
           <h3 className="card-title">Doanh thu</h3>
           <p className="card-value red">
-            {overview.totalRevenue ? overview.totalRevenue.toLocaleString() + "₫" : "0₫"}
+            {overview.totalRevenue
+              ? overview.totalRevenue.toLocaleString() + "₫"
+              : "0₫"}
           </p>
         </div>
       </div>
@@ -240,7 +256,7 @@ if (period === "dayly") {
           onChange={handleTimePeriodChange}
           className="p-2 border rounded-md"
         >
-          <option value="dayly">1 Ngày</option>
+          <option value="daily">1 Ngày</option>
           <option value="weekly">1 Tuần</option>
           <option value="monthly">1 Tháng</option>
           <option value="yearly">1 Năm</option>
@@ -263,7 +279,6 @@ if (period === "dayly") {
             value={customEndDate}
             onChange={(e) => setCustomEndDate(e.target.value)}
           />
-
         </div>
       )}
 
