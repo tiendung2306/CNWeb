@@ -111,7 +111,9 @@ export default function Payments() {
               <td>{payment.id}</td>
               <td>{payment.orderId}</td>
               <td>{payment.userId || "N/A"}</td>
-              <td>{payment.paymentMethod}</td>
+              <td>
+                {payment.paymentMethod === "Momo" ? "VNPAY" : payment.paymentMethod}
+              </td>
               <td>{payment.amount} VND</td>
               <td>{payment.paymentStatus}</td>
               <td>{new Date(payment.paymentDate).toLocaleString()}</td>
