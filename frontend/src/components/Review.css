@@ -1,100 +1,143 @@
 /* Đánh giá - Review Section */
 .review-section {
-    margin-top: 20px;
-    padding: 20px;
-    border-radius: 10px;
-    background: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .review-section h3 {
-    text-align: center;
-    margin-bottom: 15px;
-    color: #333;
-  }
-  
-  /* Form đánh giá */
-  .review-section form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .review-section label {
-    font-weight: bold;
-  }
-  
-  .review-section input[type="number"] {
-    width: 60px;
-    padding: 5px;
-    font-size: 16px;
-    text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .review-section textarea {
-    width: 100%;
-    min-height: 80px;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-  }
-  
-  .review-section button {
-    background-color: #ff9900;
-    color: white;
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  
-  .review-section button:hover {
-    background-color: #e68900;
-  }
-  
-  /* Danh sách đánh giá */
-  .review-list {
-    margin-top: 20px;
-  }
-  
-  .review-item {
-    background: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 10px;
-  }
-  
-  .review-item p {
-    margin: 5px 0;
-    font-size: 16px;
-  }
-  
-  .review-item strong {
-    color: #ff9900;
-  }
-  
-  /* Nút chỉnh sửa và xóa */
-  .review-item div {
-    margin-top: 10px;
-  }
-  
-  .review-item button {
-    margin-right: 5px;
-    background: #ddd;
-    color: #333;
-    padding: 6px 12px;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-  }
-  
-  .review-item button:hover {
-    background: #bbb;
-  }
-  
+  margin-top: 30px;
+  padding: 30px 25px;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.review-section h3 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #222;
+  font-weight: 700;
+  font-size: 1.8rem;
+  letter-spacing: 0.03em;
+}
+
+/* Form đánh giá */
+.review-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.review-section label {
+  font-weight: 600;
+  color: #444;
+  font-size: 1rem;
+}
+
+.review-section input[type="number"] {
+  width: 70px;
+  padding: 8px 12px;
+  font-size: 1.1rem;
+  text-align: center;
+  border: 2px solid #ff9900;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
+}
+
+.review-section input[type="number"]:focus {
+  border-color: #e68a00;
+  outline: none;
+}
+
+.review-section textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 2px solid #ddd;
+  font-size: 1.1rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+}
+
+.review-section textarea:focus {
+  border-color: #ff9900;
+  outline: none;
+}
+
+.review-section button {
+  align-self: flex-start;
+  background-color: #ff9900;
+  color: white;
+  padding: 12px 25px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(255, 153, 0, 0.4);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-section button:hover {
+  background-color: #e68a00;
+  box-shadow: 0 6px 16px rgba(230, 138, 0, 0.6);
+}
+
+/* Danh sách đánh giá */
+.review-list {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Item đánh giá */
+.review-item {
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+  border-left: 6px solid #ff9900;
+  transition: transform 0.2s ease;
+}
+
+.review-item:hover {
+  transform: translateY(-3px);
+}
+
+.review-item p {
+  margin: 8px 0;
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+.review-item strong {
+  color: #ff9900;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Nút chỉnh sửa và xóa */
+.review-item div {
+  margin-top: 15px;
+}
+
+.review-item button {
+  margin-right: 10px;
+  background: #f0f0f0;
+  color: #555;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.review-item button:hover {
+  background: #ff9900;
+  color: #fff;
+  border-color: #ff9900;
+}

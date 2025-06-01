@@ -167,8 +167,10 @@ const FoodDetail = () => {
           <FaUndo /> <span>Đổi trả trong 7 ngày</span>
         </div>
       </div>
+     <Review menuItemId={food.id} />
 
-      <Review foodId={food.id} userId={userId} />
+
+      {/* <Review foodId={food.id} userId={userId} /> */}
     </div>
   );
 };
