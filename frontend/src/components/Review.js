@@ -19,7 +19,7 @@ const Review = ({ menuItemId }) => {
       const response = await axios.get(`${API_REVIEWS}/menuitem/${menuItemId}`, {
         headers: { "x-token": token },
       });
-      setReviews(response.data);
+      setReviews(response.data.data);
     } catch (error) {
       console.error("Lỗi khi lấy đánh giá:", error);
     }

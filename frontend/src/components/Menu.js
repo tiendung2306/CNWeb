@@ -28,6 +28,7 @@ function Menu() {
           setCategories(result.data.categories);
         } else {
           setError("Không có dữ liệu danh mục.");
+          console.log(BASE_URL)
         }
       } catch (err) {
         console.error("Lỗi khi gọi API danh mục:", err);
@@ -116,9 +117,8 @@ function Menu() {
       {/* Bộ lọc danh mục */}
       <div className="menu-selection">
         <button
-          className={`menu-selection-button ${
-            selectedCategory === "Tất cả" ? "active" : ""
-          }`}
+          className={`menu-selection-button ${selectedCategory === "Tất cả" ? "active" : ""
+            }`}
           onClick={() => {
             setSelectedCategory("Tất cả");
             setCurrentPage(1); // Đặt lại trang khi chọn "Tất cả"
@@ -129,9 +129,8 @@ function Menu() {
         {categories.map((category) => (
           <button
             key={category.id}
-            className={`menu-selection-button ${
-              selectedCategory === category.name ? "active" : ""
-            }`}
+            className={`menu-selection-button ${selectedCategory === category.name ? "active" : ""
+              }`}
             onClick={() => {
               setSelectedCategory(category.name);
               setCurrentPage(1); // Đặt lại trang khi thay đổi danh mục
