@@ -93,51 +93,66 @@
 }
 
 /* Item đánh giá */
-.review-item {
-  background: #fff;
-  padding: 20px 25px;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
-  border-left: 6px solid #ff9900;
-  transition: transform 0.2s ease;
-}
-
-.review-item:hover {
-  transform: translateY(-3px);
-}
-
-.review-item p {
-  margin: 8px 0;
-  font-size: 1rem;
-  color: #555;
-  line-height: 1.4;
-}
-
-.review-item strong {
-  color: #ff9900;
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
-/* Nút chỉnh sửa và xóa */
-.review-item div {
-  margin-top: 15px;
-}
-
-.review-item button {
-  margin-right: 10px;
-  background: #f0f0f0;
-  color: #555;
-  padding: 8px 18px;
+.reviews-item {
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  padding: 16px;
+  margin-bottom: 16px;
   border-radius: 8px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-.review-item button:hover {
-  background: #ff9900;
-  color: #fff;
-  border-color: #ff9900;
+.user-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.user-icon {
+  font-size: 24px;
+  color: #6b7280;
+  /* gray-500 */
+}
+
+.reviews-item p {
+  margin: 4px 0;
+  color: #374151;
+  /* gray-700 */
+}
+
+.reviews-item strong {
+  color: #f59e0b;
+  /* yellow-500 */
+}
+
+.reviews-item button {
+  padding: 6px 12px;
+  margin-right: 8px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.reviews-item button:first-of-type {
+  background-color: #3b82f6;
+  /* blue-500 */
+  color: white;
+}
+
+.reviews-item button:first-of-type:hover {
+  background-color: #2563eb;
+  /* blue-600 */
+}
+
+.reviews-item button:last-of-type {
+  background-color: #ef4444;
+  /* red-500 */
+  color: white;
+}
+
+.reviews-item button:last-of-type:hover {
+  background-color: #dc2626;
+  /* red-600 */
 }
