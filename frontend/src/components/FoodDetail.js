@@ -23,15 +23,30 @@ const FoodDetail = () => {
   const navigate = useNavigate();
   const { addToCart } = useContext(CartContext);
   const userId = 1;
-
+  const [rating, setRating] = useState(0);
   const [food, setFood] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [averageRating, setAverageRating] = useState(0);
   const token = localStorage.getItem("token");
-  console.log("BASE_URL:", BASE_URL);
-  console.log("id:", id);
+  const [reviews, setReviews] = useState([]);
+  const fetchReviews = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/reviews/menuitem/${id}`,
+        {
+          headers: { "x-token": token },
+        }
+      );
+      setReviews(response.data.data);
+    } catch (error) {
+      console.error("Lỗi khi lấy đánh giá:", error);
+    }
+  };
 
+  useEffect(() => {
+    fetchReviews();
+  }, [id]);
   useEffect(() => {
     const fetchFood = async () => {
       try {
@@ -96,23 +111,29 @@ const FoodDetail = () => {
         <div className="food-info">
           <h2>{food.name}</h2>
           <p className="status">
-            Tình trạng: <span className="in-stock">{food.status == 'available' ? "Còn hàng" : "Hết hàng"}</span>
+            Tình trạng:{" "}
+            <span className="in-stock">
+              {food.status == "available" ? "Còn hàng" : "Hết hàng"}
+            </span>
           </p>
           <p className="description">{food.description}</p>
           <p className="price">Giá: {food.price.toLocaleString()}đ</p>
+
           <div className="rating">
             {renderStars(averageRating)}
-            <span className="rating-score">({averageRating.toFixed(1)})</span>
+            <span className="rating-number">
+              {averageRating.toFixed(1)} / 5
+            </span>
           </div>
 
           <div className="buttons">
             <button
               className="add-to-cart"
               onClick={() => addToCart(food)}
-              disabled={food.status !== 'available'}
+              disabled={food.status !== "available"}
               style={{
-                opacity: food.status !== 'available' ? 0.6 : 1,
-                cursor: food.status !== 'available' ? 'not-allowed' : 'pointer'
+                opacity: food.status !== "available" ? 0.6 : 1,
+                cursor: food.status !== "available" ? "not-allowed" : "pointer",
               }}
             >
               THÊM VÀO GIỎ
@@ -120,10 +141,10 @@ const FoodDetail = () => {
             <button
               className="buy-now"
               onClick={handleBuyNow}
-              disabled={food.status !== 'available'}
+              disabled={food.status !== "available"}
               style={{
-                opacity: food.status !== 'available' ? 0.6 : 1,
-                cursor: food.status !== 'available' ? 'not-allowed' : 'pointer'
+                opacity: food.status !== "available" ? 0.6 : 1,
+                cursor: food.status !== "available" ? "not-allowed" : "pointer",
               }}
             >
               Mua ngay
@@ -167,8 +188,7 @@ const FoodDetail = () => {
           <FaUndo /> <span>Đổi trả trong 7 ngày</span>
         </div>
       </div>
-     <Review menuItemId={food.id} />
-
+      <Review menuItemId={food.id} />
 
       {/* <Review foodId={food.id} userId={userId} /> */}
     </div>
