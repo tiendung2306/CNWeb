@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import "./Review.css";
-
+import { CiUser } from "react-icons/ci";
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const API_REVIEWS = `${BASE_URL}/api/reviews`;
 
@@ -83,6 +83,7 @@ const Review = ({ menuItemId }) => {
     setRating(review.rating);
     setComment(review.comment);
   };
+  // loc theo so sao 
 
   return (
     <div className="review-section">
@@ -111,10 +112,18 @@ const Review = ({ menuItemId }) => {
       <div className="review-list">
         {reviews.length > 0 ? (
           reviews.map((review) => (
-            <div key={review.id} className="review-item">
-              <p>
-                <strong>⭐ {review.rating} sao</strong>
-              </p>
+            <div key={review.id} className="reviews-item">
+              <div className="user-container">
+                <CiUser className="user-icon" />
+                <div>
+                  <p>Khách hàng ẩn danh số {review.userId}</p>
+                  <p>
+                    <strong>⭐ {review.rating} sao</strong>
+                  </p>
+                </div>
+
+              </div>
+
               <p>{review.comment}</p>
               {review.userId === user?.id && (
                 <div>
@@ -122,6 +131,7 @@ const Review = ({ menuItemId }) => {
                   <button onClick={() => handleDelete(review.id)}>Xóa</button>
                 </div>
               )}
+
             </div>
           ))
         ) : (
