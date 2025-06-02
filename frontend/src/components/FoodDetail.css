@@ -71,9 +71,7 @@
   margin: 10px 0;
 }
 
-.star {
-  font-size: 22px;
-}
+
 
 .rating-score {
   font-size: 18px;
@@ -195,6 +193,22 @@
   color: #ff6f00; /* Màu cam đồng bộ */
   margin-right: 10px;
 }
+
+.star {
+  font-size: 20px;
+  margin-right: 4px;
+  color: #f5c518;
+}
+.full-star {
+  color: #f5c518;
+}
+.half-star {
+  color: #f5c518;
+}
+.empty-star {
+  color: #ccc;
+}
+
 /* ========== Responsive ========== */
 @media (max-width: 768px) {
   .food-detail {
