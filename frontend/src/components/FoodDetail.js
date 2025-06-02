@@ -29,16 +29,15 @@ const FoodDetail = () => {
   const [error, setError] = useState(null);
   const [averageRating, setAverageRating] = useState(0);
   const token = localStorage.getItem("token");
-  const [reviews, setReviews] = useState([]);
   const fetchReviews = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/api/reviews/menuitem/${id}`,
-        {
-          headers: { "x-token": token },
-        }
-      );
-      setReviews(response.data.data);
+      const res = await axios.get(`${BASE_URL}/api/reviews/menuitem/${id}`, {
+        headers: { "x-token": token },
+      });
+      const item = res.data.data;
+      if (item && item.rating !== undefined) {
+        setAverageRating(parseFloat(item.rating) || 0);
+      }
     } catch (error) {
       console.error("Lỗi khi lấy đánh giá:", error);
     }
@@ -55,15 +54,10 @@ const FoodDetail = () => {
         });
 
         const item = res.data.data;
-        console.log("Món ăn đã lấy:", item);
-
         setFood({
           ...item,
           price: parseInt(item.price) || 0,
-          rating: parseFloat(item.rating) || 0,
         });
-
-        setAverageRating(parseFloat(item.rating) || 0);
       } catch (err) {
         console.error("Lỗi khi lấy món ăn:", err);
         setError("Không thể tải món ăn.");
