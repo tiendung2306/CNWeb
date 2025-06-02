@@ -34,9 +34,12 @@ const FoodDetail = () => {
       const res = await axios.get(`${BASE_URL}/api/reviews/menuitem/${id}`, {
         headers: { "x-token": token },
       });
-      const item = res.data.data;
-      if (item && item.rating !== undefined) {
-        setAverageRating(parseFloat(item.rating) || 0);
+      const reviews = res.data.data;
+      if (Array.isArray(reviews) && reviews.length > 0) {
+        const total = reviews.reduce((sum, r) => sum + (r.rating || 0), 0);
+        setAverageRating(total / reviews.length);
+      } else {
+        setAverageRating(0);
       }
     } catch (error) {
       console.error("Lỗi khi lấy đánh giá:", error);
